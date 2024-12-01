@@ -4,7 +4,9 @@ import { connectDb } from "./utils/db/index.ts";
 import App from "./App.tsx";
 import "./index.css";
 
-await connectDb();
+connectDb()
+  .then(() => console.log("Connected to database"))
+  .catch(console.error);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
