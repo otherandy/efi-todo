@@ -7,17 +7,13 @@ import {
   updateData,
 } from "./idb";
 
-import { Category, Item, List } from "../../types";
+import { Category, Group, List, TodoItem } from "../../types";
 
 const dbName = "efi-todo";
 const dbVersion = 1;
 
 function connectDb() {
-  return initDb(dbName, dbVersion, [
-    Stores.LISTS,
-    Stores.ITEMS,
-    Stores.CATEGORIES,
-  ]);
+  return initDb(dbName, dbVersion, [Stores.LISTS, Stores.CATEGORIES]);
 }
 
 function createList(title: string) {
@@ -25,36 +21,66 @@ function createList(title: string) {
     id: Date.now().toString(),
     title,
     color: "#000000",
+    groups: [],
   };
 
   return addData(dbName, dbVersion, Stores.LISTS, data);
 }
 
-function createItem(listId: string, text?: string) {
-  const data: Item = {
+function createTodoItem(list: List, groupId?: string, text = "") {
+  const data: TodoItem = {
     id: Date.now().toString(),
-    text: text ?? "",
+    categoryId: "",
+    text,
     completed: false,
     starred: false,
-    listId,
-    categoryId: "",
-    statusItems: [],
-    statusIndex: 0,
+    status: { selectedIndex: 0, array: [] },
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
 
-  return addData(dbName, dbVersion, Stores.ITEMS, data);
+  let newList = { ...list };
+
+  if (!groupId) {
+    const newGroup: Group = {
+      id: Date.now().toString(),
+      categoryId: "",
+      items: [data],
+    };
+
+    newList = {
+      ...newList,
+      groups: [...newList.groups, newGroup],
+    };
+  }
+
+  newList = {
+    ...newList,
+    groups: newList.groups.map((group) => {
+      if (group.id === groupId) {
+        return { ...group, items: [...group.items, data] };
+      }
+      return group;
+    }),
+  };
+
+  return updateData(dbName, dbVersion, Stores.LISTS, newList);
 }
 
-function createCategory(data: Category) {
+function createCategory(name: string) {
+  const data: Category = {
+    id: Date.now().toString(),
+    name,
+    color: "#000000",
+    icon: "📁",
+    listed: true,
+  };
+
   return addData(dbName, dbVersion, Stores.CATEGORIES, data);
 }
 
 function readLists() {
   return getData<List>(dbName, dbVersion, Stores.LISTS);
-}
-
-function readItems() {
-  return getData<Item>(dbName, dbVersion, Stores.ITEMS);
 }
 
 function readCategories() {
@@ -65,8 +91,21 @@ function updateList(data: List) {
   return updateData(dbName, dbVersion, Stores.LISTS, data);
 }
 
-function updateItem(data: Item) {
-  return updateData(dbName, dbVersion, Stores.ITEMS, data);
+function updateTodoItem(list: List, groupId: string, data: TodoItem) {
+  const newList = {
+    ...list,
+    groups: list.groups.map((group) => {
+      if (group.id === groupId) {
+        return {
+          ...group,
+          items: group.items.map((item) => (item.id === data.id ? data : item)),
+        };
+      }
+      return group;
+    }),
+  };
+
+  return updateData(dbName, dbVersion, Stores.LISTS, newList);
 }
 
 function updateCategory(data: Category) {
@@ -77,8 +116,21 @@ function deleteList(id: string) {
   return deleteData(dbName, dbVersion, Stores.LISTS, id);
 }
 
-function deleteItem(id: string) {
-  return deleteData(dbName, dbVersion, Stores.ITEMS, id);
+function deleteTodoItem(list: List, groupId: string, id: string) {
+  const newList = {
+    ...list,
+    groups: list.groups.map((group) => {
+      if (group.id === groupId) {
+        return {
+          ...group,
+          items: group.items.filter((item) => item.id !== id),
+        };
+      }
+      return group;
+    }),
+  };
+
+  return updateData(dbName, dbVersion, Stores.LISTS, newList);
 }
 
 function deleteCategory(id: string) {
@@ -88,15 +140,14 @@ function deleteCategory(id: string) {
 export {
   connectDb,
   createList,
-  createItem,
+  createTodoItem,
   createCategory,
   readLists,
-  readItems,
   readCategories,
   updateList,
-  updateItem,
+  updateTodoItem,
   updateCategory,
   deleteList,
-  deleteItem,
+  deleteTodoItem,
   deleteCategory,
 };

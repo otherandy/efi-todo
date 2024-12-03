@@ -1,6 +1,5 @@
 export const enum Stores {
   LISTS = "lists",
-  ITEMS = "items",
   CATEGORIES = "categories",
 }
 

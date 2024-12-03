@@ -1,14 +1,17 @@
-import { Item } from "../types";
+import { TodoItem } from "../types";
 
-type ItemProps = Item & {
-  handleDeleteItem: () => void;
+type TodoItemProps = TodoItem & {
+  handleDeleteTodoItem: () => void;
 };
 
-export function ItemComponent({ text, handleDeleteItem }: ItemProps) {
+export function TodoItemComponent({
+  text,
+  handleDeleteTodoItem,
+}: TodoItemProps) {
   return (
     <li>
       <div>{text}</div>
-      <button onClick={handleDeleteItem}>Delete</button>
+      <button onClick={handleDeleteTodoItem}>Delete</button>
     </li>
   );
 }

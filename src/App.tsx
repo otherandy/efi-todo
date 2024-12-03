@@ -1,27 +1,28 @@
 import { useEffect, useState } from "react";
 import {
   createList,
-  createItem,
+  createTodoItem,
   readLists,
-  readItems,
-  deleteItem,
+  deleteList,
+  createCategory,
+  deleteCategory,
+  deleteTodoItem,
+  updateList,
 } from "./utils/db";
 import { ListComponent } from "./components/List";
-import { ItemComponent } from "./components/Item";
-import { Item, List } from "./types";
+import { TodoItemComponent } from "./components/Item";
+import { CategoryComponent } from "./components/Category";
+import { Category, List } from "./types";
 import "./App.css";
+import { GroupComponent } from "./components/Group";
 
 function App() {
   const [lists, setLists] = useState<List[] | null>(null);
-  const [items, setItems] = useState<Item[] | null>(null);
+  const [categories, setCategories] = useState<Category[] | null>(null);
 
   useEffect(() => {
     readLists()
       .then((data) => setLists(data))
-      .catch((error) => console.error(error));
-
-    readItems()
-      .then((data) => setItems(data))
       .catch((error) => console.error(error));
   }, []);
 
@@ -35,23 +36,79 @@ function App() {
       .catch((error) => console.error(error));
   };
 
-  const handleAddItem = (id: string) => {
-    createItem(id, "New Item")
-      .then((data) => {
-        if (!data) return;
-        const newItems = items ? [...items, data] : [data];
-        setItems(newItems);
+  const handleDeleteList = (listId: string) => {
+    deleteList(listId)
+      .then((deleted) => {
+        if (!deleted) return;
+        const newLists = lists!.filter((list) => list.id !== listId);
+        setLists(newLists);
       })
       .catch((error) => console.error(error));
   };
 
-  const handleDeleteItem = (id: string) => {
-    deleteItem(id)
+  const handleAddTodoItem = (list: List, groupId?: string) => {
+    createTodoItem(list, groupId, "New Item")
+      .then((data) => {
+        if (!data) return;
+        const newLists = lists!.map((list) =>
+          list.id === data.id ? data : list,
+        );
+        setLists(newLists);
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const handleDeleteTodoItem = (
+    list: List,
+    groupId: string,
+    itemId: string,
+  ) => {
+    deleteTodoItem(list, groupId, itemId)
+      .then((data) => {
+        if (!data) return;
+        const newLists = lists!.map((list) =>
+          list.id === data.id ? data : list,
+        );
+        setLists(newLists);
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const handleDeleteGroup = (list: List, groupId: string) => {
+    const newList = {
+      ...list,
+      groups: list.groups.filter((group) => group.id !== groupId),
+    };
+
+    updateList(newList)
+      .then((data) => {
+        if (!data) return;
+        const newLists = lists!.map((list) =>
+          list.id === data.id ? data : list,
+        );
+        setLists(newLists);
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const handleCreateCategory = () => {
+    createCategory("New Category")
+      .then((data) => {
+        if (!data) return;
+        const newCategories = categories ? [...categories, data] : [data];
+        setCategories(newCategories);
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const handleDeleteCategory = (categoryId: string) => {
+    deleteCategory(categoryId)
       .then((deleted) => {
         if (!deleted) return;
-        if (!items) return;
-        const newItems = items.filter((item) => item.id !== id);
-        setItems(newItems);
+        const newCategories = categories!.filter(
+          (category) => category.id !== categoryId,
+        );
+        setCategories(newCategories);
       })
       .catch((error) => console.error(error));
   };
@@ -61,21 +118,41 @@ function App() {
       {lists?.map((list) => (
         <ListComponent
           key={list.id}
-          handleAddItem={() => handleAddItem(list.id)}
+          handleAddTodoItem={() => handleAddTodoItem(list)}
+          handleDeleteList={() => handleDeleteList(list.id)}
           {...list}
         >
-          {items
-            ?.filter((item) => item.listId === list.id)
-            .map((item) => (
-              <ItemComponent
-                key={item.id}
-                handleDeleteItem={() => handleDeleteItem(item.id)}
-                {...item}
-              />
-            ))}
+          {list.groups.map((group) => (
+            <GroupComponent
+              key={group.id}
+              handleDeleteGroup={() => handleDeleteGroup(list, group.id)}
+              {...group}
+            >
+              {group.items.map((item) => (
+                <TodoItemComponent
+                  key={item.id}
+                  handleDeleteTodoItem={() =>
+                    handleDeleteTodoItem(list, group.id, item.id)
+                  }
+                  {...item}
+                />
+              ))}
+            </GroupComponent>
+          ))}
         </ListComponent>
       ))}
       <button onClick={handleCreateList}>Create List</button>
+      <h2>Category List</h2>
+      <ul>
+        {categories?.map((category) => (
+          <CategoryComponent
+            key={category.id}
+            handleDeleteCategory={() => handleDeleteCategory(category.id)}
+            {...category}
+          />
+        ))}
+      </ul>
+      <button onClick={handleCreateCategory}>Create Category</button>
     </>
   );
 }
