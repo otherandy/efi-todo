@@ -17,6 +17,7 @@ import {
   readCategories,
 } from "@/utils/db";
 import { Category, List } from "@/types";
+import "@/styles/App.css";
 
 function App() {
   const [lists, setLists] = useState<List[] | null>(null);
@@ -121,41 +122,45 @@ function App() {
 
   return (
     <>
-      {lists?.map((list) => (
-        <ListComponent
-          key={list.id}
-          handleAddTodoItem={() => handleAddTodoItem(list)}
-          handleDeleteList={() => handleDeleteList(list.id)}
-          {...list}
-        >
-          {list.groups.map((group) => {
+      <div id="lists">
+        {lists?.map((list) => (
+          <ListComponent
+            key={list.id}
+            handleAddTodoItem={() => handleAddTodoItem(list)}
+            handleDeleteList={() => handleDeleteList(list.id)}
+            {...list}
+          >
+            {list.groups.map((group) => {
               const category = categories?.find(
                 (category) => category.id === group.categoryId,
               );
               return (
-            <GroupComponent
-              key={group.id}
+                <GroupComponent
+                  key={group.id}
                   category={category}
-              handleDeleteGroup={() => handleDeleteGroup(list, group.id)}
-              {...group}
-            >
-              {group.items.map((item) => (
-                <TodoItemComponent
-                  key={item.id}
-                  handleDeleteTodoItem={() =>
-                    handleDeleteTodoItem(list, group.id, item.id)
-                  }
-                  {...item}
-                />
-              ))}
-            </GroupComponent>
-          );
+                  handleDeleteGroup={() => handleDeleteGroup(list, group.id)}
+                  {...group}
+                >
+                  {group.items.map((item) => (
+                    <TodoItemComponent
+                      key={item.id}
+                      handleDeleteTodoItem={() =>
+                        handleDeleteTodoItem(list, group.id, item.id)
+                      }
+                      {...item}
+                    />
+                  ))}
+                </GroupComponent>
+              );
             })}
-        </ListComponent>
-      ))}
-      <button onClick={handleCreateList}>Create List</button>
+          </ListComponent>
+        ))}
+        <button onClick={handleCreateList} className="create-list-button">
+          +
+        </button>
+      </div>
       <h2>Category List</h2>
-      <ul>
+      <div>
         {categories?.map((category) => (
           <CategoryComponent
             key={category.id}
@@ -163,7 +168,7 @@ function App() {
             {...category}
           />
         ))}
-      </ul>
+      </div>
       <button onClick={handleCreateCategory}>Create Category</button>
     </>
   );

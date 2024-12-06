@@ -1,0 +1,10 @@
+.container {
+  display: flex;
+  gap: 1rem;
+  border-left: 2px solid;
+}
+
+.category {
+  display: flex;
+  gap: 1rem;
+}

@@ -1,4 +1,5 @@
 import { TodoItem } from "@/types";
+import classes from "@/styles/Item.module.css";
 
 type TodoItemProps = TodoItem & {
   handleDeleteTodoItem: () => void;
@@ -9,9 +10,11 @@ export function TodoItemComponent({
   handleDeleteTodoItem,
 }: TodoItemProps) {
   return (
-    <li>
-      <div>{text}</div>
-      <button onClick={handleDeleteTodoItem}>Delete</button>
-    </li>
+    <div className={classes.content}>
+      <div className={classes.text}>{text}</div>
+      <button onClick={handleDeleteTodoItem} className={classes.delete}>
+        x
+      </button>
+    </div>
   );
 }

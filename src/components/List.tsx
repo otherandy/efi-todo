@@ -1,4 +1,5 @@
 import { List } from "@/types";
+import classes from "@/styles/List.module.css";
 
 type ListProps = List & {
   children: React.ReactNode;
@@ -8,16 +9,33 @@ type ListProps = List & {
 
 export function ListComponent({
   title,
+  color,
   children,
   handleAddTodoItem,
   handleDeleteList,
 }: ListProps) {
   return (
-    <>
-      <h2>{title}</h2>
-      <ul>{children}</ul>
-      <button onClick={handleAddTodoItem}>Add Item</button>
-      <button onClick={handleDeleteList}>Delete List</button>
-    </>
+    <div className={classes.container}>
+      <div
+        className={classes.title}
+        style={{
+          backgroundColor: color,
+        }}
+      >
+        <h2>{title}</h2>
+        <div className={classes.menu}>
+          <button></button>
+          <div>
+            <button onClick={handleDeleteList}>Delete List</button>
+          </div>
+        </div>
+      </div>
+      <div className={classes.items}>
+        {children}
+        <button onClick={handleAddTodoItem} className={classes.create}>
+          +
+        </button>
+      </div>
+    </div>
   );
 }

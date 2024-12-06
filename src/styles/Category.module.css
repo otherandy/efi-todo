@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  gap: 1rem;
+  border-left: 2px solid;
+}
+
+.container .delete {
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.container .delete:hover {
+  opacity: 1;
+}
