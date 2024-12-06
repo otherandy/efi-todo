@@ -20,7 +20,7 @@ function createList(title: string) {
   const data: List = {
     id: Date.now().toString(),
     title,
-    color: "#000000",
+    color: "#f3f3f3",
     groups: [],
   };
 
@@ -30,7 +30,6 @@ function createList(title: string) {
 function createTodoItem(list: List, groupId?: string, text = "") {
   const data: TodoItem = {
     id: Date.now().toString(),
-    categoryId: "",
     text,
     completed: false,
     starred: false,

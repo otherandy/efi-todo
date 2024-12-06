@@ -13,7 +13,6 @@ interface Status {
 
 export interface TodoItem {
   id: string;
-  categoryId: string;
   text: string;
   completed: boolean;
   starred: boolean;
