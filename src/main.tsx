@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { connectDb } from "./utils/db/index.ts";
-import App from "./App.tsx";
+import { connectDb } from "@/utils/db/index.ts";
+import App from "@/App.tsx";
 import "./index.css";
 
 connectDb()

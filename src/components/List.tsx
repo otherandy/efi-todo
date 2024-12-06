@@ -1,4 +1,4 @@
-import { List } from "../types";
+import { List } from "@/types";
 
 type ListProps = List & {
   children: React.ReactNode;

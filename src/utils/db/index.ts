@@ -7,7 +7,7 @@ import {
   updateData,
 } from "./idb";
 
-import { Category, Group, List, TodoItem } from "../../types";
+import { Category, Group, List, TodoItem } from "@/types";
 
 const dbName = "efi-todo";
 const dbVersion = 1;

@@ -1,4 +1,10 @@
 import { useEffect, useState } from "react";
+
+import { ListComponent } from "@/components/List";
+import { GroupComponent } from "@/components/Group";
+import { TodoItemComponent } from "@/components/Item";
+import { CategoryComponent } from "@/components/Category";
+
 import {
   createList,
   createTodoItem,
@@ -8,13 +14,8 @@ import {
   deleteCategory,
   deleteTodoItem,
   updateList,
-} from "./utils/db";
-import { ListComponent } from "./components/List";
-import { TodoItemComponent } from "./components/Item";
-import { CategoryComponent } from "./components/Category";
-import { Category, List } from "./types";
-import "./App.css";
-import { GroupComponent } from "./components/Group";
+} from "@/utils/db";
+import { Category, List } from "@/types";
 
 function App() {
   const [lists, setLists] = useState<List[] | null>(null);

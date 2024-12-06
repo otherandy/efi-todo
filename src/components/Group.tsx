@@ -1,4 +1,4 @@
-import { Group } from "../types";
+import { Group } from "@/types";
 
 type GroupProps = Group & {
   children: React.ReactNode;
