@@ -14,6 +14,7 @@ import {
   deleteCategory,
   deleteTodoItem,
   updateList,
+  readCategories,
 } from "@/utils/db";
 import { Category, List } from "@/types";
 
@@ -24,6 +25,10 @@ function App() {
   useEffect(() => {
     readLists()
       .then((data) => setLists(data))
+      .catch((error) => console.error(error));
+
+    readCategories()
+      .then((data) => setCategories(data))
       .catch((error) => console.error(error));
   }, []);
 
@@ -123,9 +128,14 @@ function App() {
           handleDeleteList={() => handleDeleteList(list.id)}
           {...list}
         >
-          {list.groups.map((group) => (
+          {list.groups.map((group) => {
+              const category = categories?.find(
+                (category) => category.id === group.categoryId,
+              );
+              return (
             <GroupComponent
               key={group.id}
+                  category={category}
               handleDeleteGroup={() => handleDeleteGroup(list, group.id)}
               {...group}
             >
@@ -139,7 +149,8 @@ function App() {
                 />
               ))}
             </GroupComponent>
-          ))}
+          );
+            })}
         </ListComponent>
       ))}
       <button onClick={handleCreateList}>Create List</button>

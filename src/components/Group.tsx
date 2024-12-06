@@ -1,17 +1,23 @@
-import { Group } from "@/types";
+import { Category, Group } from "@/types";
 
 type GroupProps = Group & {
+  category?: Category;
   children: React.ReactNode;
   handleDeleteGroup: () => void;
 };
 
-export function GroupComponent({ children, handleDeleteGroup }: GroupProps) {
+export function GroupComponent({
+  category,
+  children,
+  handleDeleteGroup,
+}: GroupProps) {
   return (
-    <li>
-      <ul>
-        {children}
-        <button onClick={handleDeleteGroup}>Delete Group</button>
-      </ul>
-    </li>
+    <div>
+      {category && <div>{category.name}</div>}
+      {children}
+      {Array.isArray(children) && children.length > 1 && (
+        <button onClick={handleDeleteGroup}>Delete</button>
+      )}
+    </div>
   );
 }
