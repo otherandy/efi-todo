@@ -108,12 +108,12 @@ function App() {
       .catch((error) => console.error(error));
   };
 
-  const handleDeleteCategory = (categoryId: string) => {
-    deleteCategory(categoryId)
+  const handleDeleteCategory = (categoryName: string) => {
+    deleteCategory(categoryName)
       .then((deleted) => {
         if (!deleted) return;
         const newCategories = categories!.filter(
-          (category) => category.id !== categoryId,
+          (category) => category.name !== categoryName,
         );
         setCategories(newCategories);
       })
@@ -132,7 +132,7 @@ function App() {
           >
             {list.groups.map((group) => {
               const category = categories?.find(
-                (category) => category.id === group.categoryId,
+                (category) => category.name === group.categoryName,
               );
               return (
                 <GroupComponent
@@ -163,9 +163,9 @@ function App() {
       <div>
         {categories?.map((category) => (
           <CategoryComponent
-            key={category.id}
-            handleDeleteCategory={() => handleDeleteCategory(category.id)}
-            {...category}
+            key={category.name}
+            handleDeleteCategory={() => handleDeleteCategory(category.name)}
+                        {...category}
           />
         ))}
       </div>

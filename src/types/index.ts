@@ -1,9 +1,8 @@
 export interface Category {
-  id: string;
   name: string;
   color: string;
   icon: string;
-  listed: boolean;
+  hidden: boolean;
 }
 
 interface Status {
@@ -23,7 +22,7 @@ export interface TodoItem {
 
 export interface Group {
   id: string;
-  categoryId: string;
+  categoryName: string;
   items: TodoItem[];
 }
 
@@ -31,5 +30,6 @@ export interface List {
   id: string;
   title: string;
   color: string;
+  hidden: boolean;
   groups: Group[];
 }

@@ -11,9 +11,13 @@ import { Category, Group, List, TodoItem } from "@/types";
 
 const dbName = "efi-todo";
 const dbVersion = 1;
+const stores = [
+  { name: Stores.LISTS, keyPath: "id" },
+  { name: Stores.CATEGORIES, keyPath: "name" },
+];
 
 function connectDb() {
-  return initDb(dbName, dbVersion, [Stores.LISTS, Stores.CATEGORIES]);
+  return initDb(dbName, dbVersion, stores);
 }
 
 function createList(title: string) {
@@ -21,6 +25,7 @@ function createList(title: string) {
     id: Date.now().toString(),
     title,
     color: "#f3f3f3",
+    hidden: false,
     groups: [],
   };
 
@@ -43,7 +48,7 @@ function createTodoItem(list: List, groupId?: string, text = "") {
   if (!groupId) {
     const newGroup: Group = {
       id: Date.now().toString(),
-      categoryId: "",
+      categoryName: "",
       items: [data],
     };
 
@@ -68,11 +73,10 @@ function createTodoItem(list: List, groupId?: string, text = "") {
 
 function createCategory(name: string) {
   const data: Category = {
-    id: Date.now().toString(),
     name,
-    color: "#000000",
+    color: "red",
     icon: "📁",
-    listed: true,
+    hidden: false,
   };
 
   return addData(dbName, dbVersion, Stores.CATEGORIES, data);

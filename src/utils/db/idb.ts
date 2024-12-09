@@ -6,7 +6,7 @@ export const enum Stores {
 export function initDb(
   dbName: string,
   version: number,
-  storeName: Stores[],
+  stores: { name: Stores; keyPath: string }[],
 ): Promise<boolean> {
   return new Promise((resolve, reject) => {
     const open = indexedDB.open(dbName, version);
@@ -14,9 +14,9 @@ export function initDb(
     open.onupgradeneeded = () => {
       const db = open.result;
 
-      storeName.forEach((storeName) => {
-        if (!db.objectStoreNames.contains(storeName)) {
-          db.createObjectStore(storeName, { keyPath: "id" });
+      stores.forEach((store) => {
+        if (!db.objectStoreNames.contains(store.name)) {
+          db.createObjectStore(store.name, { keyPath: store.keyPath });
         }
       });
     };
