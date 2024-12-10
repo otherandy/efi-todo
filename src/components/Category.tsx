@@ -1,25 +1,31 @@
 import { Category } from "@/types";
 import classes from "@/styles/Category.module.css";
 
-type CategoryProps = Category & {
+interface CategoryProps {
+  category: Category;
+  handleUpdateCategory: (category: Category) => void;
   handleDeleteCategory: () => void;
-};
+}
 
 export function CategoryComponent({
-  color,
-  icon,
-  name,
+  category,
+  handleUpdateCategory,
   handleDeleteCategory,
 }: CategoryProps) {
   return (
     <div
       className={classes.container}
       style={{
-        borderColor: color,
+        borderColor: category.color,
       }}
     >
-      <div>{icon}</div>
-      <div>{name}</div>
+      <div>{category.icon}</div>
+      <input
+        value={category.name}
+        onChange={(e) =>
+          handleUpdateCategory({ ...category, name: e.target.value })
+        }
+      />
       <button onClick={handleDeleteCategory} className={classes.delete}>
         x
       </button>

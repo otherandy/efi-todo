@@ -15,6 +15,7 @@ import {
   deleteTodoItem,
   updateList,
   readCategories,
+  updateCategory,
 } from "@/utils/db";
 import { Category, List } from "@/types";
 import "@/styles/App.css";
@@ -81,6 +82,37 @@ function App() {
       .catch((error) => console.error(error));
   };
 
+  const handleUpdateTodoItem = (
+    list: List,
+    groupId: string,
+    itemId: string,
+    text: string,
+  ) => {
+    const newList = {
+      ...list,
+      groups: list.groups.map((group) => {
+        if (group.id !== groupId) return group;
+        return {
+          ...group,
+          items: group.items.map((item) => {
+            if (item.id !== itemId) return item;
+            return { ...item, text };
+          }),
+        };
+      }),
+    };
+
+    updateList(newList)
+      .then((data) => {
+        if (!data) return;
+        const newLists = lists!.map((list) =>
+          list.id === data.id ? data : list,
+        );
+        setLists(newLists);
+      })
+      .catch((error) => console.error(error));
+  };
+
   const handleDeleteGroup = (list: List, groupId: string) => {
     const newList = {
       ...list,
@@ -120,15 +152,27 @@ function App() {
       .catch((error) => console.error(error));
   };
 
+  const handleUpdateCategory = (category: Category) => {
+    updateCategory(category)
+      .then((data) => {
+        if (!data) return;
+        const newCategories = categories!.map((category) =>
+          category.name === data.name ? data : category,
+        );
+        setCategories(newCategories);
+      })
+      .catch((error) => console.error(error));
+  };
+
   return (
     <>
       <div id="lists">
         {lists?.map((list) => (
           <ListComponent
             key={list.id}
+            list={list}
             handleAddTodoItem={() => handleAddTodoItem(list)}
             handleDeleteList={() => handleDeleteList(list.id)}
-            {...list}
           >
             {list.groups.map((group) => {
               const category = categories?.find(
@@ -139,15 +183,17 @@ function App() {
                   key={group.id}
                   category={category}
                   handleDeleteGroup={() => handleDeleteGroup(list, group.id)}
-                  {...group}
                 >
                   {group.items.map((item) => (
                     <TodoItemComponent
                       key={item.id}
+                      item={item}
+                      handleUpdateTodoItem={(text) =>
+                        handleUpdateTodoItem(list, group.id, item.id, text)
+                      }
                       handleDeleteTodoItem={() =>
                         handleDeleteTodoItem(list, group.id, item.id)
                       }
-                      {...item}
                     />
                   ))}
                 </GroupComponent>
@@ -164,8 +210,9 @@ function App() {
         {categories?.map((category) => (
           <CategoryComponent
             key={category.name}
+            category={category}
+            handleUpdateCategory={handleUpdateCategory}
             handleDeleteCategory={() => handleDeleteCategory(category.name)}
-                        {...category}
           />
         ))}
       </div>

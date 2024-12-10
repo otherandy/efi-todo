@@ -1,15 +1,15 @@
 import { List } from "@/types";
 import classes from "@/styles/List.module.css";
 
-type ListProps = List & {
+interface ListProps {
+  list: List;
   children: React.ReactNode;
   handleAddTodoItem: () => void;
   handleDeleteList: () => void;
-};
+}
 
 export function ListComponent({
-  title,
-  color,
+  list,
   children,
   handleAddTodoItem,
   handleDeleteList,
@@ -19,10 +19,10 @@ export function ListComponent({
       <div
         className={classes.title}
         style={{
-          backgroundColor: color,
+          backgroundColor: list.color,
         }}
       >
-        <h2>{title}</h2>
+        <h2>{list.title}</h2>
         <div className={classes.menu}>
           <button></button>
           <div>

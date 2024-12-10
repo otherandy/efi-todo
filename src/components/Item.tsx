@@ -1,17 +1,24 @@
 import { TodoItem } from "@/types";
 import classes from "@/styles/Item.module.css";
 
-type TodoItemProps = TodoItem & {
+interface TodoItemProps {
+  item: TodoItem;
+  handleUpdateTodoItem: (text: string) => void;
   handleDeleteTodoItem: () => void;
-};
+}
 
 export function TodoItemComponent({
-  text,
+  item,
+  handleUpdateTodoItem,
   handleDeleteTodoItem,
 }: TodoItemProps) {
   return (
     <div className={classes.content}>
-      <div className={classes.text}>{text}</div>
+      <input
+        className={classes.text}
+        value={item.text}
+        onChange={(e) => handleUpdateTodoItem(e.target.value)}
+      />
       <button onClick={handleDeleteTodoItem} className={classes.delete}>
         x
       </button>
