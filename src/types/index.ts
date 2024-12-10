@@ -1,25 +1,27 @@
+type Color = string;
+
 interface List {
-  id: string;
+  id: number;
   title: string;
-  color: string;
+  color: Color;
   hidden: boolean;
 }
 
 interface Group {
-  id: string;
-  listId: string;
-  categoryId: string;
+  id: number;
+  listId: number;
+  categoryId: number;
 }
 
 interface TodoItem {
-  id: string;
-  groupId: string;
+  id: number;
+  groupId: number;
   text: string;
   completed: boolean;
   starred: boolean;
   status: Status;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface Status {
@@ -28,9 +30,9 @@ interface Status {
 }
 
 interface Category {
-  id: string;
+  id: number;
   name: string;
-  color: string;
+  color: Color;
   icon: string;
   hidden: boolean;
 }

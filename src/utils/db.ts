@@ -1,4 +1,4 @@
-import Dexie, { EntityTable } from "dexie";
+import Dexie, { type EntityTable } from "dexie";
 import type { Category, Group, List, TodoItem } from "@/types";
 
 const db = new Dexie("efi-todo") as Dexie & {

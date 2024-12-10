@@ -25,14 +25,14 @@ function App() {
       .catch((error) => console.error(error));
   };
 
-  const handleDeleteList = (listId: string) => {
+  const handleDeleteList = (listId: number) => {
     db.lists.delete(listId).catch((error) => console.error(error));
   };
 
   const handleAddTodoItem = (
-    listId: string,
-    groupId?: string,
-    categoryId?: string,
+    listId: number,
+    groupId?: number,
+    categoryId?: number,
   ) => {
     let group = groups?.find((group) => group.id === groupId);
 
@@ -40,7 +40,7 @@ function App() {
       db.groups
         .add({
           listId,
-          categoryId: categoryId ?? "",
+          categoryId: categoryId ?? 1,
         })
         .then((id) => db.groups.get(id))
         .then((newGroup) => {
@@ -57,8 +57,8 @@ function App() {
       completed: false,
       starred: false,
       status: { selectedIndex: 0, array: [] },
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     db.todoItems.add(newItem).catch((error) => console.error(error));
@@ -84,7 +84,7 @@ function App() {
     db.lists.update(item.id, item).catch((error) => console.error(error));
   };
 
-  const handleDeleteGroup = (groupId: string) => {
+  const handleDeleteGroup = (groupId: number) => {
     db.groups.delete(groupId).catch((error) => console.error(error));
 
     const items = todoItems?.filter((todoItem) => todoItem.groupId === groupId);
@@ -106,7 +106,7 @@ function App() {
       .catch((error) => console.error(error));
   };
 
-  const handleDeleteCategory = (categoryId: string) => {
+  const handleDeleteCategory = (categoryId: number) => {
     db.categories.delete(categoryId).catch((error) => console.error(error));
   };
 
@@ -158,14 +158,18 @@ function App() {
       </div>
       <h2>Category List</h2>
       <div>
-        {categories?.map((category) => (
-          <CategoryComponent
-            key={category.name}
-            category={category}
-            handleUpdateCategory={handleUpdateCategory}
-            handleDeleteCategory={() => handleDeleteCategory(category.name)}
-          />
-        ))}
+        {categories?.map((category) => {
+          if (category.hidden) return null;
+
+          return (
+            <CategoryComponent
+              key={category.name}
+              category={category}
+              handleUpdateCategory={handleUpdateCategory}
+              handleDeleteCategory={() => handleDeleteCategory(category.id)}
+            />
+          );
+        })}
       </div>
       <button onClick={handleCreateCategory}>Create Category</button>
     </>
