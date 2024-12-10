@@ -1,17 +1,19 @@
-export interface Category {
-  name: string;
+interface List {
+  id: string;
+  title: string;
   color: string;
-  icon: string;
   hidden: boolean;
 }
 
-interface Status {
-  selectedIndex: number;
-  array: string[];
+interface Group {
+  id: string;
+  listId: string;
+  categoryId: string;
 }
 
-export interface TodoItem {
+interface TodoItem {
   id: string;
+  groupId: string;
   text: string;
   completed: boolean;
   starred: boolean;
@@ -20,16 +22,17 @@ export interface TodoItem {
   updatedAt: string;
 }
 
-export interface Group {
-  id: string;
-  categoryName: string;
-  items: TodoItem[];
+interface Status {
+  selectedIndex: number;
+  array: string[];
 }
 
-export interface List {
+interface Category {
   id: string;
-  title: string;
+  name: string;
   color: string;
+  icon: string;
   hidden: boolean;
-  groups: Group[];
 }
+
+export type { Category, Status, TodoItem, Group, List };

@@ -1,166 +1,118 @@
-import { useEffect, useState } from "react";
-
 import { ListComponent } from "@/components/List";
 import { GroupComponent } from "@/components/Group";
 import { TodoItemComponent } from "@/components/Item";
 import { CategoryComponent } from "@/components/Category";
 
-import {
-  createList,
-  createTodoItem,
-  readLists,
-  deleteList,
-  createCategory,
-  deleteCategory,
-  deleteTodoItem,
-  updateList,
-  readCategories,
-  updateCategory,
-} from "@/utils/db";
-import { Category, List } from "@/types";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "@/utils/db";
+
+import type { Category, TodoItem } from "@/types";
 import "@/styles/App.css";
 
 function App() {
-  const [lists, setLists] = useState<List[] | null>(null);
-  const [categories, setCategories] = useState<Category[] | null>(null);
-
-  useEffect(() => {
-    readLists()
-      .then((data) => setLists(data))
-      .catch((error) => console.error(error));
-
-    readCategories()
-      .then((data) => setCategories(data))
-      .catch((error) => console.error(error));
-  }, []);
+  const lists = useLiveQuery(() => db.lists.toArray());
+  const categories = useLiveQuery(() => db.categories.toArray());
+  const groups = useLiveQuery(() => db.groups.toArray());
+  const todoItems = useLiveQuery(() => db.todoItems.toArray());
 
   const handleCreateList = () => {
-    createList("New List")
-      .then((data) => {
-        if (!data) return;
-        const newLists = lists ? [...lists, data] : [data];
-        setLists(newLists);
+    db.lists
+      .add({
+        title: "New List",
+        color: "d9d9d9",
+        hidden: false,
       })
       .catch((error) => console.error(error));
   };
 
   const handleDeleteList = (listId: string) => {
-    deleteList(listId)
-      .then((deleted) => {
-        if (!deleted) return;
-        const newLists = lists!.filter((list) => list.id !== listId);
-        setLists(newLists);
-      })
-      .catch((error) => console.error(error));
+    db.lists.delete(listId).catch((error) => console.error(error));
   };
 
-  const handleAddTodoItem = (list: List, groupId?: string) => {
-    createTodoItem(list, groupId, "New Item")
-      .then((data) => {
-        if (!data) return;
-        const newLists = lists!.map((list) =>
-          list.id === data.id ? data : list,
-        );
-        setLists(newLists);
-      })
-      .catch((error) => console.error(error));
-  };
-
-  const handleDeleteTodoItem = (
-    list: List,
-    groupId: string,
-    itemId: string,
+  const handleAddTodoItem = (
+    listId: string,
+    groupId?: string,
+    categoryId?: string,
   ) => {
-    deleteTodoItem(list, groupId, itemId)
-      .then((data) => {
-        if (!data) return;
-        const newLists = lists!.map((list) =>
-          list.id === data.id ? data : list,
-        );
-        setLists(newLists);
-      })
-      .catch((error) => console.error(error));
-  };
+    let group = groups?.find((group) => group.id === groupId);
 
-  const handleUpdateTodoItem = (
-    list: List,
-    groupId: string,
-    itemId: string,
-    text: string,
-  ) => {
-    const newList = {
-      ...list,
-      groups: list.groups.map((group) => {
-        if (group.id !== groupId) return group;
-        return {
-          ...group,
-          items: group.items.map((item) => {
-            if (item.id !== itemId) return item;
-            return { ...item, text };
-          }),
-        };
-      }),
+    if (!group) {
+      db.groups
+        .add({
+          listId,
+          categoryId: categoryId ?? "",
+        })
+        .then((id) => db.groups.get(id))
+        .then((newGroup) => {
+          group = newGroup;
+        })
+        .catch((error) => console.error(error));
+    }
+
+    if (!group) return;
+
+    const newItem: Omit<TodoItem, "id"> = {
+      groupId: group.id,
+      text: "New Item",
+      completed: false,
+      starred: false,
+      status: { selectedIndex: 0, array: [] },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
 
-    updateList(newList)
-      .then((data) => {
-        if (!data) return;
-        const newLists = lists!.map((list) =>
-          list.id === data.id ? data : list,
-        );
-        setLists(newLists);
-      })
-      .catch((error) => console.error(error));
+    db.todoItems.add(newItem).catch((error) => console.error(error));
   };
 
-  const handleDeleteGroup = (list: List, groupId: string) => {
-    const newList = {
-      ...list,
-      groups: list.groups.filter((group) => group.id !== groupId),
-    };
+  const handleDeleteTodoItem = (item: TodoItem) => {
+    db.todoItems.delete(item.id).catch((error) => console.error(error));
 
-    updateList(newList)
-      .then((data) => {
-        if (!data) return;
-        const newLists = lists!.map((list) =>
-          list.id === data.id ? data : list,
-        );
-        setLists(newLists);
-      })
-      .catch((error) => console.error(error));
+    const group = groups?.find((group) => group.id === item.groupId);
+
+    if (!group) return;
+
+    const items = todoItems?.filter(
+      (todoItem) => todoItem.groupId === group?.id,
+    );
+
+    if (items?.length === 0) {
+      db.groups.delete(group.id).catch((error) => console.error(error));
+    }
+  };
+
+  const handleUpdateTodoItem = (item: TodoItem) => {
+    db.lists.update(item.id, item).catch((error) => console.error(error));
+  };
+
+  const handleDeleteGroup = (groupId: string) => {
+    db.groups.delete(groupId).catch((error) => console.error(error));
+
+    const items = todoItems?.filter((todoItem) => todoItem.groupId === groupId);
+
+    if (!items) return;
+
+    const itemIds = items.map((item) => item.id);
+    db.todoItems.bulkDelete(itemIds).catch((error) => console.error(error));
   };
 
   const handleCreateCategory = () => {
-    createCategory("New Category")
-      .then((data) => {
-        if (!data) return;
-        const newCategories = categories ? [...categories, data] : [data];
-        setCategories(newCategories);
+    db.categories
+      .add({
+        name: "New Category",
+        color: "d9d9d9",
+        icon: "📁",
+        hidden: false,
       })
       .catch((error) => console.error(error));
   };
 
-  const handleDeleteCategory = (categoryName: string) => {
-    deleteCategory(categoryName)
-      .then((deleted) => {
-        if (!deleted) return;
-        const newCategories = categories!.filter(
-          (category) => category.name !== categoryName,
-        );
-        setCategories(newCategories);
-      })
-      .catch((error) => console.error(error));
+  const handleDeleteCategory = (categoryId: string) => {
+    db.categories.delete(categoryId).catch((error) => console.error(error));
   };
 
   const handleUpdateCategory = (category: Category) => {
-    updateCategory(category)
-      .then((data) => {
-        if (!data) return;
-        const newCategories = categories!.map((category) =>
-          category.name === data.name ? data : category,
-        );
-        setCategories(newCategories);
-      })
+    db.categories
+      .update(category.id, category)
       .catch((error) => console.error(error));
   };
 
@@ -171,34 +123,33 @@ function App() {
           <ListComponent
             key={list.id}
             list={list}
-            handleAddTodoItem={() => handleAddTodoItem(list)}
+            handleAddTodoItem={() =>
+              handleAddTodoItem(list.id, undefined, undefined)
+            }
             handleDeleteList={() => handleDeleteList(list.id)}
           >
-            {list.groups.map((group) => {
-              const category = categories?.find(
-                (category) => category.name === group.categoryName,
-              );
-              return (
+            {groups
+              ?.filter((group) => group.listId === list.id)
+              .map((group) => (
                 <GroupComponent
                   key={group.id}
-                  category={category}
-                  handleDeleteGroup={() => handleDeleteGroup(list, group.id)}
+                  category={categories?.find(
+                    (category) => category.id === group.categoryId,
+                  )}
+                  handleDeleteGroup={() => handleDeleteGroup(group.id)}
                 >
-                  {group.items.map((item) => (
-                    <TodoItemComponent
-                      key={item.id}
-                      item={item}
-                      handleUpdateTodoItem={(text) =>
-                        handleUpdateTodoItem(list, group.id, item.id, text)
-                      }
-                      handleDeleteTodoItem={() =>
-                        handleDeleteTodoItem(list, group.id, item.id)
-                      }
-                    />
-                  ))}
+                  {todoItems
+                    ?.filter((item) => item.groupId === group.id)
+                    .map((item) => (
+                      <TodoItemComponent
+                        key={item.id}
+                        item={item}
+                        handleDeleteTodoItem={() => handleDeleteTodoItem(item)}
+                        handleUpdateTodoItem={handleUpdateTodoItem}
+                      />
+                    ))}
                 </GroupComponent>
-              );
-            })}
+              ))}
           </ListComponent>
         ))}
         <button onClick={handleCreateList} className="create-list-button">

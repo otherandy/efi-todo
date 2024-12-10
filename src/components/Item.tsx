@@ -3,7 +3,7 @@ import classes from "@/styles/Item.module.css";
 
 interface TodoItemProps {
   item: TodoItem;
-  handleUpdateTodoItem: (text: string) => void;
+  handleUpdateTodoItem: (item: TodoItem) => void;
   handleDeleteTodoItem: () => void;
 }
 
@@ -17,7 +17,9 @@ export function TodoItemComponent({
       <input
         className={classes.text}
         value={item.text}
-        onChange={(e) => handleUpdateTodoItem(e.target.value)}
+        onChange={(e) =>
+          handleUpdateTodoItem({ ...item, text: e.target.value })
+        }
       />
       <button onClick={handleDeleteTodoItem} className={classes.delete}>
         x
