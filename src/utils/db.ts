@@ -15,4 +15,14 @@ db.version(1).stores({
   todoItems: "++id, groupId",
 });
 
+db.on("populate", async () => {
+  await db.lists.bulkAdd([
+    { title: "New List", color: "#d9d9d9", hidden: false },
+  ]);
+
+  await db.categories.bulkAdd([
+    { name: "", color: "#d9d9d9", icon: "", hidden: true },
+  ]);
+});
+
 export { db };
