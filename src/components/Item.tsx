@@ -1,27 +1,26 @@
-import { TodoItem } from "@/types";
+import { db } from "@/utils/db";
+import type { TodoItem } from "@/types";
+
 import classes from "@/styles/Item.module.css";
 
-interface TodoItemProps {
-  item: TodoItem;
-  handleUpdateTodoItem: (item: TodoItem) => void;
-  handleDeleteTodoItem: () => void;
-}
-
-export function TodoItemComponent({
-  item,
-  handleUpdateTodoItem,
-  handleDeleteTodoItem,
-}: TodoItemProps) {
+export function TodoItemComponent({ item }: { item: TodoItem }) {
   return (
     <div className={classes.content}>
       <input
         className={classes.text}
         value={item.text}
-        onChange={(e) =>
-          handleUpdateTodoItem({ ...item, text: e.target.value })
-        }
+        onChange={(e) => {
+          db.todoItems
+            .update(item.id, { text: e.target.value })
+            .catch((error) => console.error(error));
+        }}
       />
-      <button onClick={handleDeleteTodoItem} className={classes.delete}>
+      <button
+        className={classes.delete}
+        onClick={() => {
+          db.todoItems.delete(item.id).catch((error) => console.error(error));
+        }}
+      >
         x
       </button>
     </div>

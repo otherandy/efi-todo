@@ -1,19 +1,25 @@
-import { List } from "@/types";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "@/utils/db";
+import { GroupComponent } from "@/components/Group";
+import type { List } from "@/types";
+
 import classes from "@/styles/List.module.css";
 
-interface ListProps {
-  list: List;
-  children: React.ReactNode;
-  handleAddTodoItem: () => void;
-  handleDeleteList: () => void;
+export function ListsComponent() {
+  const lists = useLiveQuery(() => db.lists.toArray());
+
+  return (
+    <div id="lists">
+      {lists?.map((list) => <ListComponent key={list.id} list={list} />)}
+    </div>
+  );
 }
 
-export function ListComponent({
-  list,
-  children,
-  handleAddTodoItem,
-  handleDeleteList,
-}: ListProps) {
+export function ListComponent({ list }: { list: List }) {
+  const groups = useLiveQuery(() =>
+    db.groups.where({ listId: list.id }).toArray(),
+  );
+
   return (
     <div className={classes.container}>
       <div
@@ -24,18 +30,45 @@ export function ListComponent({
       >
         <h2>{list.title}</h2>
         <div className={classes.menu}>
-          <button></button>
           <div>
-            <button onClick={handleDeleteList}>Delete List</button>
+            <button
+              onClick={() => {
+                db.lists.delete(list.id).catch((error) => console.error(error));
+              }}
+            >
+              Delete List
+            </button>
           </div>
         </div>
       </div>
       <div className={classes.items}>
-        {children}
-        <button onClick={handleAddTodoItem} className={classes.create}>
-          +
-        </button>
+        {groups?.map((group) => (
+          <GroupComponent key={group.id} group={group} />
+        ))}
       </div>
+      <button
+        onClick={() => {
+          db.groups
+            .add({
+              listId: list.id,
+              categoryId: 1,
+            })
+            .then(async (group) => {
+              await db.todoItems.add({
+                text: "New Item",
+                groupId: group,
+                completed: false,
+                starred: false,
+                status: { selectedIndex: 0, array: [] },
+                createdAt: new Date(),
+                updatedAt: new Date(),
+              });
+            })
+            .catch((error) => console.error(error));
+        }}
+      >
+        +
+      </button>
     </div>
   );
 }
