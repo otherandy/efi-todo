@@ -13,6 +13,7 @@
   "dependencies": {
     "@fontsource-variable/comfortaa": "^5.1.0",
     "@kfonts/nanum-square-round": "^0.2.0",
+    "@radix-ui/react-context-menu": "^2.2.2",
     "dexie": "^4.0.10",
     "dexie-react-hooks": "^1.1.7",
     "react": "^18.3.1",

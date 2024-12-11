@@ -3,6 +3,8 @@ import { db } from "@/utils/db";
 import { GroupComponent } from "@/components/Group";
 import type { List } from "@/types";
 
+import * as ContextMenu from "@radix-ui/react-context-menu";
+
 import classes from "@/styles/List.module.css";
 import AddCircleIcon from "@/assets/add_circle.svg?react";
 
@@ -38,25 +40,37 @@ export function ListComponent({ list }: { list: List }) {
 
   return (
     <div className={classes.list}>
-      <div
-        className={classes.title}
-        style={{
-          backgroundColor: list.color,
-        }}
-      >
-        <h2>{list.title}</h2>
-        <div className={classes.menu}>
-          <div>
-            <button
-              onClick={() => {
+      <ContextMenu.Root>
+        <ContextMenu.Trigger asChild>
+          <div
+            className={classes.title}
+            style={{
+              backgroundColor: list.color,
+            }}
+          >
+            <h2>{list.title}</h2>
+          </div>
+        </ContextMenu.Trigger>
+        <ContextMenu.Portal>
+          <ContextMenu.Content>
+            <ContextMenu.Item
+              onSelect={() => {
+                db.todoItems
+                  .where({ listId: list.id })
+                  .delete()
+                  .catch((error) => console.error(error));
+                db.groups
+                  .where({ listId: list.id })
+                  .delete()
+                  .catch((error) => console.error(error));
                 db.lists.delete(list.id).catch((error) => console.error(error));
               }}
             >
-              Delete List
-            </button>
-          </div>
-        </div>
-      </div>
+              Delete
+            </ContextMenu.Item>
+          </ContextMenu.Content>
+        </ContextMenu.Portal>
+      </ContextMenu.Root>
       <div className={classes.groups}>
         {groups?.map((group) => (
           <GroupComponent key={group.id} group={group} />
