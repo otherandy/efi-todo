@@ -3,6 +3,7 @@ import { db } from "@/utils/db";
 import type { Category } from "@/types";
 
 import classes from "@/styles/Category.module.css";
+import AddCircleIcon from "@/assets/add_circle.svg?react";
 
 export function CategoriesComponent() {
   const categories = useLiveQuery(() => db.categories.toArray());
@@ -28,7 +29,7 @@ export function CategoriesComponent() {
             .catch((error) => console.error(error));
         }}
       >
-        Add Category
+        <AddCircleIcon />
       </button>
     </>
   );

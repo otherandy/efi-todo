@@ -4,6 +4,7 @@ import { GroupComponent } from "@/components/Group";
 import type { List } from "@/types";
 
 import classes from "@/styles/List.module.css";
+import AddCircleIcon from "@/assets/add_circle.svg?react";
 
 export function ListsComponent() {
   const lists = useLiveQuery(() => db.lists.toArray());
@@ -22,7 +23,7 @@ export function ListsComponent() {
             .catch((error) => console.error(error));
         }}
       >
-        Add List
+        <AddCircleIcon />
       </button>
     </div>
   );
@@ -80,7 +81,7 @@ export function ListComponent({ list }: { list: List }) {
             .catch((error) => console.error(error));
         }}
       >
-        +
+        <AddCircleIcon />
       </button>
     </div>
   );
