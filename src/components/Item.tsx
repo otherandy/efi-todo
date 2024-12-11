@@ -5,7 +5,7 @@ import classes from "@/styles/Item.module.css";
 
 export function TodoItemComponent({ item }: { item: TodoItem }) {
   return (
-    <div className={classes.content}>
+    <div className={classes.item}>
       <input
         className={classes.text}
         value={item.text}

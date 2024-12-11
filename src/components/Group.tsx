@@ -14,24 +14,21 @@ export function GroupComponent({ group }: { group: Group }) {
 
   return (
     <div
-      className={classes.container}
+      className={classes.group}
       style={{
         borderColor: category?.color,
       }}
     >
-      <div
-        className={classes.category}
-        style={{
-          borderColor: category?.color,
-        }}
-      >
-        <div>{category?.icon}</div>
-        <input className={classes.text} value={category?.name} />
+      <div className={classes.category}>
+        <div className={classes.icon}>{category?.icon}</div>
+        <input className={classes.name} value={category?.name} />
       </div>
       <div className={classes.items}>
         {items?.map((item) => <TodoItemComponent key={item.id} item={item} />)}
       </div>
-      <button
+      {/* <button
+        title="Add Item to Group"
+        className={classes.create}
         onClick={() => {
           db.todoItems
             .add({
@@ -47,7 +44,7 @@ export function GroupComponent({ group }: { group: Group }) {
         }}
       >
         +
-      </button>
+      </button> */}
     </div>
   );
 }

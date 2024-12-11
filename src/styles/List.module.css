@@ -1,5 +1,35 @@
-.container {
+.lists {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .lists {
+    flex-direction: row;
+  }
+}
+
+.lists .create {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.lists .create:hover {
+  opacity: 0.8;
+}
+
+.list {
   width: 18.75rem;
+  max-width: 100%;
 }
 
 .title {
@@ -9,6 +39,7 @@
   overflow: hidden;
   white-space: nowrap;
   padding: 0.5rem;
+  border-radius: 4px;
 }
 
 .title h2 {
@@ -21,15 +52,14 @@
   display: none;
 }
 
-.items {
+.groups {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 1rem;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
 }
 
-.items .create {
-  width: 100%;
+.groups .create {
   border: none;
   background-color: white;
   opacity: 0.5;
@@ -37,6 +67,6 @@
   cursor: pointer;
 }
 
-.items .create:hover {
+.groups .create:hover {
   opacity: 1;
 }

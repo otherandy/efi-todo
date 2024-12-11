@@ -18,6 +18,7 @@ export function CategoriesComponent() {
         })}
       </div>
       <button
+        title="Add Category"
         onClick={() => {
           db.categories
             .add({

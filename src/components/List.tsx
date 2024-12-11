@@ -10,9 +10,11 @@ export function ListsComponent() {
   const lists = useLiveQuery(() => db.lists.toArray());
 
   return (
-    <div id="lists">
+    <div className={classes.lists}>
       {lists?.map((list) => <ListComponent key={list.id} list={list} />)}
       <button
+        title="Add List"
+        className={classes.create}
         onClick={() => {
           db.lists
             .add({
@@ -35,7 +37,7 @@ export function ListComponent({ list }: { list: List }) {
   );
 
   return (
-    <div className={classes.container}>
+    <div className={classes.list}>
       <div
         className={classes.title}
         style={{
@@ -55,34 +57,36 @@ export function ListComponent({ list }: { list: List }) {
           </div>
         </div>
       </div>
-      <div className={classes.items}>
+      <div className={classes.groups}>
         {groups?.map((group) => (
           <GroupComponent key={group.id} group={group} />
         ))}
+        <button
+          title="Add Group"
+          className={classes.create}
+          onClick={() => {
+            db.groups
+              .add({
+                listId: list.id,
+                categoryId: 1,
+              })
+              .then(async (group) => {
+                await db.todoItems.add({
+                  text: "New Item",
+                  groupId: group,
+                  completed: false,
+                  starred: false,
+                  status: { selectedIndex: 0, array: [] },
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                });
+              })
+              .catch((error) => console.error(error));
+          }}
+        >
+          <AddCircleIcon />
+        </button>
       </div>
-      <button
-        onClick={() => {
-          db.groups
-            .add({
-              listId: list.id,
-              categoryId: 1,
-            })
-            .then(async (group) => {
-              await db.todoItems.add({
-                text: "New Item",
-                groupId: group,
-                completed: false,
-                starred: false,
-                status: { selectedIndex: 0, array: [] },
-                createdAt: new Date(),
-                updatedAt: new Date(),
-              });
-            })
-            .catch((error) => console.error(error));
-        }}
-      >
-        <AddCircleIcon />
-      </button>
     </div>
   );
 }

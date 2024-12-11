@@ -9,7 +9,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* comfortaa-latin-wght-normal */
 @font-face {
   font-family: "Comfortaa Variable";
   font-style: normal;
@@ -65,4 +64,5 @@
 body {
   font-family: "Comfortaa Variable", "나눔스퀘어라운드", "NanumSquareRound",
     system-ui;
+  background-color: #f3f3f3;
 }
