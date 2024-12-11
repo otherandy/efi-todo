@@ -11,6 +11,19 @@ export function ListsComponent() {
   return (
     <div id="lists">
       {lists?.map((list) => <ListComponent key={list.id} list={list} />)}
+      <button
+        onClick={() => {
+          db.lists
+            .add({
+              title: "New List",
+              color: "#d9d9d9",
+              hidden: false,
+            })
+            .catch((error) => console.error(error));
+        }}
+      >
+        Add List
+      </button>
     </div>
   );
 }
