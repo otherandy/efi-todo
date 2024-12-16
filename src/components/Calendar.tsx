@@ -17,7 +17,7 @@ const months = [
   "DEC",
 ];
 
-const days = ["☀️", "🌙", "🔥", "💧", "🌳", "✨", "⛰️"];
+const days = ["☀️", "🌙", "🔥", "💧", "🌳", "⭐", "🏔"];
 
 export function Calendar() {
   const [date, setDate] = useState(new Date());
