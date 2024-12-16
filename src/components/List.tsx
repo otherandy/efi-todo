@@ -109,45 +109,24 @@ export function ListComponent({ list }: { list: List }) {
 
   return (
     <div className={classes.list}>
-      <ContextMenu.Root>
-        <ContextMenu.Trigger asChild>
-          <div
+      <ListContextMenu list={list}>
+        <div
+          className={classes.title}
+          style={{
+            backgroundColor: list.color,
+          }}
+        >
+          <input
             className={classes.title}
-            style={{
-              backgroundColor: list.color,
+            value={list.title}
+            onChange={(e) => {
+              db.lists
+                .update(list.id, { title: e.target.value })
+                .catch((error) => console.error(error));
             }}
-          >
-            <input
-              className={classes.title}
-              value={list.title}
-              onChange={(e) => {
-                db.lists
-                  .update(list.id, { title: e.target.value })
-                  .catch((error) => console.error(error));
-              }}
-            />
-          </div>
-        </ContextMenu.Trigger>
-        <ContextMenu.Portal>
-          <ContextMenu.Content>
-            <ContextMenu.Item
-              onSelect={() => {
-                db.todoItems
-                  .where({ listId: list.id })
-                  .delete()
-                  .catch((error) => console.error(error));
-                db.groups
-                  .where({ listId: list.id })
-                  .delete()
-                  .catch((error) => console.error(error));
-                db.lists.delete(list.id).catch((error) => console.error(error));
-              }}
-            >
-              Delete
-            </ContextMenu.Item>
-          </ContextMenu.Content>
-        </ContextMenu.Portal>
-      </ContextMenu.Root>
+          />
+        </div>
+      </ListContextMenu>
       <div className={classes.groups}>
         {groups?.map((group) => (
           <GroupComponent key={group.id} group={group} />
@@ -181,5 +160,39 @@ export function ListComponent({ list }: { list: List }) {
         </button>
       </div>
     </div>
+  );
+}
+
+function ListContextMenu({
+  list,
+  children,
+}: {
+  list: List;
+  children: React.ReactNode;
+}) {
+  return (
+    <ContextMenu.Root>
+      <ContextMenu.Trigger asChild>{children}</ContextMenu.Trigger>
+      <ContextMenu.Portal>
+        <ContextMenu.Content className={classes.contextMenu}>
+          <ContextMenu.Item>Change Color</ContextMenu.Item>
+          <ContextMenu.Item
+            onSelect={() => {
+              db.todoItems
+                .where({ listId: list.id })
+                .delete()
+                .catch((error) => console.error(error));
+              db.groups
+                .where({ listId: list.id })
+                .delete()
+                .catch((error) => console.error(error));
+              db.lists.delete(list.id).catch((error) => console.error(error));
+            }}
+          >
+            Delete List
+          </ContextMenu.Item>
+        </ContextMenu.Content>
+      </ContextMenu.Portal>
+    </ContextMenu.Root>
   );
 }
