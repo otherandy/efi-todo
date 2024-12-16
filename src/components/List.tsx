@@ -78,7 +78,10 @@ export function ListsComponent() {
       onDragEnd={handleDragEnd}
     >
       <div className={classes.lists}>
-        {lists?.map((list) => <ListComponent key={list.id} list={list} />)}
+        {lists?.map((list) => {
+          if (list.hidden) return null;
+          return <ListComponent key={list.id} list={list} />;
+        })}
         <button
           title="Add List"
           className={classes.create}
@@ -194,5 +197,31 @@ function ListContextMenu({
         </ContextMenu.Content>
       </ContextMenu.Portal>
     </ContextMenu.Root>
+  );
+}
+
+export function ListSidebarComponent() {
+  const lists = useLiveQuery(() => db.lists.toArray());
+
+  return (
+    <div className={classes.sidebar}>
+      <h2 className={classes.header}>Lists</h2>
+      <div>
+        {lists?.map((list) => (
+          <div key={list.id} className={classes.item}>
+            <input
+              type="checkbox"
+              checked={!list.hidden}
+              onChange={(e) => {
+                db.lists
+                  .update(list.id, { hidden: !e.target.checked })
+                  .catch((error) => console.error(error));
+              }}
+            />
+            <span>{list.title}</span>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
