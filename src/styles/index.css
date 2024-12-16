@@ -62,3 +62,8 @@ body {
     system-ui;
   background-color: #f3f3f3;
 }
+
+#root {
+  display: flex;
+  height: 100vh;
+}

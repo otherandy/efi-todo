@@ -10,15 +10,16 @@ export function CategoriesComponent() {
   const categories = useLiveQuery(() => db.categories.toArray());
 
   return (
-    <>
-      <h1>Categories</h1>
-      <div id="categories">
+    <div className={classes.categories}>
+      <h2 className={classes.header}>Categories</h2>
+      <div>
         {categories?.map((category) => {
           if (category.hidden) return null;
           return <CategoryComponent key={category.id} category={category} />;
         })}
       </div>
       <button
+        className={classes.create}
         title="Add Category"
         onClick={() => {
           db.categories
@@ -33,14 +34,14 @@ export function CategoriesComponent() {
       >
         <AddCircleIcon />
       </button>
-    </>
+    </div>
   );
 }
 
 export function CategoryComponent({ category }: { category: Category }) {
   return (
     <div
-      className={classes.container}
+      className={classes.category}
       style={{
         borderColor: category.color,
       }}

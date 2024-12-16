@@ -2,6 +2,7 @@
   display: flex;
   gap: 1rem;
   background-color: white;
+  border-left: 8px solid;
   border-radius: 4px;
   padding: 0.5rem;
 }
