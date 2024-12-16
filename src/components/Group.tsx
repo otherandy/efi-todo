@@ -1,50 +1,56 @@
 import { useLiveQuery } from "dexie-react-hooks";
+import { useDroppable } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+
 import { db } from "@/utils/db";
-import { TodoItemComponent } from "@/components/Item";
 import type { Group } from "@/types";
+
+import { TodoItemComponent } from "@/components/Item";
 
 import classes from "@/styles/Group.module.css";
 
 export function GroupComponent({ group }: { group: Group }) {
   const items = useLiveQuery(() =>
-    db.todoItems.where({ groupId: group.id }).toArray(),
+    db.todoItems.where({ groupId: group.id }).sortBy("order"),
   );
 
   const category = useLiveQuery(() => db.categories.get(group.categoryId));
 
+  const { isOver, setNodeRef } = useDroppable({
+    id: `G${group.id}`,
+    data: { order: group.order },
+  });
+
+  const style: React.CSSProperties = {
+    borderColor: category?.color,
+    backgroundColor: isOver ? category?.color : undefined,
+  };
+
+  if (!items) {
+    return null;
+  }
+
   return (
-    <div
-      className={classes.group}
-      style={{
-        borderColor: category?.color,
-      }}
-    >
-      <div className={classes.category}>
-        <div className={classes.icon}>{category?.icon}</div>
-        <input className={classes.name} value={category?.name} />
+    <SortableContext items={items} strategy={verticalListSortingStrategy}>
+      <div className={classes.group} style={style}>
+        <div className={classes.category}>
+          <div
+            className={classes.icon}
+            style={{ backgroundColor: category?.color }}
+          >
+            {category?.icon}
+          </div>
+          <div className={classes.name}>{category?.name}</div>
+        </div>
+        <div ref={setNodeRef} className={classes.items}>
+          {items?.map((item) => (
+            <TodoItemComponent key={item.id} item={item} />
+          ))}
+        </div>
       </div>
-      <div className={classes.items}>
-        {items?.map((item) => <TodoItemComponent key={item.id} item={item} />)}
-      </div>
-      {/* <button
-        title="Add Item to Group"
-        className={classes.create}
-        onClick={() => {
-          db.todoItems
-            .add({
-              text: "New Item",
-              groupId: group.id,
-              completed: false,
-              starred: false,
-              status: { selectedIndex: 0, array: [] },
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            })
-            .catch((error) => console.error(error));
-        }}
-      >
-        +
-      </button> */}
-    </div>
+    </SortableContext>
   );
 }

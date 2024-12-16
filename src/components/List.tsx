@@ -1,8 +1,24 @@
+import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/utils/db";
-import { GroupComponent } from "@/components/Group";
-import type { List } from "@/types";
+import {
+  DndContext,
+  closestCenter,
+  useSensors,
+  useSensor,
+  PointerSensor,
+  KeyboardSensor,
+  type DragStartEvent,
+  type DragOverEvent,
+  type DragEndEvent,
+  DragOverlay,
+} from "@dnd-kit/core";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 
+import { db } from "@/utils/db";
+import type { List, TodoItem } from "@/types";
+
+import { GroupComponent } from "@/components/Group";
+import { TodoItemComponent } from "@/components/Item";
 import * as ContextMenu from "@radix-ui/react-context-menu";
 
 import classes from "@/styles/List.module.css";
@@ -10,32 +26,85 @@ import AddCircleIcon from "@/assets/add_circle.svg?react";
 
 export function ListsComponent() {
   const lists = useLiveQuery(() => db.lists.toArray());
+  const [overlayItem, setOverlayItem] = useState<TodoItem | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+
+    const id = active.id as string;
+    if (!id.startsWith("I")) return;
+
+    db.todoItems
+      .get(Number(id.slice(1)))
+      .then((item) => {
+        if (item) {
+          setOverlayItem(item);
+        }
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const handleDragOver = (event: DragOverEvent) => {
+    const { active, over } = event;
+
+    if (!active || !over) return;
+    if (active.id === over.id) return;
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!active || !over) return;
+    if (active.id === over.id) return;
+  };
 
   return (
-    <div className={classes.lists}>
-      {lists?.map((list) => <ListComponent key={list.id} list={list} />)}
-      <button
-        title="Add List"
-        className={classes.create}
-        onClick={() => {
-          db.lists
-            .add({
-              title: "New List",
-              color: "#d9d9d9",
-              hidden: false,
-            })
-            .catch((error) => console.error(error));
-        }}
-      >
-        <AddCircleIcon />
-      </button>
-    </div>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDragEnd={handleDragEnd}
+    >
+      <div className={classes.lists}>
+        {lists?.map((list) => <ListComponent key={list.id} list={list} />)}
+        <button
+          title="Add List"
+          className={classes.create}
+          onClick={() => {
+            db.lists
+              .add({
+                title: "New List",
+                color: "#d9d9d9",
+                hidden: false,
+              })
+              .catch((error) => console.error(error));
+          }}
+        >
+          <AddCircleIcon />
+        </button>
+      </div>
+      <DragOverlay>
+        {overlayItem !== null && <TodoItemComponent item={overlayItem} />}
+      </DragOverlay>
+    </DndContext>
   );
 }
 
 export function ListComponent({ list }: { list: List }) {
   const groups = useLiveQuery(() =>
-    db.groups.where({ listId: list.id }).toArray(),
+    db.groups.where({ listId: list.id }).sortBy("order"),
   );
 
   return (
@@ -76,23 +145,25 @@ export function ListComponent({ list }: { list: List }) {
           <GroupComponent key={group.id} group={group} />
         ))}
         <button
-          title="Add Group"
+          title="Add Item"
           className={classes.create}
           onClick={() => {
             db.groups
-              .add({
+              .put({
                 listId: list.id,
                 categoryId: 1,
+                order: groups?.length ?? 0,
               })
-              .then(async (group) => {
+              .then(async (groupId) => {
                 await db.todoItems.add({
                   text: "New Item",
-                  groupId: group,
+                  groupId,
                   completed: false,
                   starred: false,
-                  status: { selectedIndex: 0, array: [] },
+                  status: { selectedIndex: 0, elements: [] },
                   createdAt: new Date(),
                   updatedAt: new Date(),
+                  order: 0,
                 });
               })
               .catch((error) => console.error(error));

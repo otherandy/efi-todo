@@ -1,4 +1,5 @@
 import { useLiveQuery } from "dexie-react-hooks";
+
 import { db } from "@/utils/db";
 import type { Category } from "@/types";
 

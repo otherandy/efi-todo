@@ -2,27 +2,33 @@
   display: flex;
   gap: 1rem;
   background-color: white;
-  border-left: 4px solid;
   border-radius: 4px;
-}
-
-.category {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.category .icon {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-.category .name {
-  width: 8ch;
-  border: none;
+  padding: 0.5rem;
 }
 
 .items {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.category {
+  display: flex;
+  padding: 0.5rem;
+  align-items: start;
+  gap: 0.5rem;
+}
+
+.category .icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.category .icon:hover {
+  cursor: pointer;
+}
+
+.category .name {
+  min-width: 8ch;
 }

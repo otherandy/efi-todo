@@ -11,8 +11,8 @@ const db = new Dexie("efi-todo") as Dexie & {
 db.version(1).stores({
   lists: "++id, title",
   categories: "++id, &name",
-  groups: "++id, listId, categoryId",
-  todoItems: "++id, groupId",
+  groups: "++id, listId, categoryId, order",
+  todoItems: "++id, groupId, order",
 });
 
 db.on("populate", async () => {

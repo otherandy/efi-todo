@@ -11,6 +11,7 @@ interface Group {
   id: number;
   listId: number;
   categoryId: number;
+  order: number;
 }
 
 interface TodoItem {
@@ -22,11 +23,12 @@ interface TodoItem {
   status: Status;
   createdAt: Date;
   updatedAt: Date;
+  order: number;
 }
 
 interface Status {
   selectedIndex: number;
-  array: string[];
+  elements: string[];
 }
 
 interface Category {
