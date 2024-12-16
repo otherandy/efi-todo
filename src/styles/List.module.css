@@ -43,10 +43,16 @@
   border-radius: 4px;
 }
 
-.title h2 {
+.title input {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1;
+  border: none;
+  background-color: transparent;
+}
+
+.title input:focus {
+  outline: none;
 }
 
 .menu {

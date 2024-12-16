@@ -15,6 +15,10 @@
   border: none;
 }
 
+.text input:focus {
+  outline: none;
+}
+
 .delete {
   background-color: white;
   border: none;

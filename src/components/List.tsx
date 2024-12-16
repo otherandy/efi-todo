@@ -117,7 +117,15 @@ export function ListComponent({ list }: { list: List }) {
               backgroundColor: list.color,
             }}
           >
-            <h2>{list.title}</h2>
+            <input
+              className={classes.title}
+              value={list.title}
+              onChange={(e) => {
+                db.lists
+                  .update(list.id, { title: e.target.value })
+                  .catch((error) => console.error(error));
+              }}
+            />
           </div>
         </ContextMenu.Trigger>
         <ContextMenu.Portal>
