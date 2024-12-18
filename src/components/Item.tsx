@@ -30,6 +30,7 @@ export function TodoItemComponent({ item }: Props) {
       {...attributes}
       {...listeners}
     >
+      <span className={classes.separator} />
       <div className={classes.text}>
         <input
           aria-label="Item Text"
