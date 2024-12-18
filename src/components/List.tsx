@@ -183,7 +183,16 @@ function ListContextMenu({
     <ContextMenuRoot>
       <ContextMenuTrigger>{children}</ContextMenuTrigger>
       <ContextMenuContentStyled>
-        <ContextMenuItem>Change Color</ContextMenuItem>
+        <ContextMenuItem
+          onSelect={() => {
+            db.lists
+              .update(list.id, { hidden: true })
+              .catch((error) => console.error(error));
+          }}
+        >
+          Hide
+        </ContextMenuItem>
+        <ContextMenuItem>Color</ContextMenuItem>
         <ContextMenuItem
           onSelect={() => {
             db.todoItems
@@ -197,7 +206,7 @@ function ListContextMenu({
             db.lists.delete(list.id).catch((error) => console.error(error));
           }}
         >
-          Delete List
+          Delete
         </ContextMenuItem>
       </ContextMenuContentStyled>
     </ContextMenuRoot>
