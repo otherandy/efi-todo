@@ -46,8 +46,8 @@ export function TodoItemComponent({ item }: Props) {
               e.preventDefault();
               db.todoItems
                 .add({
-                  groupId: item.groupId,
                   text: "",
+                  groupId: item.groupId,
                   completed: false,
                   starred: false,
                   status: { selectedIndex: 0, elements: [] },
@@ -65,6 +65,17 @@ export function TodoItemComponent({ item }: Props) {
         className={classes.delete}
         onClick={() => {
           db.todoItems.delete(item.id).catch((error) => console.error(error));
+
+          db.todoItems
+            .where({ groupId: item.groupId })
+            .count()
+            .then(async (count) => {
+              console.log(count);
+              if (count === 0) {
+                await db.groups.delete(item.groupId);
+              }
+            })
+            .catch((error) => console.error(error));
         }}
       >
         x
