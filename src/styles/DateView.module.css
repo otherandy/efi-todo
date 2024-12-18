@@ -8,6 +8,8 @@
   gap: 0.5rem;
   align-items: center;
   margin: 1rem;
+  pointer-events: none;
+  user-select: none;
 }
 
 .date > span {
