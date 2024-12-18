@@ -1,4 +1,4 @@
-.calendar {
+.date {
   display: flex;
   background-color: white;
   width: fit-content;
@@ -10,7 +10,7 @@
   margin: 1rem;
 }
 
-.calendar > span {
+.date > span {
   width: 1px;
   height: 1rem;
   background-color: #e0e0e0;

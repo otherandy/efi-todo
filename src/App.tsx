@@ -1,5 +1,5 @@
-import { Sidebar } from "@/components/Sidebar";
-import { Calendar } from "@/components/Calendar";
+import { Sidebar } from "@/components/ui/Sidebar";
+import { DateView } from "@/components/DateView";
 import { ListsComponent } from "@/components/List";
 
 function App() {
@@ -7,7 +7,7 @@ function App() {
     <>
       <Sidebar />
       <main className="main">
-        <Calendar />
+        <DateView />
         <ListsComponent />
       </main>
     </>

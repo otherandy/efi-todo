@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import classes from "@/styles/Calendar.module.css";
+import classes from "@/styles/DateView.module.css";
 
 const months = [
   "JAN",
@@ -19,7 +19,7 @@ const months = [
 
 const days = ["☀️", "🌙", "🔥", "💧", "🌳", "⭐", "🏔"];
 
-export function Calendar() {
+export function DateView() {
   const [date, setDate] = useState(new Date());
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export function Calendar() {
   }, []);
 
   return (
-    <div className={classes.calendar}>
+    <div className={classes.date}>
       <div>{months[date.getMonth()]}</div>
       <span />
       <div>{date.getDate()}</div>
