@@ -21,7 +21,29 @@ db.on("populate", async () => {
   ]);
 
   await db.categories.bulkAdd([
-    { name: "", color: "#d9d9d9", icon: "", hidden: true },
+    { name: "New Category", color: "#d9d9d9", icon: "📁", hidden: false },
+  ]);
+
+  await db.groups.bulkAdd([
+    {
+      listId: 1,
+      categoryId: 1,
+      color: "#d9d9d9",
+      order: 0,
+    },
+  ]);
+
+  await db.todoItems.bulkAdd([
+    {
+      groupId: 1,
+      text: "New Item",
+      completed: false,
+      starred: false,
+      status: { selectedIndex: 0, elements: [] },
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      order: 0,
+    },
   ]);
 });
 
