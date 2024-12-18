@@ -7,10 +7,21 @@ interface List {
   hidden: boolean;
 }
 
+interface Category {
+  id: number;
+  name: string;
+  color: Color;
+  icon: string;
+  hidden: boolean;
+}
+
 interface Group {
   id: number;
   listId: number;
   categoryId: number;
+  categoryName?: string;
+  color: Color;
+  icon?: string;
   order: number;
 }
 
@@ -29,14 +40,6 @@ interface TodoItem {
 interface Status {
   selectedIndex: number;
   elements: string[];
-}
-
-interface Category {
-  id: number;
-  name: string;
-  color: Color;
-  icon: string;
-  hidden: boolean;
 }
 
 export type { Category, Status, TodoItem, Group, List };

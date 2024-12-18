@@ -24,26 +24,29 @@ export function GroupComponent({ group }: { group: Group }) {
     data: { order: group.order },
   });
 
-  const style: React.CSSProperties = {
-    borderColor: category?.color,
-    backgroundColor: isOver ? category?.color : undefined,
-  };
-
-  if (!items) {
-    return null;
+  if (category) {
+    db.groups
+      .update(group.id, {
+        categoryName: category.name,
+        color: category.color,
+        icon: category.icon,
+      })
+      .catch((error) => console.error(error));
   }
+
+  if (!items) return null;
+
+  const style: React.CSSProperties = {
+    borderColor: group.color,
+    backgroundColor: isOver ? group.color : undefined,
+  };
 
   return (
     <SortableContext items={items} strategy={verticalListSortingStrategy}>
       <div className={classes.group} style={style}>
         <div className={classes.category}>
-          <div
-            className={classes.icon}
-            style={{ backgroundColor: category?.color }}
-          >
-            {category?.icon}
-          </div>
-          <div className={classes.name}>{category?.name}</div>
+          <div className={classes.icon}>{group.icon}</div>
+          <div className={classes.name}>{group.categoryName}</div>
         </div>
         <div ref={setNodeRef} className={classes.items}>
           {items?.map((item) => (

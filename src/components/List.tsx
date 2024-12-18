@@ -142,6 +142,7 @@ export function ListComponent({ list }: { list: List }) {
               .put({
                 listId: list.id,
                 categoryId: 1,
+                color: "#d9d9d9",
                 order: groups?.length ?? 0,
               })
               .then(async (groupId) => {
