@@ -29,7 +29,7 @@ interface TodoItem {
   id: number;
   groupId: number;
   text: string;
-  completed: boolean;
+  checked: boolean;
   starred: boolean;
   status: Status;
   createdAt: Date;

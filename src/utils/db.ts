@@ -37,7 +37,7 @@ db.on("populate", async () => {
     {
       groupId: 1,
       text: "New Item",
-      completed: false,
+      checked: false,
       starred: false,
       status: { selectedIndex: 0, elements: [] },
       createdAt: new Date(),

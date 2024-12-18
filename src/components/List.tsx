@@ -19,7 +19,12 @@ import type { List, TodoItem } from "@/types";
 
 import { GroupComponent } from "@/components/Group";
 import { TodoItemComponent } from "@/components/Item";
-import * as ContextMenu from "@radix-ui/react-context-menu";
+import {
+  ContextMenuRoot,
+  ContextMenuTrigger,
+  ContextMenuContentStyled,
+  ContextMenuItem,
+} from "@/components/ui/ContextMenu";
 
 import classes from "@/styles/List.module.css";
 import AddCircleIcon from "@/assets/add_circle.svg?react";
@@ -149,7 +154,7 @@ export function ListComponent({ list }: { list: List }) {
                 await db.todoItems.add({
                   text: "New Item",
                   groupId,
-                  completed: false,
+                  checked: false,
                   starred: false,
                   status: { selectedIndex: 0, elements: [] },
                   createdAt: new Date(),
@@ -175,29 +180,27 @@ function ListContextMenu({
   children: React.ReactNode;
 }) {
   return (
-    <ContextMenu.Root>
-      <ContextMenu.Trigger asChild>{children}</ContextMenu.Trigger>
-      <ContextMenu.Portal>
-        <ContextMenu.Content className={classes.contextMenu}>
-          <ContextMenu.Item>Change Color</ContextMenu.Item>
-          <ContextMenu.Item
-            onSelect={() => {
-              db.todoItems
-                .where({ listId: list.id })
-                .delete()
-                .catch((error) => console.error(error));
-              db.groups
-                .where({ listId: list.id })
-                .delete()
-                .catch((error) => console.error(error));
-              db.lists.delete(list.id).catch((error) => console.error(error));
-            }}
-          >
-            Delete List
-          </ContextMenu.Item>
-        </ContextMenu.Content>
-      </ContextMenu.Portal>
-    </ContextMenu.Root>
+    <ContextMenuRoot>
+      <ContextMenuTrigger>{children}</ContextMenuTrigger>
+      <ContextMenuContentStyled>
+        <ContextMenuItem>Change Color</ContextMenuItem>
+        <ContextMenuItem
+          onSelect={() => {
+            db.todoItems
+              .where({ listId: list.id })
+              .delete()
+              .catch((error) => console.error(error));
+            db.groups
+              .where({ listId: list.id })
+              .delete()
+              .catch((error) => console.error(error));
+            db.lists.delete(list.id).catch((error) => console.error(error));
+          }}
+        >
+          Delete List
+        </ContextMenuItem>
+      </ContextMenuContentStyled>
+    </ContextMenuRoot>
   );
 }
 

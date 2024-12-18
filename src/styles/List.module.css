@@ -78,25 +78,6 @@
   opacity: 1;
 }
 
-.contextMenu {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  background-color: #ababab;
-  border: 1px solid #ababab;
-}
-
-.contextMenu > div {
-  background-color: #f8f8f8;
-  cursor: pointer;
-  padding: 0.2rem;
-  min-width: 7.5rem;
-}
-
-.contextMenu > div:hover {
-  background-color: #e8e8e8;
-}
-
 .sidebar {
   display: flex;
   flex-direction: column;
