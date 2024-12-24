@@ -3,35 +3,11 @@ import classes from "@/styles/ContextMenu.module.css";
 
 export const ContextMenuRoot = ContextMenu.Root;
 
-export function ContextMenuTrigger({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return <ContextMenu.Trigger asChild>{children}</ContextMenu.Trigger>;
-}
+export const ContextMenuTrigger = ContextMenu.Trigger;
 
-export function ContextMenuContent({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <ContextMenu.Content className={className}>{children}</ContextMenu.Content>
-  );
-}
+export const ContextMenuContent = ContextMenu.Content;
 
-export function ContextMenuItem({
-  children,
-  onSelect,
-}: {
-  children: React.ReactNode;
-  onSelect?: () => void;
-}) {
-  return <ContextMenu.Item onSelect={onSelect}>{children}</ContextMenu.Item>;
-}
+export const ContextMenuItem = ContextMenu.Item;
 
 export function ContextMenuContentStyled({
   children,

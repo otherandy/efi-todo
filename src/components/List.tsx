@@ -156,7 +156,11 @@ export function ListComponent({ list }: { list: List }) {
                   groupId,
                   checked: false,
                   starred: false,
-                  status: { selectedIndex: 0, elements: [] },
+                  status: {
+                    selected: 0,
+                    elements: ["Storyboard", "Layout", "Sketch"],
+                    hidden: true,
+                  },
                   createdAt: new Date(),
                   updatedAt: new Date(),
                   order: 0,

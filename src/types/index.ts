@@ -38,8 +38,9 @@ interface TodoItem {
 }
 
 interface Status {
-  selectedIndex: number;
+  selected: number;
   elements: string[];
+  hidden: boolean;
 }
 
 export type { Category, Status, TodoItem, Group, List };
