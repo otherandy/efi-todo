@@ -6,13 +6,11 @@ import {
   useSensors,
   useSensor,
   PointerSensor,
-  KeyboardSensor,
   type DragStartEvent,
   type DragOverEvent,
   type DragEndEvent,
   DragOverlay,
 } from "@dnd-kit/core";
-import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 
 import { db } from "@/utils/db";
 import type { List, TodoItem } from "@/types";
@@ -38,9 +36,6 @@ export function ListsComponent() {
       activationConstraint: {
         distance: 10,
       },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
 
