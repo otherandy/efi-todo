@@ -26,12 +26,22 @@ function ListSidebarComponent() {
       .catch((error) => console.error(error));
   };
 
+  const handleAddList = () => {
+    db.lists
+      .add({
+        title: "New List",
+        color: "#d9d9d9",
+        hidden: false,
+      })
+      .catch((error) => console.error(error));
+  };
+
   return (
-    <div className={classes.lists}>
-      <h2 className={classes.header}>Lists</h2>
-      <div>
+    <div>
+      <div className={classes.header}>Lists</div>
+      <div className={classes.lists}>
         {lists?.map((list) => (
-          <div key={list.id} className={classes.item}>
+          <div key={list.id}>
             <input
               type="checkbox"
               checked={!list.hidden}
@@ -40,6 +50,13 @@ function ListSidebarComponent() {
             <span>{list.title}</span>
           </div>
         ))}
+        <button
+          className={classes.createButton}
+          title="Add Category"
+          onClick={handleAddList}
+        >
+          <AddCircleIcon />
+        </button>
       </div>
     </div>
   );
@@ -60,21 +77,21 @@ function CategorySidebarComponent() {
   };
 
   return (
-    <div className={classes.categories}>
-      <h2 className={classes.header}>Categories</h2>
-      <div>
+    <div>
+      <div className={classes.header}>Categories</div>
+      <div className={classes.categories}>
         {categories?.map((category) => {
           if (category.hidden) return null;
           return <CategoryComponent key={category.id} category={category} />;
         })}
+        <button
+          className={classes.createButton}
+          title="Add Category"
+          onClick={handleAddCategory}
+        >
+          <AddCircleIcon />
+        </button>
       </div>
-      <button
-        className={classes.createButton}
-        title="Add Category"
-        onClick={handleAddCategory}
-      >
-        <AddCircleIcon />
-      </button>
     </div>
   );
 }
