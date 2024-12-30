@@ -187,7 +187,10 @@ function ListContextMenu({
 
   const handleDeleteList = () => {
     db.transaction("rw", db.todoItems, db.groups, db.lists, async () => {
-      await db.todoItems.where({ listId: list.id }).delete();
+      const groups = await db.groups.where({ listId: list.id }).toArray();
+      for (const group of groups) {
+        await db.todoItems.where({ groupId: group.id }).delete();
+      }
       await db.groups.where({ listId: list.id }).delete();
       await db.lists.delete(list.id);
     }).catch((error) => console.error(error));
