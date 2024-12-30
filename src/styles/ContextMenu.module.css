@@ -11,8 +11,8 @@
   cursor: pointer;
   padding: 0.2rem;
   min-width: 7.5rem;
-}
 
-.contextMenu > div:hover {
-  background-color: #e8e8e8;
+  &:hover {
+    background-color: #e8e8e8;
+  }
 }

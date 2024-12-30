@@ -16,18 +16,19 @@
 .category {
   display: flex;
   padding: 0.5rem;
-  align-items: start;
   gap: 0.5rem;
+  height: 24px;
+  align-items: center;
 }
 
 .category .icon {
   width: 24px;
   height: 24px;
   flex-shrink: 0;
-}
 
-.category .icon:hover {
-  cursor: pointer;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .category .name {

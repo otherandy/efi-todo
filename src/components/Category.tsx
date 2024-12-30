@@ -1,44 +1,19 @@
-import { useLiveQuery } from "dexie-react-hooks";
-
 import { db } from "@/utils/db";
 import type { Category } from "@/types";
 
 import classes from "@/styles/Category.module.css";
-import AddCircleIcon from "@/assets/add_circle.svg?react";
-
-export function CategoriesComponent() {
-  const categories = useLiveQuery(() => db.categories.toArray());
-
-  return (
-    <div className={classes.categories}>
-      <h2 className={classes.header}>Categories</h2>
-      <div>
-        {categories?.map((category) => {
-          if (category.hidden) return null;
-          return <CategoryComponent key={category.id} category={category} />;
-        })}
-      </div>
-      <button
-        className={classes.create}
-        title="Add Category"
-        onClick={() => {
-          db.categories
-            .add({
-              name: "New Category",
-              color: "#d9d9d9",
-              icon: "📁",
-              hidden: false,
-            })
-            .catch((error) => console.error(error));
-        }}
-      >
-        <AddCircleIcon />
-      </button>
-    </div>
-  );
-}
 
 export function CategoryComponent({ category }: { category: Category }) {
+  const handleChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    db.categories
+      .update(category.id, { name: e.target.value })
+      .catch((error) => console.error(error));
+  };
+
+  const handleDeleteCategory = () => {
+    db.categories.delete(category.id).catch((error) => console.error(error));
+  };
+
   return (
     <div
       className={classes.category}
@@ -47,22 +22,8 @@ export function CategoryComponent({ category }: { category: Category }) {
       }}
     >
       <div>{category.icon}</div>
-      <input
-        value={category.name}
-        onChange={(e) => {
-          db.categories
-            .update(category.id, { name: e.target.value })
-            .catch((error) => console.error(error));
-        }}
-      />
-      <button
-        className={classes.delete}
-        onClick={() => {
-          db.categories
-            .delete(category.id)
-            .catch((error) => console.error(error));
-        }}
-      >
+      <input value={category.name} onChange={handleChangeName} />
+      <button className={classes.deleteButton} onClick={handleDeleteCategory}>
         x
       </button>
     </div>

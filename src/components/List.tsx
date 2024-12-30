@@ -69,6 +69,16 @@ export function ListsComponent() {
     if (active.id === over.id) return;
   };
 
+  // const handleAddList = () => {
+  //   db.lists
+  //     .add({
+  //       title: "New List",
+  //       color: "#d9d9d9",
+  //       hidden: false,
+  //     })
+  //     .catch((error) => console.error(error));
+  // };
+
   return (
     <DndContext
       sensors={sensors}
@@ -82,21 +92,13 @@ export function ListsComponent() {
           if (list.hidden) return null;
           return <ListComponent key={list.id} list={list} />;
         })}
-        <button
+        {/* <button
           title="Add List"
-          className={classes.create}
-          onClick={() => {
-            db.lists
-              .add({
-                title: "New List",
-                color: "#d9d9d9",
-                hidden: false,
-              })
-              .catch((error) => console.error(error));
-          }}
+          className={classes.createButton}
+          onClick={handleAddList}
         >
           <AddCircleIcon />
-        </button>
+        </button> */}
       </div>
       <DragOverlay>
         {overlayItem !== null && <TodoItemComponent item={overlayItem} />}
@@ -110,6 +112,38 @@ export function ListComponent({ list }: { list: List }) {
     db.groups.where({ listId: list.id }).sortBy("order"),
   );
 
+  const handleChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    db.lists
+      .update(list.id, { title: e.target.value })
+      .catch((error) => console.error(error));
+  };
+
+  const handleAddItem = () => {
+    db.transaction("rw", db.groups, db.todoItems, async () => {
+      const groupId = await db.groups.add({
+        listId: list.id,
+        categoryId: 1,
+        color: "#d9d9d9",
+        order: groups?.length ?? 0,
+      });
+
+      await db.todoItems.add({
+        text: "New Item",
+        groupId,
+        checked: false,
+        starred: false,
+        status: {
+          selected: 0,
+          elements: ["Storyboard", "Layout", "Sketch"],
+          hidden: true,
+        },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        order: 0,
+      });
+    }).catch((error) => console.error(error));
+  };
+
   return (
     <div className={classes.list}>
       <ListContextMenu list={list}>
@@ -119,15 +153,7 @@ export function ListComponent({ list }: { list: List }) {
             backgroundColor: list.color,
           }}
         >
-          <input
-            className={classes.title}
-            value={list.title}
-            onChange={(e) => {
-              db.lists
-                .update(list.id, { title: e.target.value })
-                .catch((error) => console.error(error));
-            }}
-          />
+          <input value={list.title} onChange={handleChangeTitle} />
         </div>
       </ListContextMenu>
       <div className={classes.groups}>
@@ -136,33 +162,8 @@ export function ListComponent({ list }: { list: List }) {
         ))}
         <button
           title="Add Item"
-          className={classes.create}
-          onClick={() => {
-            db.groups
-              .put({
-                listId: list.id,
-                categoryId: 1,
-                color: "#d9d9d9",
-                order: groups?.length ?? 0,
-              })
-              .then(async (groupId) => {
-                await db.todoItems.add({
-                  text: "New Item",
-                  groupId,
-                  checked: false,
-                  starred: false,
-                  status: {
-                    selected: 0,
-                    elements: ["Storyboard", "Layout", "Sketch"],
-                    hidden: true,
-                  },
-                  createdAt: new Date(),
-                  updatedAt: new Date(),
-                  order: 0,
-                });
-              })
-              .catch((error) => console.error(error));
-          }}
+          className={classes.createButton}
+          onClick={handleAddItem}
         >
           <AddCircleIcon />
         </button>
@@ -178,62 +179,28 @@ function ListContextMenu({
   list: List;
   children: React.ReactNode;
 }) {
+  const handleHideList = () => {
+    db.lists
+      .update(list.id, { hidden: true })
+      .catch((error) => console.error(error));
+  };
+
+  const handleDeleteList = () => {
+    db.transaction("rw", db.todoItems, db.groups, db.lists, async () => {
+      await db.todoItems.where({ listId: list.id }).delete();
+      await db.groups.where({ listId: list.id }).delete();
+      await db.lists.delete(list.id);
+    }).catch((error) => console.error(error));
+  };
+
   return (
     <ContextMenuRoot>
-      <ContextMenuTrigger>{children}</ContextMenuTrigger>
+      <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
       <ContextMenuContentStyled>
-        <ContextMenuItem
-          onSelect={() => {
-            db.lists
-              .update(list.id, { hidden: true })
-              .catch((error) => console.error(error));
-          }}
-        >
-          Hide
-        </ContextMenuItem>
+        <ContextMenuItem onSelect={handleHideList}>Hide</ContextMenuItem>
         <ContextMenuItem>Color</ContextMenuItem>
-        <ContextMenuItem
-          onSelect={() => {
-            db.todoItems
-              .where({ listId: list.id })
-              .delete()
-              .catch((error) => console.error(error));
-            db.groups
-              .where({ listId: list.id })
-              .delete()
-              .catch((error) => console.error(error));
-            db.lists.delete(list.id).catch((error) => console.error(error));
-          }}
-        >
-          Delete
-        </ContextMenuItem>
+        <ContextMenuItem onSelect={handleDeleteList}>Delete</ContextMenuItem>
       </ContextMenuContentStyled>
     </ContextMenuRoot>
-  );
-}
-
-export function ListSidebarComponent() {
-  const lists = useLiveQuery(() => db.lists.toArray());
-
-  return (
-    <div className={classes.sidebar}>
-      <h2 className={classes.header}>Lists</h2>
-      <div>
-        {lists?.map((list) => (
-          <div key={list.id} className={classes.item}>
-            <input
-              type="checkbox"
-              checked={!list.hidden}
-              onChange={(e) => {
-                db.lists
-                  .update(list.id, { hidden: !e.target.checked })
-                  .catch((error) => console.error(error));
-              }}
-            />
-            <span>{list.title}</span>
-          </div>
-        ))}
-      </div>
-    </div>
   );
 }
