@@ -66,9 +66,11 @@ function CategorySidebarComponent() {
   const categories = useLiveQuery(() => db.categories.toArray());
 
   const handleAddCategory = () => {
+    const length = categories?.length ?? 0;
+
     db.categories
       .add({
-        name: "New Category",
+        name: "Category" + length,
         color: "#d9d9d9",
         icon: "📁",
         hidden: false,
