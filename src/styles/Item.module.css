@@ -8,16 +8,25 @@
   padding: 0.5rem;
 }
 
+.item:first-child .separator {
+  visibility: hidden;
+}
+
 .content {
   display: flex;
   gap: 1rem;
   align-items: center;
 }
 
-.status {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
+.content > input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid transparent;
+
+  &:focus {
+    outline: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  }
 }
 
 .separator {
@@ -27,50 +36,111 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  &:after {
+    content: "";
+    display: block;
+    height: 1px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 1px;
+  }
 }
 
-.separator:after {
-  content: "";
-  display: block;
-  height: 1px;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
-  border-radius: 1px;
-}
-
-.item:first-child .separator {
-  visibility: hidden;
-}
-
-.text {
-  flex-grow: 1;
-}
-
-.text input {
-  width: 100%;
-  border: none;
-  border-bottom: 1px solid transparent;
-}
-
-.text input:focus {
-  outline: none;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-}
-
-.delete {
+.deleteButton {
   background-color: white;
   border: none;
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.2s;
-}
 
-.delete:hover {
-  opacity: 1;
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .status {
   display: flex;
   gap: 0.5rem;
   align-items: center;
+  width: 100%;
+}
+
+.status .sideButton {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.status .element {
+  flex-grow: 1;
+  background-color: #efefef;
+  border-radius: 9999px;
+  border: none;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+}
+
+.status .element > div {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background-color: #e7e7e7;
+  margin-top: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.menu > div {
+  display: flex;
+}
+
+.menu > div > button {
+  border: none;
+  background-color: white;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-top-left-radius: 9999px;
+  border-bottom-left-radius: 9999px;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
+
+.menu > div > div {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: white;
+  border-top-right-radius: 9999px;
+  border-bottom-right-radius: 9999px;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
+
+.menu > input {
+  text-align: center;
+  border: none;
+  border-bottom: 1px solid transparent;
+  border-radius: 9999px;
+  padding: 0.5rem;
+
+  &:focus {
+    outline: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  }
 }

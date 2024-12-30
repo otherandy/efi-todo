@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/Menubar";
 
 import classes from "@/styles/Item.module.css";
+import KeyboardArrowDownIcon from "@/assets/keyboard_arrow_down.svg?react";
 
 interface Props {
   item: TodoItem;
@@ -63,6 +64,43 @@ export function TodoItemComponent({ item }: Props) {
       .catch((error) => console.error(error));
   };
 
+  const handleDeleteStatus = (index: number) => {
+    db.todoItems
+      .update(item.id, {
+        status: {
+          ...item.status,
+          elements: item.status.elements.filter((_, i) => i !== index),
+        },
+      })
+      .catch((error) => console.error(error));
+
+    if (index === item.status.selected) {
+      handleUpdateStatus(0);
+    }
+  };
+
+  const handleNewStatusOnKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    e.stopPropagation();
+
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const newElement = e.currentTarget.value;
+
+      if (newElement.trim() !== "") {
+        db.todoItems
+          .update(item.id, {
+            status: {
+              ...item.status,
+              elements: [...item.status.elements, newElement],
+            },
+          })
+          .catch((error) => console.error(error));
+      }
+    }
+  };
+
   return (
     <ContextMenuRoot>
       <ContextMenuTrigger asChild>
@@ -75,134 +113,109 @@ export function TodoItemComponent({ item }: Props) {
         >
           <div className={classes.content}>
             <span className={classes.separator} />
-            <div className={classes.text}>
-              <input
-                aria-label="Item Text"
-                autoFocus
-                value={item.text}
-                onChange={(e) => {
+            <input
+              aria-label="Item Text"
+              autoFocus
+              value={item.text}
+              onChange={(e) => {
+                db.todoItems
+                  .update(item.id, {
+                    text: e.target.value,
+                    updatedAt: new Date(),
+                  })
+                  .catch((error) => console.error(error));
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
                   db.todoItems
-                    .update(item.id, {
-                      text: e.target.value,
+                    .add({
+                      text: "",
+                      groupId: item.groupId,
+                      checked: false,
+                      starred: false,
+                      status: {
+                        selected: 0,
+                        elements: ["Storyboard", "Layout", "Sketch"],
+                        hidden: true,
+                      },
+                      createdAt: new Date(),
                       updatedAt: new Date(),
+                      order: item.order + 1,
                     })
                     .catch((error) => console.error(error));
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    db.todoItems
-                      .add({
-                        text: "",
-                        groupId: item.groupId,
-                        checked: false,
-                        starred: false,
-                        status: {
-                          selected: 0,
-                          elements: ["Storyboard", "Layout", "Sketch"],
-                          hidden: true,
-                        },
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                        order: item.order + 1,
-                      })
-                      .catch((error) => console.error(error));
-                  }
-                }}
-              />
-            </div>
+                }
+              }}
+            />
             <button
               aria-label="Delete Item"
-              className={classes.delete}
+              className={classes.deleteButton}
               onClick={handleDeleteItem}
             >
               x
             </button>
           </div>
-          <div
+          <MenubarRoot
             className={classes.status}
-            style={{ display: item.status.hidden ? "none" : "block" }}
+            style={{ display: item.status.hidden ? "none" : "flex" }}
           >
-            <MenubarRoot>
-              <MenubarMenu>
-                <MenubarTrigger
-                  onClick={() => {
-                    let newIndex = item.status.selected - 1;
+            <button
+              className={classes.sideButton}
+              onClick={() => {
+                let newIndex = item.status.selected - 1;
 
-                    if (newIndex < 0) {
-                      newIndex = item.status.elements.length - 1;
-                    }
+                if (newIndex < 0) {
+                  newIndex = item.status.elements.length - 1;
+                }
 
-                    handleUpdateStatus(newIndex);
-                  }}
-                >
-                  {"<"}
-                </MenubarTrigger>
-              </MenubarMenu>
-              <MenubarMenu>
-                <MenubarTrigger>
-                  {item.status.elements[item.status.selected]}
-                </MenubarTrigger>
-                <MenubarPortal>
-                  <MenubarContent>
-                    {item.status.elements.map((element, index) => (
+                handleUpdateStatus(newIndex);
+              }}
+            >
+              {"<"}
+            </button>
+            <MenubarMenu>
+              <MenubarTrigger className={classes.element}>
+                <KeyboardArrowDownIcon />
+                <div>{item.status.elements[item.status.selected]}</div>
+              </MenubarTrigger>
+              <MenubarPortal>
+                <MenubarContent className={classes.menu}>
+                  {item.status.elements.map((element, index) => (
+                    <div key={index}>
+                      <button onClick={() => handleDeleteStatus(index)}>
+                        x
+                      </button>
                       <MenubarItem
-                        key={index}
                         onSelect={() => {
                           handleUpdateStatus(index);
                         }}
                       >
                         {element}
                       </MenubarItem>
-                    ))}
-                    <MenubarItem>
-                      <input
-                        aria-label="New Status Element"
-                        placeholder="New Status Element"
-                        onClick={(e) => e.stopPropagation()}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
+                    </div>
+                  ))}
+                  <input
+                    placeholder="New Status Element"
+                    onKeyDown={handleNewStatusOnKeyDown}
+                  />
+                </MenubarContent>
+              </MenubarPortal>
+            </MenubarMenu>
+            <button
+              className={classes.sideButton}
+              onClick={() => {
+                let newIndex = item.status.selected + 1;
 
-                            const newElement = e.currentTarget.value;
+                if (newIndex >= item.status.elements.length) {
+                  newIndex = 0;
+                }
 
-                            if (newElement.trim() !== "") {
-                              db.todoItems
-                                .update(item.id, {
-                                  status: {
-                                    ...item.status,
-                                    elements: [
-                                      ...item.status.elements,
-                                      newElement,
-                                    ],
-                                  },
-                                })
-                                .catch((error) => console.error(error));
-                            }
-                          }
-                        }}
-                      />
-                    </MenubarItem>
-                  </MenubarContent>
-                </MenubarPortal>
-              </MenubarMenu>
-              <MenubarMenu>
-                <MenubarTrigger
-                  onClick={() => {
-                    let newIndex = item.status.selected + 1;
-
-                    if (newIndex >= item.status.elements.length) {
-                      newIndex = 0;
-                    }
-
-                    handleUpdateStatus(newIndex);
-                  }}
-                >
-                  {">"}
-                </MenubarTrigger>
-              </MenubarMenu>
-            </MenubarRoot>
-          </div>
+                handleUpdateStatus(newIndex);
+              }}
+            >
+              {">"}
+            </button>
+          </MenubarRoot>
         </div>
       </ContextMenuTrigger>
       <ContextMenuContentStyled>
