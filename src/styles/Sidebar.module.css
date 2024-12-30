@@ -5,7 +5,10 @@
   flex-direction: column;
   background-color: #e2e2e2;
   border-right: 2px solid #a9a9a9;
-  gap: 10rem;
+  gap: 1rem;
+  justify-content: space-between;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .header {
