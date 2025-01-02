@@ -80,6 +80,12 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
     }
   };
 
+  const handleLoseFocus = () => {
+    if (item.text.trim() === "") {
+      handleDeleteItem();
+    }
+  };
+
   return (
     <ItemContextMenu item={item} handleDeleteItem={handleDeleteItem}>
       <div
@@ -97,6 +103,7 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
             value={item.text}
             onChange={handleChangeItemText}
             onKeyDown={handleKeyDown}
+            onBlur={handleLoseFocus}
           />
           <button
             aria-label="Delete Item"
