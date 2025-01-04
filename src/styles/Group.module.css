@@ -1,9 +1,9 @@
 .group {
   display: flex;
   gap: 1rem;
-  background-color: white;
   border-left: 8px solid;
   border-radius: 4px;
+  background-color: white;
   padding: 0.5rem;
 }
 
@@ -15,16 +15,16 @@
 
 .category {
   display: flex;
-  padding: 0.5rem;
-  gap: 0.5rem;
-  height: 24px;
   align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  height: 24px;
 }
 
 .category .icon {
+  flex-shrink: 0;
   width: 24px;
   height: 24px;
-  flex-shrink: 0;
 
   &:hover {
     cursor: pointer;

@@ -2,10 +2,10 @@
   display: flex;
   gap: 1rem;
   border-left: 2px solid;
-  background-color: white;
-  border-radius: 4px;
-  padding: 0.5rem;
   border-left: 8px solid;
+  border-radius: 4px;
+  background-color: white;
+  padding: 0.5rem;
 }
 
 .category > input {
@@ -18,11 +18,11 @@
 }
 
 .category .deleteButton {
-  background-color: white;
-  border: none;
-  cursor: pointer;
   opacity: 0;
   transition: opacity 0.2s;
+  cursor: pointer;
+  border: none;
+  background-color: white;
 
   &:hover {
     opacity: 1;

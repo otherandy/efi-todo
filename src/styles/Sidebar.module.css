@@ -7,10 +7,10 @@
 
 .header {
   display: flex;
-  width: 100%;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   padding: 0 0.5rem;
+  width: 100%;
 }
 
 .scrollArea {
@@ -32,11 +32,11 @@
 
 .toggleButton > button {
   border: none;
-  text-align: center;
-  background-color: white;
-  height: 30px;
-  width: 30px;
   border-radius: 9999px;
+  background-color: white;
+  width: 30px;
+  height: 30px;
+  text-align: center;
 
   &:hover {
     background-color: #f2f2f2;
@@ -45,9 +45,9 @@
 
 .title {
   background-color: #f2f2f2;
-  text-align: center;
-  user-select: none;
   padding: 0.5rem;
+  user-select: none;
+  text-align: center;
 }
 
 .lists {
@@ -64,8 +64,8 @@
 
 .lists > div > span {
   flex-grow: 1;
-  background-color: white;
   border-radius: 4px;
+  background-color: white;
   padding: 0.5rem;
 }
 
@@ -77,12 +77,12 @@
 }
 
 .createButton {
-  border: none;
-  background-color: white;
   opacity: 0.5;
   transition: opacity 0.2s;
   cursor: pointer;
+  border: none;
   border-radius: 4px;
+  background-color: white;
 
   &:hover {
     opacity: 1;
