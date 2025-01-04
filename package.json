@@ -18,6 +18,7 @@
     "@kfonts/nanum-square-round": "^0.2.0",
     "@radix-ui/react-context-menu": "^2.2.2",
     "@radix-ui/react-menubar": "^1.1.4",
+    "@radix-ui/react-scroll-area": "^1.2.2",
     "dexie": "^4.0.10",
     "dexie-react-hooks": "^1.1.7",
     "react": "^18.3.1",

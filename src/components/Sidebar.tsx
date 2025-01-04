@@ -1,16 +1,51 @@
+import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/utils/db";
 
+import { ScrollArea } from "@radix-ui/react-scroll-area";
+
+import { DateView } from "@/components/DateView";
 import { CategoryComponent } from "@/components/Category";
 
 import classes from "@/styles/Sidebar.module.css";
 import AddCircleIcon from "@/assets/add_circle.svg?react";
 
-export function Sidebar() {
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
+  isCollapsed: boolean;
+}
+
+export function Sidebar({ isCollapsed, ...props }: SidebarProps) {
   return (
-    <div className={classes.sidebar}>
-      <ListSidebarComponent />
-      <CategorySidebarComponent />
+    <div className={classes.sidebar} {...props}>
+      <div className={classes.header}>
+        <DateView />
+      </div>
+      <ScrollArea className={classes.scrollArea} data-collapsed={isCollapsed}>
+        <ListSidebarComponent />
+        <CategorySidebarComponent />
+      </ScrollArea>
+    </div>
+  );
+}
+
+export function SidebarProvider({ children }: { children: React.ReactNode }) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  return (
+    <>
+      <Sidebar isCollapsed={isCollapsed} />
+      <SidebarToggleButton onClick={() => setIsCollapsed(!isCollapsed)} />
+      {children}
+    </>
+  );
+}
+
+export function SidebarToggleButton({
+  onClick,
+}: React.HTMLAttributes<HTMLButtonElement>) {
+  return (
+    <div className={classes.toggleButton}>
+      <button onClick={onClick}>+</button>
     </div>
   );
 }
@@ -38,7 +73,7 @@ function ListSidebarComponent() {
 
   return (
     <div>
-      <div className={classes.header}>Lists</div>
+      <div className={classes.title}>Lists</div>
       <div className={classes.lists}>
         {lists?.map((list) => (
           <div key={list.id}>
@@ -80,7 +115,7 @@ function CategorySidebarComponent() {
 
   return (
     <div>
-      <div className={classes.header}>Categories</div>
+      <div className={classes.title}>Categories</div>
       <div className={classes.categories}>
         {categories?.map((category) => {
           if (category.hidden) return null;

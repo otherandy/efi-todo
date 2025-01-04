@@ -1,16 +1,13 @@
-import { Sidebar } from "@/components/Sidebar";
-import { DateView } from "@/components/DateView";
+import { SidebarProvider } from "@/components/Sidebar";
 import { ListsComponent } from "@/components/List";
 
 function App() {
   return (
-    <>
-      <Sidebar />
+    <SidebarProvider>
       <main className="main">
-        <DateView />
         <ListsComponent />
       </main>
-    </>
+    </SidebarProvider>
   );
 }
 
