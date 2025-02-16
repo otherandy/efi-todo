@@ -1,17 +1,21 @@
+import { useState } from "react";
+
 import { db } from "@/utils/db";
 import type { Category } from "@/types";
 
 import classes from "@/styles/Category.module.css";
 
 export function CategoryComponent({ category }: { category: Category }) {
-  const handleChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [name, setName] = useState(category.name);
+
+  const handleChangeName = () => {
     db.categories
-      .update(category.id, { name: e.target.value })
+      .update(category.name, { name })
       .catch((error) => console.error(error));
   };
 
   const handleDeleteCategory = () => {
-    db.categories.delete(category.id).catch((error) => console.error(error));
+    db.categories.delete(category.name).catch((error) => console.error(error));
   };
 
   return (
@@ -22,7 +26,11 @@ export function CategoryComponent({ category }: { category: Category }) {
       }}
     >
       <div>{category.icon}</div>
-      <input value={category.name} onChange={handleChangeName} />
+      <input
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        onBlur={handleChangeName}
+      />
       <button className={classes.deleteButton} onClick={handleDeleteCategory}>
         x
       </button>

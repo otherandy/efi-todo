@@ -119,7 +119,7 @@ function CategorySidebarComponent() {
       <div className={classes.categories}>
         {categories?.map((category) => {
           if (category.hidden) return null;
-          return <CategoryComponent key={category.id} category={category} />;
+          return <CategoryComponent key={category.name} category={category} />;
         })}
         <button
           className={classes.createButton}

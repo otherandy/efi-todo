@@ -11,11 +11,15 @@ import {
   type DragEndEvent,
   DragOverlay,
 } from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 import { db } from "@/utils/db";
 import type { List, TodoItem } from "@/types";
 
-import { GroupComponent } from "@/components/Group";
 import { TodoItemComponent } from "@/components/Item";
 import {
   ContextMenuRoot,
@@ -42,15 +46,11 @@ export function ListsComponent() {
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
 
-    const id = active.id as string;
-    if (!id.startsWith("I")) return;
-
+    if (!active) return;
     db.todoItems
-      .get(Number(id.slice(1)))
+      .get(parseInt(active.id as string))
       .then((item) => {
-        if (item) {
-          setOverlayItem(item);
-        }
+        if (item) setOverlayItem(item);
       })
       .catch((error) => console.error(error));
   };
@@ -67,6 +67,30 @@ export function ListsComponent() {
 
     if (!active || !over) return;
     if (active.id === over.id) return;
+
+    const listId = parseInt(
+      (over.data.current as { sortable: { containerId: string } }).sortable
+        .containerId,
+    );
+
+    db.todoItems
+      .where({ listId: listId })
+      .sortBy("order")
+      .then(async (items) => {
+        const sortedItems = arrayMove(
+          items,
+          items.findIndex((item) => item.id === parseInt(active.id as string)),
+          items.findIndex((item) => item.id === parseInt(over.id as string)),
+        );
+
+        for (const item of sortedItems) {
+          await db.todoItems.update(item.id, {
+            order: sortedItems.indexOf(item),
+            updatedAt: new Date(),
+          });
+        }
+      })
+      .catch((error) => console.error(error));
   };
 
   // const handleAddList = () => {
@@ -108,8 +132,8 @@ export function ListsComponent() {
 }
 
 export function ListComponent({ list }: { list: List }) {
-  const groups = useLiveQuery(() =>
-    db.groups.where({ listId: list.id }).sortBy("order"),
+  const items = useLiveQuery(() =>
+    db.todoItems.where({ listId: list.id }).sortBy("order"),
   );
 
   const handleChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,29 +143,23 @@ export function ListComponent({ list }: { list: List }) {
   };
 
   const handleAddItem = () => {
-    db.transaction("rw", db.groups, db.todoItems, async () => {
-      const groupId = await db.groups.add({
+    db.todoItems
+      .add({
         listId: list.id,
-        categoryId: 1,
-        color: "#d9d9d9",
-        order: groups?.length ?? 0,
-      });
-
-      await db.todoItems.add({
-        text: "New Item",
-        groupId,
+        order: items?.length ?? 0,
+        categoryName: "",
+        text: "",
         checked: false,
         starred: false,
         status: {
           selected: 0,
-          elements: ["Storyboard", "Layout", "Sketch"],
+          elements: [],
           hidden: true,
         },
         createdAt: new Date(),
         updatedAt: new Date(),
-        order: 0,
-      });
-    }).catch((error) => console.error(error));
+      })
+      .catch((error) => console.error(error));
   };
 
   return (
@@ -156,19 +174,33 @@ export function ListComponent({ list }: { list: List }) {
           <input value={list.title} onChange={handleChangeTitle} />
         </div>
       </ListContextMenu>
-      <div className={classes.groups}>
-        {groups?.map((group) => (
-          <GroupComponent key={group.id} group={group} />
-        ))}
-        <button
-          title="Add Item"
-          className={classes.createButton}
-          onClick={handleAddItem}
-        >
-          <AddCircleIcon />
-        </button>
-      </div>
+      <ListItems id={list.id} items={items} />
+      <button
+        title="Add Item"
+        className={classes.createButton}
+        onClick={handleAddItem}
+      >
+        <AddCircleIcon />
+      </button>
     </div>
+  );
+}
+
+function ListItems({ id, items }: { id: number; items?: TodoItem[] }) {
+  if (!items) return null;
+
+  return (
+    <SortableContext
+      id={id.toString()}
+      items={items}
+      strategy={verticalListSortingStrategy}
+    >
+      <div className={classes.groups}>
+        {items.map((item) => {
+          return <TodoItemComponent key={item.id} item={item} />;
+        })}
+      </div>
+    </SortableContext>
   );
 }
 
@@ -186,14 +218,7 @@ function ListContextMenu({
   };
 
   const handleDeleteList = () => {
-    db.transaction("rw", db.todoItems, db.groups, db.lists, async () => {
-      const groups = await db.groups.where({ listId: list.id }).toArray();
-      for (const group of groups) {
-        await db.todoItems.where({ groupId: group.id }).delete();
-      }
-      await db.groups.where({ listId: list.id }).delete();
-      await db.lists.delete(list.id);
-    }).catch((error) => console.error(error));
+    db.lists.delete(list.id).catch((error) => console.error(error));
   };
 
   return (

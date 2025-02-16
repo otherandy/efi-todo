@@ -1,8 +1,9 @@
+import { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 import { db } from "@/utils/db";
-import type { TodoItem } from "@/types";
+import type { Category, TodoItem } from "@/types";
 
 import {
   ContextMenuRoot,
@@ -21,17 +22,37 @@ import {
 
 import classes from "@/styles/Item.module.css";
 import KeyboardArrowDownIcon from "@/assets/keyboard_arrow_down.svg?react";
+import { useEffect } from "react";
 
 export function TodoItemComponent({ item }: { item: TodoItem }) {
+  const [category, setCategory] = useState<Category>();
+
+  useEffect(() => {
+    db.categories
+      .get(item.categoryName)
+      .then((category) => {
+        if (category) setCategory(category);
+      })
+      .catch((error) => console.error(error));
+  }, [item.categoryName]);
+
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
-      id: `I${item.id}`,
-      data: { order: item.order },
+      id: item.id,
     });
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
+  };
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    db.todoItems
+      .update(item.id, {
+        categoryName: e.target.value,
+        updatedAt: new Date(),
+      })
+      .catch((error) => console.error(error));
   };
 
   const handleChangeItemText = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,17 +66,6 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
 
   const handleDeleteItem = () => {
     db.todoItems.delete(item.id).catch((error) => console.error(error));
-
-    db.todoItems
-      .where({ groupId: item.groupId })
-      .count()
-      .then(async (count) => {
-        console.log(count);
-        if (count === 0) {
-          await db.groups.delete(item.groupId);
-        }
-      })
-      .catch((error) => console.error(error));
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -64,17 +74,18 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
       db.todoItems
         .add({
           text: "",
-          groupId: item.groupId,
+          listId: item.listId,
+          order: item.order + 1,
+          categoryName: item.categoryName,
           checked: false,
           starred: false,
           status: {
             selected: 0,
-            elements: ["Storyboard", "Layout", "Sketch"],
+            elements: [],
             hidden: true,
           },
           createdAt: new Date(),
           updatedAt: new Date(),
-          order: item.order + 1,
         })
         .catch((error) => console.error(error));
     }
@@ -95,7 +106,17 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
         {...attributes}
         {...listeners}
       >
-        <div className={classes.content}>
+        <div
+          className={classes.content}
+          style={{
+            backgroundColor: category?.color ?? "transparent",
+          }}
+        >
+          <input
+            className={classes.category}
+            value={item.categoryName ?? ""}
+            onChange={handleCategoryChange}
+          />
           <span className={classes.separator} />
           <input
             aria-label="Item Text"

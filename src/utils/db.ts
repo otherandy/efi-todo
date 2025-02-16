@@ -1,52 +1,51 @@
 import Dexie, { type EntityTable } from "dexie";
-import type { Category, Group, List, TodoItem } from "@/types";
+import type { Category, List, TodoItem } from "@/types";
 
 const db = new Dexie("efi-todo") as Dexie & {
   lists: EntityTable<List, "id">;
-  categories: EntityTable<Category, "id">;
-  groups: EntityTable<Group, "id">;
+  categories: EntityTable<Category, "name">;
   todoItems: EntityTable<TodoItem, "id">;
 };
 
 db.version(1).stores({
-  lists: "++id, title",
-  categories: "++id, &name",
-  groups: "++id, listId, categoryId, order",
-  todoItems: "++id, groupId, order",
+  lists: "++id, title, hidden",
+  categories: "&name, icon, hidden",
+  todoItems: "++id, listId",
 });
 
 db.on("populate", async () => {
   await db.lists.bulkAdd([
-    { title: "New List", color: "#d9d9d9", hidden: false },
+    {
+      title: "New List",
+      color: "#e6e6e6",
+      hidden: false,
+    },
   ]);
 
   await db.categories.bulkAdd([
-    { name: "New Category", color: "#d9d9d9", icon: "📁", hidden: false },
-  ]);
-
-  await db.groups.bulkAdd([
     {
-      listId: 1,
-      categoryId: 1,
+      name: "",
       color: "#d9d9d9",
-      order: 0,
+      icon: "📁",
+      hidden: true,
     },
   ]);
 
   await db.todoItems.bulkAdd([
     {
-      groupId: 1,
-      text: "New Item",
+      listId: 1,
+      order: 0,
+      categoryName: "",
+      text: "Item 1",
       checked: false,
       starred: false,
       status: {
         selected: 0,
-        elements: ["Storyboard", "Layout", "Sketch"],
+        elements: [],
         hidden: true,
       },
       createdAt: new Date(),
       updatedAt: new Date(),
-      order: 0,
     },
   ]);
 });
