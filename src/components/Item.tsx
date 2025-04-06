@@ -97,50 +97,74 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
   };
 
   return (
-    <ItemContextMenu item={item} handleDeleteItem={handleDeleteItem}>
-      <div
-        ref={setNodeRef}
-        className={classes.item}
-        data-category={item.categoryName}
-        style={style}
-        {...attributes}
-        {...listeners}
-      >
-        <div className={classes.content}>
-          <span
-            className={classes.decoration}
-            style={
-              {
-                "--cat-color": category?.color,
-              } as React.CSSProperties
-            }
-          />
-          <input
-            aria-label="Category"
-            className={classes.category}
-            value={item.categoryName ?? ""}
-            onChange={handleCategoryChange}
-          />
-          <span className={classes.separator} />
-          <input
-            aria-label="Item Text"
-            autoFocus
-            value={item.text}
-            onChange={handleChangeItemText}
-            onKeyDown={handleKeyDown}
-            onBlur={handleLoseFocus}
-          />
-          <button
-            aria-label="Delete Item"
-            className={classes.deleteButton}
-            onClick={handleDeleteItem}
-          >
-            x
-          </button>
-        </div>
-        <ItemStatusMenu item={item} />
+    <div className={classes.container}>
+      <div>
+        <input
+          type="checkbox"
+          checked={item.starred}
+          onChange={() => {
+            db.todoItems
+              .update(item.id, { starred: !item.starred })
+              .catch((error) => console.error(error));
+          }}
+        />
       </div>
-    </ItemContextMenu>
+      <ItemContextMenu item={item} handleDeleteItem={handleDeleteItem}>
+        <div
+          ref={setNodeRef}
+          className={classes.item}
+          data-category={item.categoryName}
+          style={style}
+          {...attributes}
+          {...listeners}
+        >
+          <div className={classes.content}>
+            <span
+              className={classes.decoration}
+              style={
+                {
+                  "--cat-color": category?.color,
+                } as React.CSSProperties
+              }
+            />
+            <input
+              aria-label="Category"
+              className={classes.category}
+              value={item.categoryName ?? ""}
+              onChange={handleCategoryChange}
+            />
+            <span className={classes.separator} />
+            <input
+              aria-label="Item Text"
+              autoFocus
+              value={item.text}
+              onChange={handleChangeItemText}
+              onKeyDown={handleKeyDown}
+              onBlur={handleLoseFocus}
+            />
+            <button
+              aria-label="Delete Item"
+              className={classes.deleteButton}
+              onClick={handleDeleteItem}
+            >
+              x
+            </button>
+          </div>
+          <ItemStatusMenu item={item} />
+        </div>
+      </ItemContextMenu>
+      <div className={classes.check}>
+        <input
+          type="checkbox"
+          checked={item.checked}
+          onChange={() => {
+            db.todoItems
+              .update(item.id, { checked: !item.checked })
+              .catch((error) => console.error(error));
+          }}
+        />
+      </div>
+    </div>
   );
 }
 
