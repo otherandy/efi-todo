@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/utils/db";
 
@@ -31,10 +31,22 @@ export function Sidebar({ isCollapsed, ...props }: SidebarProps) {
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+  useEffect(() => {
+    const savedState = localStorage.getItem("sidebar-collapsed");
+    if (savedState) {
+      setIsCollapsed(savedState === "true");
+    }
+  }, []);
+
+  const handleToggleSidebar = () => {
+    setIsCollapsed((prev) => !prev);
+    localStorage.setItem("sidebar-collapsed", (!isCollapsed).toString());
+  };
+
   return (
     <>
       <Sidebar isCollapsed={isCollapsed} />
-      <SidebarToggleButton onClick={() => setIsCollapsed(!isCollapsed)} />
+      <SidebarToggleButton onClick={handleToggleSidebar} />
       {children}
     </>
   );
