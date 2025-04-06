@@ -31,7 +31,7 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
     db.categories
       .get(item.categoryName)
       .then((category) => {
-        if (category) setCategory(category);
+        setCategory(category);
       })
       .catch((error) => console.error(error));
   }, [item.categoryName]);
@@ -102,17 +102,22 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
       <div
         ref={setNodeRef}
         className={classes.item}
+        data-category={item.categoryName}
         style={style}
         {...attributes}
         {...listeners}
       >
-        <div
-          className={classes.content}
-          style={{
-            backgroundColor: category?.color ?? "transparent",
-          }}
-        >
+        <div className={classes.content}>
+          <span
+            className={classes.decoration}
+            style={
+              {
+                "--cat-color": category?.color,
+              } as React.CSSProperties
+            }
+          />
           <input
+            aria-label="Category"
             className={classes.category}
             value={item.categoryName ?? ""}
             onChange={handleCategoryChange}

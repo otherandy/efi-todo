@@ -47,6 +47,7 @@ export function ListsComponent() {
     const { active } = event;
 
     if (!active) return;
+
     db.todoItems
       .get(parseInt(active.id as string))
       .then((item) => {
@@ -60,6 +61,27 @@ export function ListsComponent() {
 
     if (!active || !over) return;
     if (active.id === over.id) return;
+
+    const listId = parseInt(
+      (over.data.current as { sortable: { containerId: string } }).sortable
+        .containerId,
+    );
+
+    db.todoItems
+      .get(parseInt(active.id as string))
+      .then((item) => {
+        if (!item) return;
+
+        if (item.listId !== listId) {
+          db.todoItems
+            .update(item.id, {
+              listId: listId,
+              updatedAt: new Date(),
+            })
+            .catch((error) => console.error(error));
+        }
+      })
+      .catch((error) => console.error(error));
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -136,6 +158,13 @@ export function ListComponent({ list }: { list: List }) {
     db.todoItems.where({ listId: list.id }).sortBy("order"),
   );
 
+  // const categories = items?.reduce((acc, item) => {
+  //   if (!acc.includes(item.categoryName)) {
+  //     acc.push(item.categoryName);
+  //   }
+  //   return acc;
+  // }, [] as string[]);
+
   const handleChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     db.lists
       .update(list.id, { title: e.target.value })
@@ -195,7 +224,7 @@ function ListItems({ id, items }: { id: number; items?: TodoItem[] }) {
       items={items}
       strategy={verticalListSortingStrategy}
     >
-      <div className={classes.groups}>
+      <div className={classes.items}>
         {items.map((item) => {
           return <TodoItemComponent key={item.id} item={item} />;
         })}

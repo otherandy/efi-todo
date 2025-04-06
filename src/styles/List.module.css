@@ -54,14 +54,13 @@
   }
 }
 
-.groups {
+.items {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
   padding: 0.5rem 0;
 }
 
-.groups .createButton {
+.items .createButton {
   opacity: 0.5;
   transition: opacity 0.2s;
   cursor: pointer;
