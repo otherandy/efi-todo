@@ -7,11 +7,9 @@ import classes from "@/styles/Category.module.css";
 import {
   ContextMenuContentStyled,
   ContextMenuRoot,
-} from "@/components/ui/ContextMenu";
-import {
   ContextMenuItem,
   ContextMenuTrigger,
-} from "@radix-ui/react-context-menu";
+} from "@/components/ui/ContextMenu";
 import { ColorPicker } from "@/components/ui/ColorPicker";
 
 export function CategoryComponent({ category }: { category: Category }) {

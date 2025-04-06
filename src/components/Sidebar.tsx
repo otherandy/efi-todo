@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/utils/db";
+import { db, deleteList } from "@/utils/db";
 
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 import { DateView } from "@/components/DateView";
 import { CategoryComponent } from "@/components/Category";
+
+import {
+  ContextMenuContentStyled,
+  ContextMenuRoot,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/ContextMenu";
 
 import classes from "@/styles/Sidebar.module.css";
 import AddCircleIcon from "@/assets/add_circle.svg?react";
@@ -88,14 +95,27 @@ function ListSidebarComponent() {
       <div className={classes.title}>Lists</div>
       <div className={classes.lists}>
         {lists?.map((list) => (
-          <div key={list.id}>
-            <input
-              type="checkbox"
-              checked={!list.hidden}
-              onChange={() => handleToggleHidden(list.id)}
-            />
-            <span>{list.title}</span>
-          </div>
+          <ContextMenuRoot key={list.id}>
+            <ContextMenuTrigger>
+              <div className={classes.container}>
+                <input
+                  type="checkbox"
+                  checked={!list.hidden}
+                  onChange={() => handleToggleHidden(list.id)}
+                />
+                <span className={classes.title}>{list.title}</span>
+              </div>
+            </ContextMenuTrigger>
+            <ContextMenuContentStyled>
+              <ContextMenuItem
+                onClick={() => {
+                  deleteList(list.id);
+                }}
+              >
+                Delete
+              </ContextMenuItem>
+            </ContextMenuContentStyled>
+          </ContextMenuRoot>
         ))}
         <button
           className={classes.createButton}

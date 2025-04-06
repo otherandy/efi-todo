@@ -17,7 +17,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-import { db } from "@/utils/db";
+import { db, deleteList } from "@/utils/db";
 import type { List, TodoItem } from "@/types";
 
 import { TodoItemComponent } from "@/components/Item";
@@ -276,7 +276,7 @@ function ListContextMenu({
   };
 
   const handleDeleteList = () => {
-    db.lists.delete(list.id).catch((error) => console.error(error));
+    deleteList(list.id);
   };
 
   return (
