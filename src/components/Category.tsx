@@ -12,7 +12,7 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@radix-ui/react-context-menu";
-import { ColorPicker } from "./ui/ColorPicker";
+import { ColorPicker } from "@/components/ui/ColorPicker";
 
 export function CategoryComponent({ category }: { category: Category }) {
   const [name, setName] = useState(category.name);

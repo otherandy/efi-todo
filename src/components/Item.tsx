@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -12,17 +12,16 @@ import {
   ContextMenuItem,
 } from "@/components/ui/ContextMenu";
 import {
-  MenubarMenu,
-  MenubarRoot,
-  MenubarTrigger,
-  MenubarContent,
-  MenubarItem,
-  MenubarPortal,
-} from "@/components/ui/Menubar";
+  DropdownMenuRoot,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+} from "@/components/ui/DropdownMenu";
 
 import classes from "@/styles/Item.module.css";
+import classesM from "@/styles/Menubar.module.css";
 import KeyboardArrowDownIcon from "@/assets/keyboard_arrow_down.svg?react";
-import { useEffect } from "react";
 
 export function TodoItemComponent({ item }: { item: TodoItem }) {
   const [category, setCategory] = useState<Category>();
@@ -206,7 +205,7 @@ function ItemStatusMenu({ item }: { item: TodoItem }) {
   };
 
   return (
-    <MenubarRoot
+    <div
       className={classes.status}
       style={{ display: item.status.hidden ? "none" : "flex" }}
     >
@@ -216,41 +215,41 @@ function ItemStatusMenu({ item }: { item: TodoItem }) {
       >
         {"<"}
       </button>
-      <MenubarMenu>
-        <MenubarTrigger className={classes.element}>
+      <DropdownMenuRoot>
+        <DropdownMenuTrigger className={classes.element}>
           <KeyboardArrowDownIcon />
           <div>{item.status.elements[item.status.selected]}</div>
-        </MenubarTrigger>
-        <MenubarPortal>
-          <MenubarContent className={classes.menu}>
+        </DropdownMenuTrigger>
+        <DropdownMenuPortal>
+          <DropdownMenuContent className={classesM.menu}>
             {item.status.elements.map((element, index) => (
               <div key={index}>
                 <button onClick={() => handleDeleteStatusElement(index)}>
                   x
                 </button>
-                <MenubarItem
+                <DropdownMenuItem
                   onSelect={() => {
                     handleUpdateStatus(index);
                   }}
                 >
                   {element}
-                </MenubarItem>
+                </DropdownMenuItem>
               </div>
             ))}
             <input
               placeholder="New Status Element"
               onKeyDown={handleKeyDownNewStatus}
             />
-          </MenubarContent>
-        </MenubarPortal>
-      </MenubarMenu>
+          </DropdownMenuContent>
+        </DropdownMenuPortal>
+      </DropdownMenuRoot>
       <button
         className={classes.sideButton}
         onClick={() => handleSideClick("Right")}
       >
         {">"}
       </button>
-    </MenubarRoot>
+    </div>
   );
 }
 

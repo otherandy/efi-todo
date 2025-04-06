@@ -27,8 +27,17 @@ import {
   ContextMenuContentStyled,
   ContextMenuItem,
 } from "@/components/ui/ContextMenu";
+import { ColorPicker } from "@/components/ui/ColorPicker";
+import {
+  DropdownMenuItem,
+  DropdownMenuRoot,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuPortal,
+} from "@/components/ui/DropdownMenu";
 
 import classes from "@/styles/List.module.css";
+import classesCM from "@/styles/ContextMenu.module.css";
 import AddCircleIcon from "@/assets/add_circle.svg?react";
 
 export function ListsComponent() {
@@ -158,6 +167,8 @@ export function ListComponent({ list }: { list: List }) {
     db.todoItems.where({ listId: list.id }).sortBy("order"),
   );
 
+  const [displayColorPicker, setDisplayColorPicker] = useState(false);
+
   // const categories = items?.reduce((acc, item) => {
   //   if (!acc.includes(item.categoryName)) {
   //     acc.push(item.categoryName);
@@ -191,17 +202,51 @@ export function ListComponent({ list }: { list: List }) {
       .catch((error) => console.error(error));
   };
 
+  const handleChangeColor = (color: string) => {
+    db.lists.update(list.id, { color }).catch((error) => console.error(error));
+  };
+
   return (
     <div className={classes.list}>
-      <ListContextMenu list={list}>
-        <div
-          className={classes.title}
-          style={{
-            backgroundColor: list.color,
-          }}
-        >
-          <input value={list.title} onChange={handleChangeTitle} />
-        </div>
+      <ListContextMenu
+        list={list}
+        setDisplayColorPicker={setDisplayColorPicker}
+      >
+        <>
+          <div
+            className={classes.title}
+            style={{
+              backgroundColor: list.color,
+            }}
+          >
+            <input value={list.title} onChange={handleChangeTitle} />
+            <DropdownMenuRoot>
+              <DropdownMenuTrigger asChild>
+                <button>:</button>
+              </DropdownMenuTrigger>
+              <DropdownMenuPortal>
+                <DropdownMenuContent className={classesCM.contextMenu}>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setDisplayColorPicker(true);
+                    }}
+                  >
+                    Color
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenuPortal>
+            </DropdownMenuRoot>
+          </div>
+          {displayColorPicker && (
+            <ColorPicker
+              color={list.color}
+              onChange={(color) => {
+                handleChangeColor(color);
+                setDisplayColorPicker(false);
+              }}
+            />
+          )}
+        </>
       </ListContextMenu>
       <ListItems id={list.id} items={items} />
       <button
@@ -212,6 +257,43 @@ export function ListComponent({ list }: { list: List }) {
         <AddCircleIcon />
       </button>
     </div>
+  );
+}
+
+function ListContextMenu({
+  list,
+  setDisplayColorPicker,
+  children,
+}: {
+  list: List;
+  setDisplayColorPicker: (value: boolean) => void;
+  children: React.ReactNode;
+}) {
+  const handleHideList = () => {
+    db.lists
+      .update(list.id, { hidden: true })
+      .catch((error) => console.error(error));
+  };
+
+  const handleDeleteList = () => {
+    db.lists.delete(list.id).catch((error) => console.error(error));
+  };
+
+  return (
+    <ContextMenuRoot>
+      <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
+      <ContextMenuContentStyled>
+        <ContextMenuItem onSelect={handleHideList}>Hide</ContextMenuItem>
+        <ContextMenuItem
+          onClick={() => {
+            setDisplayColorPicker(true);
+          }}
+        >
+          Color
+        </ContextMenuItem>
+        <ContextMenuItem onSelect={handleDeleteList}>Delete</ContextMenuItem>
+      </ContextMenuContentStyled>
+    </ContextMenuRoot>
   );
 }
 
@@ -230,34 +312,5 @@ function ListItems({ id, items }: { id: number; items?: TodoItem[] }) {
         })}
       </div>
     </SortableContext>
-  );
-}
-
-function ListContextMenu({
-  list,
-  children,
-}: {
-  list: List;
-  children: React.ReactNode;
-}) {
-  const handleHideList = () => {
-    db.lists
-      .update(list.id, { hidden: true })
-      .catch((error) => console.error(error));
-  };
-
-  const handleDeleteList = () => {
-    db.lists.delete(list.id).catch((error) => console.error(error));
-  };
-
-  return (
-    <ContextMenuRoot>
-      <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
-      <ContextMenuContentStyled>
-        <ContextMenuItem onSelect={handleHideList}>Hide</ContextMenuItem>
-        <ContextMenuItem>Color</ContextMenuItem>
-        <ContextMenuItem onSelect={handleDeleteList}>Delete</ContextMenuItem>
-      </ContextMenuContentStyled>
-    </ContextMenuRoot>
   );
 }
