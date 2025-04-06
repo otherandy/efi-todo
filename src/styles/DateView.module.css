@@ -1,19 +1,47 @@
 .date {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  flex-direction: column;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   background-color: white;
-  padding: 0.5rem;
   width: fit-content;
   pointer-events: none;
   user-select: none;
 }
 
-.date > span {
+.date .header {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  color: #555;
+  font-size: 0.825rem;
+  text-align: center;
+}
+
+.date .body {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  padding: 0 0.5rem 0.5rem 0.5rem;
+  height: 2rem;
+  font-size: 1.25rem;
+}
+
+.date .body .emoji {
+  align-self: flex-start;
+}
+
+.divider {
   border-radius: 1px;
   background-color: #e0e0e0;
   width: 1px;
   height: 1rem;
+}
+
+.dividerHorizontal {
+  border-radius: 1px;
+  background-color: #e0e0e0;
+  width: 100%;
+  height: 1px;
 }
