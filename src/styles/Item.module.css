@@ -6,6 +6,7 @@
 
 .item {
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
@@ -47,7 +48,7 @@
   }
 }
 
-.decoration {
+.lineDecoration {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -62,6 +63,17 @@
     height: 100%;
     content: "";
   }
+}
+
+.cornerDecoration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  border-radius: 8px 0 0 0;
+  background-color: var(--cat-color);
+  width: 12px;
+  height: 12px;
 }
 
 .separator {
@@ -123,4 +135,20 @@
 .status .element > div {
   flex-grow: 1;
   text-align: center;
+}
+
+.star > input {
+  display: none;
+}
+
+.star > input:checked + svg {
+  fill: rgb(246, 211, 71);
+}
+
+.star > svg {
+  cursor: pointer;
+}
+
+.check > input {
+  display: none;
 }

@@ -21,7 +21,11 @@ import {
 
 import classes from "@/styles/Item.module.css";
 import classesM from "@/styles/Menubar.module.css";
+
 import KeyboardArrowDownIcon from "@/assets/keyboard_arrow_down.svg?react";
+import StarIcon from "@/assets/star.svg?react";
+import CircleIcon from "@/assets/circle.svg?react";
+import CheckCircleIcon from "@/assets/check_circle.svg?react";
 
 export function TodoItemComponent({ item }: { item: TodoItem }) {
   const [category, setCategory] = useState<Category>();
@@ -98,7 +102,7 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
 
   return (
     <div className={classes.container}>
-      <div>
+      <label className={classes.star}>
         <input
           type="checkbox"
           checked={item.starred}
@@ -108,7 +112,8 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
               .catch((error) => console.error(error));
           }}
         />
-      </div>
+        <StarIcon />
+      </label>
       <ItemContextMenu item={item} handleDeleteItem={handleDeleteItem}>
         <div
           ref={setNodeRef}
@@ -120,7 +125,7 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
         >
           <div className={classes.content}>
             <span
-              className={classes.decoration}
+              className={classes.cornerDecoration}
               style={
                 {
                   "--cat-color": category?.color,
@@ -153,7 +158,7 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
           <ItemStatusMenu item={item} />
         </div>
       </ItemContextMenu>
-      <div className={classes.check}>
+      <label className={classes.check}>
         <input
           type="checkbox"
           checked={item.checked}
@@ -163,7 +168,8 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
               .catch((error) => console.error(error));
           }}
         />
-      </div>
+        {item.checked ? <CheckCircleIcon /> : <CircleIcon />}
+      </label>
     </div>
   );
 }
