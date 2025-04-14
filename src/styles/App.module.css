@@ -1,0 +1,9 @@
+.bottom {
+  display: flex;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  gap: 1rem;
+  z-index: 1;
+  padding: 1rem;
+}

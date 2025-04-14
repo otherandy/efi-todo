@@ -4,7 +4,6 @@ import { db, deleteList } from "@/utils/db";
 
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 
-import { DateView } from "@/components/DateView";
 import { CategoryComponent } from "@/components/Category";
 
 import {
@@ -24,9 +23,7 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 export function Sidebar({ isCollapsed, ...props }: SidebarProps) {
   return (
     <div className={classes.sidebar} {...props}>
-      <div className={classes.header}>
-        <DateView />
-      </div>
+      <div className={classes.header}></div>
       <ScrollArea className={classes.scrollArea} data-collapsed={isCollapsed}>
         <ListSidebarComponent />
         <CategorySidebarComponent />
@@ -53,18 +50,24 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Sidebar isCollapsed={isCollapsed} />
-      <SidebarToggleButton onClick={handleToggleSidebar} />
+      <SidebarToggleButton
+        isCollapsed={isCollapsed}
+        onClick={handleToggleSidebar}
+      />
       {children}
     </>
   );
 }
 
 export function SidebarToggleButton({
+  isCollapsed,
   onClick,
-}: React.HTMLAttributes<HTMLButtonElement>) {
+}: React.HTMLAttributes<HTMLButtonElement> & {
+  isCollapsed: boolean;
+}) {
   return (
     <div className={classes.toggleButton}>
-      <button onClick={onClick}>+</button>
+      <button onClick={onClick}>{isCollapsed ? ">" : "<"}</button>
     </div>
   );
 }
