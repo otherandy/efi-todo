@@ -28,21 +28,14 @@ import {
   ContextMenuItem,
 } from "@/components/ui/ContextMenu";
 import { ColorPicker } from "@/components/ui/ColorPicker";
-import {
-  DropdownMenuItem,
-  DropdownMenuRoot,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuPortal,
-} from "@/components/ui/DropdownMenu";
 
 import classes from "@/styles/List.module.css";
-import classesCM from "@/styles/ContextMenu.module.css";
 import AddCircleIcon from "@/assets/add_circle.svg?react";
 
 export function ListsComponent() {
   const lists = useLiveQuery(() => db.lists.toArray());
   const [overlayItem, setOverlayItem] = useState<TodoItem | null>(null);
+  const [hovering, setHovering] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -53,12 +46,15 @@ export function ListsComponent() {
   );
 
   const handleDragStart = (event: DragStartEvent) => {
-    const { active } = event;
+    setHovering(true);
 
+    const { active } = event;
     if (!active) return;
 
+    const itemId = parseInt(active.id as string);
+
     db.todoItems
-      .get(parseInt(active.id as string))
+      .get(itemId)
       .then((item) => {
         if (item) setOverlayItem(item);
       })
@@ -67,9 +63,9 @@ export function ListsComponent() {
 
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
-
     if (!active || !over) return;
-    if (active.id === over.id) return;
+
+    const itemId = parseInt(active.id as string);
 
     const listId = parseInt(
       (over.data.current as { sortable: { containerId: string } }).sortable
@@ -77,7 +73,7 @@ export function ListsComponent() {
     );
 
     db.todoItems
-      .get(parseInt(active.id as string))
+      .get(itemId)
       .then((item) => {
         if (!item) return;
 
@@ -94,6 +90,8 @@ export function ListsComponent() {
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
+    setHovering(false);
+
     const { active, over } = event;
 
     if (!active || !over) return;
@@ -124,16 +122,6 @@ export function ListsComponent() {
       .catch((error) => console.error(error));
   };
 
-  // const handleAddList = () => {
-  //   db.lists
-  //     .add({
-  //       title: "New List",
-  //       color: "#d9d9d9",
-  //       hidden: false,
-  //     })
-  //     .catch((error) => console.error(error));
-  // };
-
   return (
     <DndContext
       sensors={sensors}
@@ -145,15 +133,10 @@ export function ListsComponent() {
       <div className={classes.lists}>
         {lists?.map((list) => {
           if (list.hidden) return null;
-          return <ListComponent key={list.id} list={list} />;
+          return (
+            <ListComponent key={list.id} list={list} hovering={hovering} />
+          );
         })}
-        {/* <button
-          title="Add List"
-          className={classes.createButton}
-          onClick={handleAddList}
-        >
-          <AddCircleIcon />
-        </button> */}
       </div>
       <DragOverlay>
         {overlayItem !== null && <TodoItemComponent item={overlayItem} />}
@@ -162,19 +145,18 @@ export function ListsComponent() {
   );
 }
 
-export function ListComponent({ list }: { list: List }) {
+export function ListComponent({
+  list,
+  hovering,
+}: {
+  list: List;
+  hovering?: boolean;
+}) {
   const items = useLiveQuery(() =>
     db.todoItems.where({ listId: list.id }).sortBy("order"),
   );
 
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
-
-  // const categories = items?.reduce((acc, item) => {
-  //   if (!acc.includes(item.categoryName)) {
-  //     acc.push(item.categoryName);
-  //   }
-  //   return acc;
-  // }, [] as string[]);
 
   const handleChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     db.lists
@@ -212,43 +194,25 @@ export function ListComponent({ list }: { list: List }) {
         list={list}
         setDisplayColorPicker={setDisplayColorPicker}
       >
-        <>
-          <div
-            className={classes.title}
-            style={{
-              backgroundColor: list.color,
-            }}
-          >
-            <input value={list.title} onChange={handleChangeTitle} />
-            <DropdownMenuRoot>
-              <DropdownMenuTrigger asChild>
-                <button>:</button>
-              </DropdownMenuTrigger>
-              <DropdownMenuPortal>
-                <DropdownMenuContent className={classesCM.contextMenu}>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setDisplayColorPicker(true);
-                    }}
-                  >
-                    Color
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenuPortal>
-            </DropdownMenuRoot>
-          </div>
-          {displayColorPicker && (
-            <ColorPicker
-              color={list.color}
-              onChange={(color) => {
-                handleChangeColor(color);
-                setDisplayColorPicker(false);
-              }}
-            />
-          )}
-        </>
+        <div
+          className={classes.title}
+          style={{
+            backgroundColor: list.color,
+          }}
+        >
+          <input value={list.title} onChange={handleChangeTitle} />
+        </div>
       </ListContextMenu>
-      <ListItems id={list.id} items={items} />
+      {displayColorPicker && (
+        <ColorPicker
+          color={list.color}
+          onChange={(color) => {
+            handleChangeColor(color);
+            setDisplayColorPicker(false);
+          }}
+        />
+      )}
+      <ListItems id={list.id} items={items} hovering={hovering} />
       <button
         title="Add Item"
         className={classes.createButton}
@@ -297,8 +261,18 @@ function ListContextMenu({
   );
 }
 
-function ListItems({ id, items }: { id: number; items?: TodoItem[] }) {
-  if (!items) return null;
+function ListItems({
+  id,
+  items,
+  hovering,
+}: {
+  id: number;
+  items?: TodoItem[];
+  hovering?: boolean;
+}) {
+  if (!items) {
+    return null;
+  }
 
   return (
     <SortableContext
@@ -307,9 +281,16 @@ function ListItems({ id, items }: { id: number; items?: TodoItem[] }) {
       strategy={verticalListSortingStrategy}
     >
       <div className={classes.items}>
-        {items.map((item) => {
-          return <TodoItemComponent key={item.id} item={item} />;
-        })}
+        {items.length === 0 && hovering ? (
+          // <div className={classes.emptyDropZone}>
+          //   <p>Drop items here</p>
+          // </div>
+          <></>
+        ) : (
+          items.map((item) => {
+            return <TodoItemComponent key={item.id} item={item} />;
+          })
+        )}
       </div>
     </SortableContext>
   );
