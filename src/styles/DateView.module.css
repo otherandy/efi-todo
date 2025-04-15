@@ -32,17 +32,3 @@
 .date .body .emoji {
   align-self: flex-start;
 }
-
-.divider {
-  border-radius: 1px;
-  background-color: #e0e0e0;
-  width: 1px;
-  height: 1rem;
-}
-
-.dividerHorizontal {
-  border-radius: 1px;
-  background-color: #e0e0e0;
-  width: 100%;
-  height: 1px;
-}

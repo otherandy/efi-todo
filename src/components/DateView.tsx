@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import classes from "@/styles/DateView.module.css";
+import { Separator } from "@/components/ui/Separator";
 
 const months = [
   "JAN",
@@ -33,15 +34,15 @@ export function DateView() {
     <div className={classes.date}>
       <div className={classes.header}>
         <div>Y{date.getFullYear()}</div>
-        <span className={classes.divider} />
+        <Separator />
         <div>W{String(Math.ceil(date.getDate() / 7)).padStart(2, "0")}</div>
       </div>
-      <span className={classes.dividerHorizontal} />
+      <Separator orientation="horizontal" />
       <div className={classes.body}>
         <div>{months[date.getMonth()]}</div>
-        <span className={classes.divider} />
+        <Separator />
         <div>{date.getDate()}</div>
-        <span className={classes.divider} />
+        <Separator />
         <div className={classes.emoji}>{days[date.getDay()]}</div>
       </div>
     </div>
