@@ -6,21 +6,19 @@ import { db } from "@/utils/db";
 import type { Category, TodoItem } from "@/types";
 
 import {
-  ContextMenuRoot,
+  ContextMenu,
   ContextMenuTrigger,
-  ContextMenuContentStyled,
+  ContextMenuContent,
   ContextMenuItem,
 } from "@/components/ui/ContextMenu";
 import {
-  DropdownMenuRoot,
+  DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuPortal,
 } from "@/components/ui/DropdownMenu";
 
 import classes from "@/styles/Item.module.css";
-import classesM from "@/styles/Menubar.module.css";
 
 import KeyboardArrowDownIcon from "@/assets/keyboard_arrow_down.svg?react";
 import StarIcon from "@/assets/star.svg?react";
@@ -245,34 +243,32 @@ function ItemStatusMenu({ item }: { item: TodoItem }) {
       >
         {"<"}
       </button>
-      <DropdownMenuRoot>
+      <DropdownMenu>
         <DropdownMenuTrigger className={classes.element}>
           <KeyboardArrowDownIcon />
           <div>{item.status.elements[item.status.selected]}</div>
         </DropdownMenuTrigger>
-        <DropdownMenuPortal>
-          <DropdownMenuContent className={classesM.menu}>
-            {item.status.elements.map((element, index) => (
-              <div key={index}>
-                <button onClick={() => handleDeleteStatusElement(index)}>
-                  x
-                </button>
-                <DropdownMenuItem
-                  onSelect={() => {
-                    handleUpdateStatus(index);
-                  }}
-                >
-                  {element}
-                </DropdownMenuItem>
-              </div>
-            ))}
-            <input
-              placeholder="New Status Element"
-              onKeyDown={handleKeyDownNewStatus}
-            />
-          </DropdownMenuContent>
-        </DropdownMenuPortal>
-      </DropdownMenuRoot>
+        <DropdownMenuContent>
+          {item.status.elements.map((element, index) => (
+            <div key={index}>
+              <button onClick={() => handleDeleteStatusElement(index)}>
+                x
+              </button>
+              <DropdownMenuItem
+                onSelect={() => {
+                  handleUpdateStatus(index);
+                }}
+              >
+                {element}
+              </DropdownMenuItem>
+            </div>
+          ))}
+          <input
+            placeholder="New Status Element"
+            onKeyDown={handleKeyDownNewStatus}
+          />
+        </DropdownMenuContent>
+      </DropdownMenu>
       <button
         className={classes.sideButton}
         onClick={() => handleSideClick("Right")}
@@ -316,9 +312,9 @@ function ItemContextMenu({
   };
 
   return (
-    <ContextMenuRoot>
+    <ContextMenu>
       <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
-      <ContextMenuContentStyled>
+      <ContextMenuContent>
         <ContextMenuItem onSelect={handleToggleCheck}>
           {item.checked ? "Uncheck" : "Check"}
         </ContextMenuItem>
@@ -329,7 +325,7 @@ function ItemContextMenu({
           {item.status.hidden ? "Show" : "Hide"} Status
         </ContextMenuItem>
         <ContextMenuItem onSelect={handleDeleteItem}>Delete</ContextMenuItem>
-      </ContextMenuContentStyled>
-    </ContextMenuRoot>
+      </ContextMenuContent>
+    </ContextMenu>
   );
 }

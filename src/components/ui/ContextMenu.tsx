@@ -1,24 +1,25 @@
-import * as ContextMenu from "@radix-ui/react-context-menu";
+import * as ContextMenuPrimitive from "@radix-ui/react-context-menu";
+import * as React from "react";
+
 import classes from "@/styles/ContextMenu.module.css";
 
-export const ContextMenuRoot = ContextMenu.Root;
+export const ContextMenu = ContextMenuPrimitive.Root;
+export const ContextMenuTrigger = ContextMenuPrimitive.Trigger;
+export const ContextMenuItem = ContextMenuPrimitive.Item;
 
-export const ContextMenuTrigger = ContextMenu.Trigger;
+export const ContextMenuContent = React.forwardRef<
+  React.ElementRef<typeof ContextMenuPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Content>
+>(({ children, ...props }, ref) => (
+  <ContextMenuPrimitive.Portal>
+    <ContextMenuPrimitive.Content
+      ref={ref}
+      className={classes.content}
+      {...props}
+    >
+      {children}
+    </ContextMenuPrimitive.Content>
+  </ContextMenuPrimitive.Portal>
+));
 
-export const ContextMenuContent = ContextMenu.Content;
-
-export const ContextMenuItem = ContextMenu.Item;
-
-export function ContextMenuContentStyled({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <ContextMenu.Portal>
-      <ContextMenu.Content className={classes.contextMenu}>
-        {children}
-      </ContextMenu.Content>
-    </ContextMenu.Portal>
-  );
-}
+ContextMenuContent.displayName = "ContextMenuContent";

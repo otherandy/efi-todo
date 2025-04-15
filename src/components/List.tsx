@@ -22,14 +22,15 @@ import type { List, TodoItem } from "@/types";
 
 import { TodoItemComponent } from "@/components/Item";
 import {
-  ContextMenuRoot,
+  ContextMenu,
   ContextMenuTrigger,
-  ContextMenuContentStyled,
+  ContextMenuContent,
   ContextMenuItem,
 } from "@/components/ui/ContextMenu";
 import { ColorPicker } from "@/components/ui/ColorPicker";
 
 import classes from "@/styles/List.module.css";
+
 import AddCircleIcon from "@/assets/add_circle.svg?react";
 
 export function ListsComponent() {
@@ -244,9 +245,9 @@ function ListContextMenu({
   };
 
   return (
-    <ContextMenuRoot>
+    <ContextMenu>
       <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
-      <ContextMenuContentStyled>
+      <ContextMenuContent>
         <ContextMenuItem onSelect={handleHideList}>Hide</ContextMenuItem>
         <ContextMenuItem
           onClick={() => {
@@ -256,8 +257,8 @@ function ListContextMenu({
           Color
         </ContextMenuItem>
         <ContextMenuItem onSelect={handleDeleteList}>Delete</ContextMenuItem>
-      </ContextMenuContentStyled>
-    </ContextMenuRoot>
+      </ContextMenuContent>
+    </ContextMenu>
   );
 }
 

@@ -5,15 +5,15 @@ import { db, deleteList } from "@/utils/db";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 import { CategoryComponent } from "@/components/Category";
-
 import {
-  ContextMenuContentStyled,
-  ContextMenuRoot,
+  ContextMenu,
+  ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/ContextMenu";
 
 import classes from "@/styles/Sidebar.module.css";
+
 import AddCircleIcon from "@/assets/add_circle.svg?react";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -98,7 +98,7 @@ function ListSidebarComponent() {
       <div className={classes.title}>Lists</div>
       <div className={classes.lists}>
         {lists?.map((list) => (
-          <ContextMenuRoot key={list.id}>
+          <ContextMenu key={list.id}>
             <ContextMenuTrigger>
               <div className={classes.container}>
                 <input
@@ -109,7 +109,7 @@ function ListSidebarComponent() {
                 <span className={classes.title}>{list.title}</span>
               </div>
             </ContextMenuTrigger>
-            <ContextMenuContentStyled>
+            <ContextMenuContent>
               <ContextMenuItem
                 onClick={() => {
                   deleteList(list.id);
@@ -117,8 +117,8 @@ function ListSidebarComponent() {
               >
                 Delete
               </ContextMenuItem>
-            </ContextMenuContentStyled>
-          </ContextMenuRoot>
+            </ContextMenuContent>
+          </ContextMenu>
         ))}
         <button
           className={classes.createButton}

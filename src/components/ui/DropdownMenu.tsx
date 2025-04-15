@@ -1,11 +1,25 @@
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+import * as React from "react";
 
-export const DropdownMenuRoot = DropdownMenu.Root;
+import classes from "@/styles/DropdownMenu.module.css";
 
-export const DropdownMenuTrigger = DropdownMenu.Trigger;
+export const DropdownMenu = DropdownMenuPrimitive.Root;
+export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+export const DropdownMenuItem = DropdownMenuPrimitive.Item;
 
-export const DropdownMenuPortal = DropdownMenu.Portal;
+export const DropdownMenuContent = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
+>(({ children, ...props }, ref) => (
+  <DropdownMenuPrimitive.Portal>
+    <DropdownMenuPrimitive.Content
+      ref={ref}
+      className={classes.content}
+      {...props}
+    >
+      {children}
+    </DropdownMenuPrimitive.Content>
+  </DropdownMenuPrimitive.Portal>
+));
 
-export const DropdownMenuContent = DropdownMenu.Content;
-
-export const DropdownMenuItem = DropdownMenu.Item;
+DropdownMenuContent.displayName = "DropdownMenuContent";

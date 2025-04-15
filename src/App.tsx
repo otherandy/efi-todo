@@ -10,7 +10,7 @@ function App() {
     <SidebarProvider>
       <main className="main">
         <ListsComponent />
-        <div className={classes.bottom}>
+        <div className={classes.toast}>
           <ResetButton />
           <DateView />
         </div>
