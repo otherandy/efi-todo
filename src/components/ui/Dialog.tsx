@@ -10,7 +10,7 @@ export const DialogContent = React.forwardRef<
 >(({ children, ...props }, ref) => (
   <DialogPrimitive.Portal>
     <DialogPrimitive.Overlay />
-    <DialogPrimitive.Content {...props} ref={ref}>
+    <DialogPrimitive.Content ref={ref} {...props}>
       {children}
       <DialogPrimitive.Close aria-label="Close">X</DialogPrimitive.Close>
     </DialogPrimitive.Content>

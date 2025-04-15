@@ -112,7 +112,7 @@ function ListContextMenu({
 }) {
   const handleHideList = () => {
     db.lists
-      .update(list.id, { hidden: true })
+      .update(list.id, { hidden: 1 })
       .catch((error) => console.error(error));
   };
 

@@ -1,9 +1,10 @@
 type Color = string;
+type Hidden = 0 | 1;
 
 interface List {
   id: number;
   title: string;
-  hidden: boolean;
+  hidden: Hidden;
   color: Color;
 }
 

@@ -8,8 +8,8 @@ const db = new Dexie("efi-todo") as Dexie & {
 };
 
 db.version(1).stores({
-  lists: "++id, title, hidden",
-  categories: "&name, icon, hidden",
+  lists: "++id, hidden",
+  categories: "&name",
   todoItems: "++id, listId",
 });
 
@@ -18,7 +18,7 @@ db.on("populate", async () => {
     {
       title: "New List",
       color: "#90abbf",
-      hidden: false,
+      hidden: 0,
     },
   ]);
 
