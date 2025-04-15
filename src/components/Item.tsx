@@ -47,14 +47,14 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
     transition,
   };
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    db.todoItems
-      .update(item.id, {
-        categoryName: e.target.value,
-        updatedAt: new Date(),
-      })
-      .catch((error) => console.error(error));
-  };
+  // const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   db.todoItems
+  //     .update(item.id, {
+  //       categoryName: e.target.value,
+  //       updatedAt: new Date(),
+  //     })
+  //     .catch((error) => console.error(error));
+  // };
 
   const handleChangeItemText = (e: React.ChangeEvent<HTMLInputElement>) => {
     db.todoItems
@@ -116,7 +116,6 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
         <div
           ref={setNodeRef}
           className={classes.item}
-          data-category={item.categoryName}
           style={style}
           {...attributes}
           {...listeners}
@@ -130,12 +129,12 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
                 } as React.CSSProperties
               }
             />
-            <input
+            {/* <input
               aria-label="Category"
               className={classes.category}
               value={item.categoryName ?? ""}
               onChange={handleCategoryChange}
-            />
+            /> */}
             <span className={classes.separator} />
             <input
               aria-label="Item Text"

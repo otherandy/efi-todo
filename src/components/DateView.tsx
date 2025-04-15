@@ -34,13 +34,7 @@ export function DateView() {
       <div className={classes.header}>
         <div>Y{date.getFullYear()}</div>
         <span className={classes.divider} />
-        <div>
-          W
-          {Math.ceil(
-            (date.getTime() - new Date(date.getFullYear(), 0, 1).getTime()) /
-              (1000 * 60 * 60 * 24 * 7),
-          )}
-        </div>
+        <div>W{String(Math.ceil(date.getDate() / 7)).padStart(2, "0")}</div>
       </div>
       <span className={classes.dividerHorizontal} />
       <div className={classes.body}>

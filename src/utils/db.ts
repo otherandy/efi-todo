@@ -17,7 +17,7 @@ db.on("populate", async () => {
   await db.lists.bulkAdd([
     {
       title: "New List",
-      color: "#e6e6e6",
+      color: "#90abbf",
       hidden: false,
     },
   ]);

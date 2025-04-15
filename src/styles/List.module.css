@@ -1,18 +1,36 @@
-.lists {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  gap: 1rem;
-  padding: 1rem;
+.list {
+  background-color: #e6eaec;
+  padding: 0.5rem;
+  min-width: 30rem;
+  max-width: 100%;
 }
 
-@media (min-width: 1024px) {
-  .lists {
-    flex-direction: row;
+.title {
+  padding: 0 2rem;
+}
+
+.title > div {
+  border-radius: 6px;
+  background-color: #f1f1f1;
+  padding: 0.5rem;
+}
+
+.title input {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1;
+  text-align: center;
+  text-overflow: ellipsis;
+
+  &:focus {
+    outline: none;
   }
 }
 
-.lists .createButton {
+.createButton {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -27,32 +45,6 @@
 
   &:hover {
     opacity: 0.8;
-  }
-}
-
-.list {
-  min-width: 18.75rem;
-  max-width: 100%;
-}
-
-.title {
-  border-radius: 4px;
-  background-color: #f1f1f1;
-  padding: 0.5rem;
-}
-
-.title > input {
-  border: none;
-  background-color: transparent;
-  width: 100%;
-  font-weight: 400;
-  font-size: 1rem;
-  line-height: 1;
-  text-align: center;
-  text-overflow: ellipsis;
-
-  &:focus {
-    outline: none;
   }
 }
 
