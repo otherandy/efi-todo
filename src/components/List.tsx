@@ -66,6 +66,15 @@ export function ListComponent({
     db.lists.update(list.id, { color }).catch((error) => console.error(error));
   };
 
+  const getOppositeColor = (hex: string) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    const avg = (r + g + b) / 3;
+    const oppositeColor = avg > 127 ? "#000000" : "#FFFFFF";
+    return oppositeColor;
+  };
+
   return (
     <div className={classes.list}>
       <ListContextMenu
@@ -74,23 +83,43 @@ export function ListComponent({
       >
         <div className={classes.title}>
           <div
+            className={classes.color}
             style={{
               backgroundColor: list.color,
             }}
           >
-            <input value={list.title} onChange={handleChangeTitle} />
+            <input
+              className={classes.input}
+              style={{
+                color: getOppositeColor(list.color),
+              }}
+              value={list.title}
+              onChange={handleChangeTitle}
+            />
           </div>
+          {displayColorPicker && (
+            <>
+              <div
+                style={{
+                  position: "fixed",
+                  top: "0px",
+                  right: "0px",
+                  bottom: "0px",
+                  left: "0px",
+                }}
+                onClick={() => setDisplayColorPicker(false)}
+              />
+              <ColorPicker
+                color={list.color}
+                onChange={(color) => {
+                  handleChangeColor(color);
+                  setDisplayColorPicker(false);
+                }}
+              />
+            </>
+          )}
         </div>
       </ListContextMenu>
-      {displayColorPicker && (
-        <ColorPicker
-          color={list.color}
-          onChange={(color) => {
-            handleChangeColor(color);
-            setDisplayColorPicker(false);
-          }}
-        />
-      )}
       <ListItems id={list.id} items={items} hovering={hovering} />
       <div className={classes.createButton}>
         <button title="Add Item" onClick={handleAddItem}>

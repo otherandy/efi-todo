@@ -1,4 +1,6 @@
 .list {
+  display: flex;
+  flex-direction: column;
   border-radius: 8px;
   background-color: #e6eaec;
   padding: 1rem 0;
@@ -8,16 +10,17 @@
 }
 
 .title {
+  position: relative;
   padding: 0 2rem;
 }
 
-.title > div {
-  border-radius: 6px;
+.title .color {
+  border-radius: 8px;
   background-color: #f1f1f1;
   padding: 0.5rem;
 }
 
-.title input {
+.title .input {
   border: none;
   background-color: transparent;
   width: 100%;
@@ -36,7 +39,7 @@
   padding: 0 2rem;
 }
 
-.createButton button {
+.createButton > button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -44,7 +47,7 @@
   transition: opacity 0.2s;
   cursor: pointer;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: white;
   padding: 0.5rem;
   width: 100%;
@@ -56,6 +59,7 @@
 
 .items {
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.5rem 0;
