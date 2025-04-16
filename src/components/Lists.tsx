@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import {
   DndContext,
-  closestCorners,
+  rectIntersection,
   useSensors,
   useSensor,
   PointerSensor,
@@ -119,7 +119,7 @@ export function ListsComponent() {
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCorners}
+      collisionDetection={rectIntersection}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
