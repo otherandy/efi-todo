@@ -1,3 +1,7 @@
+.app {
+  width: 100%;
+}
+
 .floatingLeft {
   display: flex;
   position: absolute;
@@ -16,4 +20,5 @@
   gap: 1rem;
   z-index: 1;
   padding: 1rem;
+  height: 10vh;
 }
