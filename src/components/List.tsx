@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
+
+import { useDroppable } from "@dnd-kit/core";
 import {
   SortableContext,
   verticalListSortingStrategy,
@@ -8,7 +10,7 @@ import {
 import { db, deleteList } from "@/utils/db";
 import type { List, TodoItem } from "@/types";
 
-import { TodoItemComponent } from "@/components/Item";
+import { FullTodoItemComponent } from "@/components/Item";
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -145,24 +147,29 @@ function ListItems({
   items?: TodoItem[];
   hovering?: boolean;
 }) {
+  const { setNodeRef } = useDroppable({
+    id: "List-" + id,
+    data: { type: "list", listId: id },
+  });
+
   if (!items) {
     return null;
   }
 
   return (
     <SortableContext
-      id={id.toString()}
+      id={"List-" + id}
       items={items}
       strategy={verticalListSortingStrategy}
     >
-      <div className={classes.items}>
+      <div ref={setNodeRef} className={classes.items}>
         {items.length === 0 && hovering ? (
           <div className={classes.emptyDropZone}>
             <p>Drop items here</p>
           </div>
         ) : (
           items.map((item) => {
-            return <TodoItemComponent key={item.id} item={item} />;
+            return <FullTodoItemComponent key={item.id} item={item} />;
           })
         )}
       </div>

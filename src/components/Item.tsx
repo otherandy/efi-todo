@@ -25,7 +25,39 @@ import StarIcon from "@/assets/star.svg?react";
 import CircleIcon from "@/assets/circle.svg?react";
 import CheckCircleIcon from "@/assets/check_circle.svg?react";
 
-export function TodoItemComponent({ item }: { item: TodoItem }) {
+export function FullTodoItemComponent({ item }: { item: TodoItem }) {
+  return (
+    <div className={classes.container}>
+      <label className={classes.star}>
+        <input
+          type="checkbox"
+          checked={item.starred}
+          onChange={() => {
+            db.todoItems
+              .update(item.id, { starred: !item.starred })
+              .catch((error) => console.error(error));
+          }}
+        />
+        <StarIcon />
+      </label>
+      <TodoItemComponent item={item} />
+      <label className={classes.check}>
+        <input
+          type="checkbox"
+          checked={item.checked}
+          onChange={() => {
+            db.todoItems
+              .update(item.id, { checked: !item.checked })
+              .catch((error) => console.error(error));
+          }}
+        />
+        {item.checked ? <CheckCircleIcon /> : <CircleIcon />}
+      </label>
+    </div>
+  );
+}
+
+function TodoItemComponent({ item }: { item: TodoItem }) {
   const [category, setCategory] = useState<Category>();
 
   useEffect(() => {
@@ -39,22 +71,14 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
 
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
-      id: item.id,
+      id: `Item-${item.id}`,
+      data: { type: "item", listId: item.listId },
     });
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
   };
-
-  // const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   db.todoItems
-  //     .update(item.id, {
-  //       categoryName: e.target.value,
-  //       updatedAt: new Date(),
-  //     })
-  //     .catch((error) => console.error(error));
-  // };
 
   const handleChangeItemText = (e: React.ChangeEvent<HTMLInputElement>) => {
     db.todoItems
@@ -68,6 +92,21 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
   const handleDeleteItem = () => {
     db.todoItems.delete(item.id).catch((error) => console.error(error));
   };
+
+  const handleLoseFocus = () => {
+    if (item.text.trim() === "") {
+      handleDeleteItem();
+    }
+  };
+
+  // const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   db.todoItems
+  //     .update(item.id, {
+  //       categoryName: e.target.value,
+  //       updatedAt: new Date(),
+  //     })
+  //     .catch((error) => console.error(error));
+  // };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -92,81 +131,83 @@ export function TodoItemComponent({ item }: { item: TodoItem }) {
     }
   };
 
-  const handleLoseFocus = () => {
-    if (item.text.trim() === "") {
-      handleDeleteItem();
-    }
-  };
+  return (
+    <ItemContextMenu item={item} handleDeleteItem={handleDeleteItem}>
+      <div
+        ref={setNodeRef}
+        className={classes.item}
+        style={style}
+        {...attributes}
+        {...listeners}
+      >
+        <div className={classes.content}>
+          <span
+            className={classes.cornerDecoration}
+            style={
+              {
+                "--cat-color": category?.color,
+              } as React.CSSProperties
+            }
+          />
+          {/* <input
+        aria-label="Category"
+        className={classes.category}
+        value={item.categoryName ?? ""}
+        onChange={handleCategoryChange}
+      /> */}
+          <span className={classes.separator} />
+          <input
+            aria-label="Item Text"
+            autoFocus
+            value={item.text}
+            onChange={handleChangeItemText}
+            onKeyDown={handleKeyDown}
+            onBlur={handleLoseFocus}
+          />
+          <button
+            aria-label="Delete Item"
+            className={classes.deleteButton}
+            onClick={handleDeleteItem}
+          >
+            x
+          </button>
+        </div>
+        <ItemStatusMenu item={item} />
+      </div>
+    </ItemContextMenu>
+  );
+}
+
+export function DummyTodoItemComponent({ item }: { item: TodoItem }) {
+  const [category, setCategory] = useState<Category>();
+
+  useEffect(() => {
+    db.categories
+      .get(item.categoryName)
+      .then((category) => {
+        setCategory(category);
+      })
+      .catch((error) => console.error(error));
+  }, [item.categoryName]);
 
   return (
-    <div className={classes.container}>
-      <label className={classes.star}>
-        <input
-          type="checkbox"
-          checked={item.starred}
-          onChange={() => {
-            db.todoItems
-              .update(item.id, { starred: !item.starred })
-              .catch((error) => console.error(error));
-          }}
+    <div className={classes.item}>
+      <div className={classes.content}>
+        <span
+          className={classes.cornerDecoration}
+          style={
+            {
+              "--cat-color": category?.color,
+            } as React.CSSProperties
+          }
         />
-        <StarIcon />
-      </label>
-      <ItemContextMenu item={item} handleDeleteItem={handleDeleteItem}>
-        <div
-          ref={setNodeRef}
-          className={classes.item}
-          style={style}
-          {...attributes}
-          {...listeners}
-        >
-          <div className={classes.content}>
-            <span
-              className={classes.cornerDecoration}
-              style={
-                {
-                  "--cat-color": category?.color,
-                } as React.CSSProperties
-              }
-            />
-            {/* <input
-              aria-label="Category"
-              className={classes.category}
-              value={item.categoryName ?? ""}
-              onChange={handleCategoryChange}
-            /> */}
-            <span className={classes.separator} />
-            <input
-              aria-label="Item Text"
-              autoFocus
-              value={item.text}
-              onChange={handleChangeItemText}
-              onKeyDown={handleKeyDown}
-              onBlur={handleLoseFocus}
-            />
-            <button
-              aria-label="Delete Item"
-              className={classes.deleteButton}
-              onClick={handleDeleteItem}
-            >
-              x
-            </button>
-          </div>
-          <ItemStatusMenu item={item} />
-        </div>
-      </ItemContextMenu>
-      <label className={classes.check}>
-        <input
-          type="checkbox"
-          checked={item.checked}
-          onChange={() => {
-            db.todoItems
-              .update(item.id, { checked: !item.checked })
-              .catch((error) => console.error(error));
-          }}
-        />
-        {item.checked ? <CheckCircleIcon /> : <CircleIcon />}
-      </label>
+        <span className={classes.separator} />
+        <input aria-label="Item Text" autoFocus value={item.text} readOnly />
+        <button aria-label="Delete Item" className={classes.deleteButton}>
+          x
+        </button>
+      </div>
+      <ItemStatusMenu item={item} />
     </div>
   );
 }

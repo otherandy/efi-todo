@@ -17,7 +17,7 @@ import { db } from "@/utils/db";
 import type { TodoItem } from "@/types";
 
 import { ListComponent } from "@/components/List";
-import { TodoItemComponent } from "@/components/Item";
+import { DummyTodoItemComponent } from "@/components/Item";
 
 import classes from "@/styles/Lists.module.css";
 
@@ -35,12 +35,14 @@ export function ListsComponent() {
   );
 
   const handleDragStart = (event: DragStartEvent) => {
-    setHovering(true);
-
     const { active } = event;
     if (!active) return;
+    if (!active.data.current) return;
 
-    const itemId = parseInt(active.id as string);
+    if (active.data.current.type !== "item") return;
+    setHovering(true);
+
+    const itemId = parseInt(active.id.toString().split("-")[1]);
 
     db.todoItems
       .get(itemId)
@@ -53,13 +55,15 @@ export function ListsComponent() {
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
     if (!active || !over) return;
+    if (active.id === over.id) return;
+    if (!active.data.current) return;
 
-    const itemId = parseInt(active.id as string);
+    if (active.data.current.type !== "item") return;
 
-    const listId = parseInt(
-      (over.data.current as { sortable: { containerId: string } }).sortable
-        .containerId,
-    );
+    if (!over.data.current) return;
+
+    const itemId = parseInt(active.id.toString().split("-")[1]);
+    const listId = over.data.current.listId as number;
 
     db.todoItems
       .get(itemId)
@@ -86,19 +90,24 @@ export function ListsComponent() {
     if (!active || !over) return;
     if (active.id === over.id) return;
 
-    const listId = parseInt(
-      (over.data.current as { sortable: { containerId: string } }).sortable
-        .containerId,
-    );
+    if (!active.data.current) return;
+    if (active.data.current.type !== "item") return;
+
+    if (!over.data.current) return;
+    if (over.data.current.type !== "item") return;
+
+    const activeItemId = parseInt(active.id.toString().split("-")[1]);
+    const overItemId = parseInt(over.id.toString().split("-")[1]);
+    const overListId = over.data.current.listId as number;
 
     db.todoItems
-      .where({ listId: listId })
+      .where({ listId: overListId })
       .sortBy("order")
       .then(async (items) => {
         const sortedItems = arrayMove(
           items,
-          items.findIndex((item) => item.id === parseInt(active.id as string)),
-          items.findIndex((item) => item.id === parseInt(over.id as string)),
+          items.findIndex((item) => item.id === activeItemId),
+          items.findIndex((item) => item.id === overItemId),
         );
 
         for (const item of sortedItems) {
@@ -128,7 +137,7 @@ export function ListsComponent() {
         })}
       </div>
       <DragOverlay>
-        {overlayItem !== null && <TodoItemComponent item={overlayItem} />}
+        {overlayItem !== null && <DummyTodoItemComponent item={overlayItem} />}
       </DragOverlay>
     </DndContext>
   );

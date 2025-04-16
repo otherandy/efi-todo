@@ -4,6 +4,7 @@
   flex-wrap: wrap;
   gap: 1rem;
   padding: 1rem;
+  height: 80%;
 }
 
 @media (min-width: 1024px) {
