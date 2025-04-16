@@ -33,16 +33,16 @@ export function DateView() {
   return (
     <div className={classes.date}>
       <div className={classes.header}>
-        <div>Y{date.getFullYear()}</div>
+        <div>{date.getFullYear()}</div>
         <Separator />
         <div>W{String(Math.ceil(date.getDate() / 7)).padStart(2, "0")}</div>
       </div>
       <Separator orientation="horizontal" />
       <div className={classes.body}>
         <div>{months[date.getMonth()]}</div>
-        <Separator />
+        <Separator style={{ height: "60%" }} />
         <div>{date.getDate()}</div>
-        <Separator />
+        <Separator style={{ height: "60%" }} />
         <div className={classes.emoji}>{days[date.getDay()]}</div>
       </div>
     </div>

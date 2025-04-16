@@ -1,6 +1,7 @@
 .date {
   display: flex;
   flex-direction: column;
+  justify-content: space-evenly;
   box-shadow: 0 2px rgba(0, 0, 0, 0.1);
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -13,8 +14,7 @@
 .date .header {
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
+  gap: 1.5rem;
   color: #555;
   font-size: 0.825rem;
   text-align: center;
@@ -23,9 +23,8 @@
 .date .body {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 2rem;
-  height: 2rem;
+  gap: 1rem;
+  padding: 0.2rem 2rem;
   font-size: 1.25rem;
 }
 
