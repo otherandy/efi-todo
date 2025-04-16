@@ -1,4 +1,4 @@
-.title {
+.header {
   background-color: #f2f2f2;
   padding: 0.5rem;
   user-select: none;
@@ -12,12 +12,12 @@
   padding: 0.5rem;
 }
 
-.lists .container {
+.container {
   display: flex;
   gap: 0.5rem;
 }
 
-.lists .container .title {
+.title {
   flex-grow: 1;
   border-radius: 4px;
   background-color: white;
@@ -32,7 +32,7 @@
 }
 
 .createButton {
-  opacity: 0.5;
+  opacity: 0;
   transition: opacity 0.2s;
   cursor: pointer;
   border: none;

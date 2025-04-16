@@ -36,14 +36,16 @@ export function HiddenListManager() {
   return (
     <Accordion type="single" collapsible>
       <AccordionItem value="hidden-lists">
-        <AccordionTrigger>Lists</AccordionTrigger>
+        <div className={classes.container}>
+          <AccordionTrigger>Lists</AccordionTrigger>
+          <AddListButton />
+        </div>
         <AccordionContent className={classes.lists}>
           {lists?.map((list) => (
             <button key={list.id} onClick={() => handleSetUnhidden(list.id)}>
               {list.title}
             </button>
           ))}
-          <AddListButton />
         </AccordionContent>
       </AccordionItem>
     </Accordion>
@@ -63,7 +65,7 @@ export function ListManager() {
 
   return (
     <div>
-      <div className={classes.title}>Lists</div>
+      <div className={classes.header}>Lists</div>
       <div className={classes.lists}>
         {lists?.map((list) => (
           <ContextMenu key={list.id}>
@@ -134,7 +136,7 @@ export function CategoryManager() {
 
   return (
     <div>
-      <div className={classes.title}>Categories</div>
+      <div className={classes.header}>Categories</div>
       <div className={classes.categories}>
         {categories?.map((category) => {
           if (category.hidden) return null;
