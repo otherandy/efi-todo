@@ -11,7 +11,7 @@
   user-select: none;
 }
 
-.date .header {
+.header {
   display: flex;
   justify-content: center;
   gap: 1.5rem;
@@ -20,7 +20,7 @@
   text-align: center;
 }
 
-.date .body {
+.body {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -28,6 +28,6 @@
   font-size: 1.25rem;
 }
 
-.date .body .emoji {
+.emoji {
   align-self: flex-start;
 }

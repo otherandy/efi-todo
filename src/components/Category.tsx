@@ -46,6 +46,7 @@ export function CategoryComponent({ category }: { category: Category }) {
           >
             <div>{category.icon}</div>
             <input
+              className={classes.categoryName}
               value={name}
               onChange={(e) => setName(e.target.value)}
               onBlur={handleChangeName}

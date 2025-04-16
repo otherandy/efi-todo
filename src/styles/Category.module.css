@@ -3,12 +3,12 @@
   gap: 1rem;
   border-left: 2px solid;
   border-left: 8px solid;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: white;
   padding: 0.5rem;
 }
 
-.category > input {
+.categoryName {
   border: none;
   background-color: transparent;
 
@@ -17,7 +17,7 @@
   }
 }
 
-.category .deleteButton {
+.deleteButton {
   opacity: 0;
   transition: opacity 0.2s;
   cursor: pointer;

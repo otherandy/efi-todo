@@ -19,7 +19,7 @@
 
 .title {
   flex-grow: 1;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: white;
   padding: 0.5rem;
 }
@@ -36,7 +36,7 @@
   transition: opacity 0.2s;
   cursor: pointer;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: white;
 
   &:hover {
