@@ -23,13 +23,7 @@ import classes from "@/styles/List.module.css";
 
 import AddCircleIcon from "@/assets/add_circle.svg?react";
 
-export function ListComponent({
-  list,
-  hovering,
-}: {
-  list: List;
-  hovering?: boolean;
-}) {
+export function ListComponent({ list }: { list: List }) {
   const items = useLiveQuery(() =>
     db.todoItems.where({ listId: list.id }).sortBy("order"),
   );
@@ -120,7 +114,7 @@ export function ListComponent({
           )}
         </div>
       </ListContextMenu>
-      <ListItems id={list.id} items={items} hovering={hovering} />
+      <ListItems id={list.id} items={items} />
       <div className={classes.createButton}>
         <button title="Add Item" onClick={handleAddItem}>
           <AddCircleIcon />
@@ -167,15 +161,7 @@ function ListContextMenu({
   );
 }
 
-function ListItems({
-  id,
-  items,
-  hovering,
-}: {
-  id: number;
-  items?: TodoItem[];
-  hovering?: boolean;
-}) {
+function ListItems({ id, items }: { id: number; items?: TodoItem[] }) {
   const { setNodeRef } = useDroppable({
     id: "List-" + id,
     data: { type: "list", listId: id },
@@ -192,15 +178,9 @@ function ListItems({
       strategy={verticalListSortingStrategy}
     >
       <div ref={setNodeRef} className={classes.items}>
-        {items.length === 0 && hovering ? (
-          <div className={classes.emptyDropZone}>
-            <p>Drop items here</p>
-          </div>
-        ) : (
-          items.map((item) => {
-            return <FullTodoItemComponent key={item.id} item={item} />;
-          })
-        )}
+        {items.map((item) => {
+          return <FullTodoItemComponent key={item.id} item={item} />;
+        })}
       </div>
     </SortableContext>
   );

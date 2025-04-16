@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import {
   DndContext,
-  closestCenter,
+  closestCorners,
   useSensors,
   useSensor,
   PointerSensor,
@@ -24,7 +24,6 @@ import classes from "@/styles/Lists.module.css";
 export function ListsComponent() {
   const lists = useLiveQuery(() => db.lists.toArray());
   const [overlayItem, setOverlayItem] = useState<TodoItem | null>(null);
-  const [hovering, setHovering] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -40,7 +39,6 @@ export function ListsComponent() {
     if (!active.data.current) return;
 
     if (active.data.current.type !== "item") return;
-    setHovering(true);
 
     const itemId = parseInt(active.id.toString().split("-")[1]);
 
@@ -83,8 +81,6 @@ export function ListsComponent() {
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
-    setHovering(false);
-
     const { active, over } = event;
 
     if (!active || !over) return;
@@ -123,7 +119,7 @@ export function ListsComponent() {
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCenter}
+      collisionDetection={closestCorners}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
@@ -131,9 +127,7 @@ export function ListsComponent() {
       <div className={classes.lists}>
         {lists?.map((list) => {
           if (list.hidden) return null;
-          return (
-            <ListComponent key={list.id} list={list} hovering={hovering} />
-          );
+          return <ListComponent key={list.id} list={list} />;
         })}
       </div>
       <DragOverlay>
