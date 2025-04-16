@@ -1,18 +1,16 @@
 .container {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
 .item {
   display: flex;
   position: relative;
+  flex-grow: 1;
   flex-direction: column;
   gap: 0.5rem;
   border-radius: 6px;
   background-color: white;
   padding: 0.5rem;
-  width: 100%;
 }
 
 .item:first-child .separator {
@@ -125,6 +123,13 @@
   text-align: center;
 }
 
+.star {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+}
+
 .star > input {
   display: none;
 }
@@ -135,6 +140,14 @@
 
 .star > svg {
   cursor: pointer;
+  width: 100%;
+}
+
+.check {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
 }
 
 .check > input {

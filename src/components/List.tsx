@@ -90,13 +90,11 @@ export function ListComponent({
         />
       )}
       <ListItems id={list.id} items={items} hovering={hovering} />
-      <button
-        title="Add Item"
-        className={classes.createButton}
-        onClick={handleAddItem}
-      >
-        <AddCircleIcon />
-      </button>
+      <div className={classes.createButton}>
+        <button title="Add Item" onClick={handleAddItem}>
+          <AddCircleIcon />
+        </button>
+      </div>
     </div>
   );
 }

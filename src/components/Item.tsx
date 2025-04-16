@@ -262,10 +262,7 @@ function ItemStatusMenu({ item }: { item: TodoItem }) {
               </DropdownMenuItem>
             </div>
           ))}
-          <input
-            placeholder="New Status Element"
-            onKeyDown={handleKeyDownNewStatus}
-          />
+          <input placeholder="" onKeyDown={handleKeyDownNewStatus} />
         </DropdownMenuContent>
       </DropdownMenu>
       <button
