@@ -9,7 +9,10 @@ import classes from "@/styles/Emoji.module.css";
 
 type Props = {
   itemId: number;
-} & Omit<PickerProps, "className" | "customEmojis" | "onEmojiClick">;
+} & Omit<
+  PickerProps,
+  "className" | "customEmojis" | "onEmojiClick" | "previewConfig"
+>;
 
 export function EmojiPicker(props: Props) {
   const customEmojis = useLiveQuery(() => db.customEmojis.toArray(), []);
@@ -31,6 +34,9 @@ export function EmojiPicker(props: Props) {
       <Picker
         customEmojis={customEmojis}
         onEmojiClick={onEmojiClick}
+        previewConfig={{
+          showPreview: false,
+        }}
         {...props}
       />
     </div>

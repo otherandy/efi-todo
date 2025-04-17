@@ -1,5 +1,5 @@
 .picker {
-  position: fixed;
+  position: absolute;
   z-index: 20;
 }
 
