@@ -1,16 +1,18 @@
 import Dexie, { type EntityTable } from "dexie";
-import type { Category, List, TodoItem } from "@/types";
+import type { Category, CustomEmoji, List, TodoItem } from "@/types";
 
 const db = new Dexie("efi-todo") as Dexie & {
   lists: EntityTable<List, "id">;
   categories: EntityTable<Category, "name">;
   todoItems: EntityTable<TodoItem, "id">;
+  customEmojis: EntityTable<CustomEmoji, "id">;
 };
 
 db.version(1).stores({
   lists: "++id, hidden",
   categories: "&name",
   todoItems: "++id, listId",
+  customEmojis: "&id",
 });
 
 db.on("populate", async () => {
@@ -35,10 +37,11 @@ db.on("populate", async () => {
     {
       listId: 1,
       order: 0,
-      categoryName: "",
       text: "Item 1",
       checked: false,
       starred: false,
+      categoryName: "",
+      emoji: "",
       status: {
         selected: 0,
         elements: [],

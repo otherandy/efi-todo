@@ -22,3 +22,18 @@
   padding: 1rem;
   height: 8vh;
 }
+
+.portal {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  margin: -1px;
+  border: 0px;
+  padding: 0px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0px, 0px, 0px, 0px);
+  clip-path: inset(100%);
+  white-space: nowrap;
+}

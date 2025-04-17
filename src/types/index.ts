@@ -12,10 +12,11 @@ interface TodoItem {
   id: number;
   listId: number;
   order: number;
-  categoryName: string;
   text: string;
   checked: boolean;
   starred: boolean;
+  categoryName: string;
+  emoji: string;
   status: Status;
   createdAt: Date;
   updatedAt: Date;
@@ -34,4 +35,10 @@ interface Status {
   hidden: boolean;
 }
 
-export type { List, TodoItem, Category, Status };
+interface CustomEmoji {
+  id: string;
+  names: string[];
+  imgUrl: string;
+}
+
+export type { List, TodoItem, Category, Status, CustomEmoji };

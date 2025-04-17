@@ -8,7 +8,7 @@ export function ColorPicker({
   onChange: (color: string) => void;
 }) {
   return (
-    <div style={{ position: "absolute", zIndex: 2 }}>
+    <div style={{ position: "absolute", zIndex: 10 }}>
       <TwitterPicker
         color={color}
         onChangeComplete={(color: { hex: string }) => onChange(color.hex)}

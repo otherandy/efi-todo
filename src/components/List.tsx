@@ -41,10 +41,11 @@ export function ListComponent({ list }: { list: List }) {
       .add({
         listId: list.id,
         order: items?.length ?? 0,
-        categoryName: "",
         text: "",
         checked: false,
         starred: false,
+        categoryName: "",
+        emoji: "",
         status: {
           selected: 0,
           elements: [],

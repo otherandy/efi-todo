@@ -5,6 +5,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { db } from "@/utils/db";
 import type { Category, TodoItem } from "@/types";
 
+import { ItemEmoji } from "@/components/Emoji";
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -116,9 +117,10 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
           text: "",
           listId: item.listId,
           order: item.order + 1,
-          categoryName: item.categoryName,
           checked: false,
           starred: false,
+          categoryName: item.categoryName,
+          emoji: "",
           status: {
             selected: 0,
             elements: [],
@@ -150,12 +152,13 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
             }
           />
           {/* <input
-        aria-label="Category"
-        className={classes.category}
-        value={item.categoryName ?? ""}
-        onChange={handleCategoryChange}
-      /> */}
-          <span className={classes.separator} />
+            aria-label="Category"
+            className={classes.category}
+            value={item.categoryName ?? ""}
+            onChange={handleCategoryChange}
+          /> */}
+          <ItemEmoji itemId={item.id} emoji={item.emoji} />
+          {/* <span className={classes.separator} /> */}
           <input
             aria-label="Item Text"
             autoFocus
