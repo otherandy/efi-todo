@@ -6,32 +6,50 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/ContextMenu";
+
+import { EmojiUploader } from "@/components/EmojiUploader";
 
 import classes from "@/styles/Settings.module.css";
 
-import CircleIcon from "@/assets/circle.svg?react";
-import { EmojiUploader } from "@/components/EmojiUploader";
+import MoreVertIcon from "@/assets/more_vert.svg?react";
 
 export function Settings() {
   return (
     <Dialog>
-      <DialogTrigger>
-        <CircleIcon />
-      </DialogTrigger>
+      <ContextMenu>
+        <ContextMenuTrigger className={classes.settingsButton}>
+          <MoreVertIcon />
+        </ContextMenuTrigger>
+        <ContextMenuContent>
+          <ContextMenuItem asChild>
+            <DialogTrigger>
+              <span>Custom Emoji</span>
+            </DialogTrigger>
+          </ContextMenuItem>
+          <ContextMenuItem
+            onClick={() => {
+              db.delete({
+                disableAutoOpen: true,
+              })
+                .then(() => {
+                  window.location.reload();
+                })
+                .catch(console.error);
+            }}
+          >
+            <span>Reset</span>
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
       <DialogContent>
-        <DialogTitle>Settings</DialogTitle>
-        <div className={classes.dialog}>
-          <div>
-            <h3>General</h3>
-            <br />
-            <EmojiUploader />
-          </div>
-          <div>
-            <h3>Danger Area</h3>
-            <br />
-            <ResetButton />
-          </div>
-        </div>
+        <DialogTitle>Custom Emoji</DialogTitle>
+        <EmojiUploader />
       </DialogContent>
     </Dialog>
   );

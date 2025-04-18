@@ -33,6 +33,15 @@
   padding: 1rem 2rem;
 }
 
+.topBar {
+  display: flex;
+  top: 0;
+  left: 0;
+  gap: 1rem;
+  z-index: 1;
+  background-color: white;
+}
+
 .portal {
   position: fixed;
   top: 0px;

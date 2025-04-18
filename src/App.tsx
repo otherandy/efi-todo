@@ -9,6 +9,9 @@ import classes from "@/styles/App.module.css";
 function App() {
   return (
     <main className={classes.app}>
+      <div className={classes.topBar}>
+        <Settings />
+      </div>
       <ListsComponent />
       <div className={classes.bottomLeft}>
         <HiddenListManager />
@@ -16,9 +19,6 @@ function App() {
       <div className={classes.bottomRight}>
         <DateView />
         <Picture />
-      </div>
-      <div className={classes.topRight}>
-        <Settings />
       </div>
     </main>
   );
