@@ -2,7 +2,7 @@
   width: 100%;
 }
 
-.floatingLeft {
+.bottomLeft {
   display: flex;
   position: absolute;
   bottom: 0;
@@ -12,15 +12,25 @@
   padding: 1rem;
 }
 
-.floatingRight {
+.bottomRight {
   display: flex;
   position: absolute;
   right: 0;
   bottom: 0;
   gap: 1rem;
   z-index: 1;
-  padding: 1rem;
+  padding: 1rem 2rem;
   height: 8vh;
+}
+
+.topRight {
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+  gap: 1rem;
+  z-index: 1;
+  padding: 1rem 2rem;
 }
 
 .portal {

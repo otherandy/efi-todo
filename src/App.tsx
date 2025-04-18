@@ -1,6 +1,6 @@
 import { ListsComponent } from "@/components/Lists";
 import { HiddenListManager } from "@/components/Managers";
-import { ResetButton } from "@/components/Settings";
+import { Settings } from "@/components/Settings";
 import { DateView } from "@/components/DateView";
 import { Picture } from "@/components/Picture";
 
@@ -10,13 +10,15 @@ function App() {
   return (
     <main className={classes.app}>
       <ListsComponent />
-      <div className={classes.floatingLeft}>
+      <div className={classes.bottomLeft}>
         <HiddenListManager />
       </div>
-      <div className={classes.floatingRight}>
-        <ResetButton />
+      <div className={classes.bottomRight}>
         <DateView />
         <Picture />
+      </div>
+      <div className={classes.topRight}>
+        <Settings />
       </div>
     </main>
   );

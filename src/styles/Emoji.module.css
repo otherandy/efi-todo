@@ -4,7 +4,11 @@
 }
 
 .emoji {
-  display: inline-flex;
+  position: relative;
+}
+
+.emoji > span {
+  display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;

@@ -1,6 +1,7 @@
 import Picker, {
   type PickerProps,
   type EmojiClickData,
+  EmojiStyle,
 } from "emoji-picker-react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/utils/db";
@@ -34,6 +35,7 @@ export function EmojiPicker(props: Props) {
       <Picker
         customEmojis={customEmojis}
         onEmojiClick={onEmojiClick}
+        emojiStyle={EmojiStyle.NATIVE}
         previewConfig={{
           showPreview: false,
         }}

@@ -204,7 +204,8 @@ export function DummyTodoItemComponent({ item }: { item: TodoItem }) {
             } as React.CSSProperties
           }
         />
-        <span className={classes.separator} />
+        <ItemEmoji itemId={item.id} emoji={item.emoji} />
+        {/* <span className={classes.separator} /> */}
         <input aria-label="Item Text" autoFocus value={item.text} readOnly />
         <button aria-label="Delete Item" className={classes.deleteButton}>
           x
