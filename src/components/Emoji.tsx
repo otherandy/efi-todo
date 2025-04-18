@@ -22,7 +22,13 @@ export function ItemEmoji({
       {isOpen && (
         <Portal onClick={() => setIsOpen(false)} className={classes.overlay} />
       )}
-      <span onClick={() => setIsOpen((prev) => !prev)}>
+      <span
+        onClick={() => setIsOpen((prev) => !prev)}
+        style={{
+          width: size,
+          height: size,
+        }}
+      >
         <Emoji unified={emoji} />
       </span>
       <EmojiPicker itemId={itemId} open={isOpen} />
