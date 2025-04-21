@@ -12,10 +12,15 @@ type Props = {
   itemId: number;
 } & Omit<
   PickerProps,
-  "className" | "customEmojis" | "onEmojiClick" | "previewConfig"
+  "customEmojis" | "onEmojiClick" | "emojiStyle" | "previewConfig"
 >;
 
-export function EmojiPicker(props: Props) {
+export function EmojiPickerLoader() {
+  const customEmojis = useLiveQuery(() => db.customEmojis.toArray(), []);
+  return <Picker open={false} customEmojis={customEmojis} />;
+}
+
+export function ItemEmojiPicker(props: Props) {
   const customEmojis = useLiveQuery(() => db.customEmojis.toArray(), []);
 
   const onEmojiClick = (emojiData: EmojiClickData) => {

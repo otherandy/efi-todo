@@ -1,12 +1,12 @@
 import { Emoji as EmojiPrimitive, EmojiStyle } from "emoji-picker-react";
 import { useState } from "react";
 
-import { EmojiPicker } from "@/components/ui/EmojiPicker";
+import { ItemEmojiPicker } from "@/components/ui/EmojiPicker";
 import { Portal } from "@/components/ui/Portal";
 
 import classes from "@/styles/Emoji.module.css";
 
-const size = 24; // Default size for the emoji
+const size = 24;
 
 export function ItemEmoji({
   itemId,
@@ -31,7 +31,7 @@ export function ItemEmoji({
       >
         <Emoji unified={emoji} />
       </span>
-      <EmojiPicker itemId={itemId} open={isOpen} />
+      <ItemEmojiPicker itemId={itemId} open={isOpen} />
     </div>
   );
 }
@@ -42,7 +42,6 @@ export function Emoji({ unified }: { unified?: string }) {
       unified={unified ?? "1f539"}
       size={size}
       emojiStyle={EmojiStyle.NATIVE}
-      lazyLoad={false}
     />
   );
 }
