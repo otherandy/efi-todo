@@ -96,10 +96,10 @@ export function ListComponent({ list }: { list: List }) {
         <div className={classes.title}>
           <div className={classes.icons}>
             <span>
-              <MinLineIcon onClick={handleHideList} />
+              <TrashIcon onClick={() => deleteList(list.id)} />
             </span>
             <span>
-              <TrashIcon onClick={() => deleteList(list.id)} />
+              <MinLineIcon onClick={handleHideList} />
             </span>
           </div>
           <div
