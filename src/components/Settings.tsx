@@ -7,11 +7,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/Dialog";
 import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from "@/components/ui/ContextMenu";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/DropdownMenu";
 
 import { EmojiUploader } from "@/components/EmojiUploader";
 
@@ -22,17 +22,23 @@ import MoreVertIcon from "@/assets/more_vert.svg?react";
 export function Settings() {
   return (
     <Dialog>
-      <ContextMenu>
-        <ContextMenuTrigger className={classes.settingsButton}>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          className={classes.settingsButton}
+          title="Settings"
+        >
           <MoreVertIcon />
-        </ContextMenuTrigger>
-        <ContextMenuContent>
-          <ContextMenuItem asChild>
-            <DialogTrigger>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem>
+            <DialogTrigger asChild>
               <span>Custom Emoji</span>
             </DialogTrigger>
-          </ContextMenuItem>
-          <ContextMenuItem
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <span>Add List</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
             onClick={() => {
               db.delete({
                 disableAutoOpen: true,
@@ -44,9 +50,9 @@ export function Settings() {
             }}
           >
             <span>Reset</span>
-          </ContextMenuItem>
-        </ContextMenuContent>
-      </ContextMenu>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       <DialogContent>
         <DialogTitle>Custom Emoji</DialogTitle>
         <EmojiUploader />

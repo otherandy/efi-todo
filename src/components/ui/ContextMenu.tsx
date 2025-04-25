@@ -14,7 +14,7 @@ export const ContextMenuContent = React.forwardRef<
   <ContextMenuPrimitive.Portal>
     <ContextMenuPrimitive.Content
       ref={ref}
-      className={classes.content}
+      className={classes.contextContent}
       {...props}
     >
       {children}

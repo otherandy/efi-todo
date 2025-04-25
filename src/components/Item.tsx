@@ -292,7 +292,7 @@ function ItemStatusMenu({ item }: { item: TodoItem }) {
           <KeyboardArrowDownIcon />
           <div>{item.status.elements[item.status.selected]}</div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent variant="item">
           {item.status.elements.map((element, index) => (
             <div key={index}>
               <button onClick={() => handleDeleteStatusElement(index)}>

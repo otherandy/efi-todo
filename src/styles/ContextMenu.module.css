@@ -1,16 +1,27 @@
-.content {
+.contextContent {
   display: flex;
   flex-direction: column;
   gap: 1px;
   border: 1px solid #ababab;
+  border-radius: 8px;
   background-color: #ababab;
 }
 
-.content > div {
+.contextContent > div {
   cursor: pointer;
   background-color: #f8f8f8;
   padding: 0.2rem;
   min-width: 7.5rem;
+
+  &:first-child {
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+  }
+
+  &:last-child {
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
 
   &:hover {
     background-color: #e8e8e8;

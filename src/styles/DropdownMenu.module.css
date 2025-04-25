@@ -1,4 +1,4 @@
-.content {
+.dropdownContentItem {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -9,11 +9,11 @@
   width: 100%;
 }
 
-.content > div {
+.dropdownContentItem > div {
   display: flex;
 }
 
-.content > div > button {
+.dropdownContentItem > div > button {
   cursor: pointer;
   border: none;
   border-top-left-radius: 9999px;
@@ -26,7 +26,7 @@
   }
 }
 
-.content > div > div {
+.dropdownContentItem > div > div {
   display: flex;
   flex-grow: 1;
   justify-content: center;
@@ -41,7 +41,7 @@
   }
 }
 
-.content > input {
+.dropdownContentItem > input {
   border: none;
   border-bottom: 1px solid transparent;
   border-radius: 9999px;
@@ -51,5 +51,36 @@
   &:focus {
     outline: none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  }
+}
+
+.dropdownContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin: 0 0 0.5rem 0.5rem;
+  border: 1px solid #ababab;
+  border-radius: 8px;
+  background-color: #ababab;
+}
+
+.dropdownContent > div {
+  cursor: pointer;
+  background-color: #f8f8f8;
+  padding: 0.2rem;
+  min-width: 7.5rem;
+
+  &:first-child {
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+  }
+
+  &:last-child {
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+
+  &:hover {
+    background-color: #e8e8e8;
   }
 }

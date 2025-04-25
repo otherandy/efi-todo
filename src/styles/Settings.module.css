@@ -6,7 +6,11 @@
 }
 
 .settingsButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   rotate: 90deg;
+  z-index: 100;
   cursor: pointer;
   border: none;
   background-color: unset;
