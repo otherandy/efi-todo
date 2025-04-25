@@ -8,7 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/Accordion";
-import { AddListButton } from "@/components/managers/ListManager";
+// import { AddListButton } from "@/components/managers/ListManager";
 
 import classes from "@/styles/managers/HiddenListManager.module.css";
 
@@ -30,7 +30,7 @@ export function HiddenListManager() {
       <AccordionItem value="hidden-lists" className={classes.container}>
         <div className={classes.header}>
           <AccordionTrigger>Lists</AccordionTrigger>
-          <AddListButton />
+          {/* <AddListButton /> */}
         </div>
         <AccordionContent className={classes.lists}>
           {lists?.map((list) => (
