@@ -381,7 +381,7 @@ function ItemContextMenu({
         </ContextMenuItem> */}
         <ContextMenuItem>Color</ContextMenuItem>
         <ContextMenuItem onSelect={handleDuplicateItem}>
-          Dupicate
+          Duplicate
         </ContextMenuItem>
         <ContextMenuItem onSelect={handleToggleStatus}>
           {item.status.hidden ? "Assign" : "Remove"} Status
