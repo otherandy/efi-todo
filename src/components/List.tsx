@@ -72,11 +72,26 @@ export function ListComponent({ list }: { list: List }) {
       .catch((error) => console.error(error));
   };
 
+  const handleClearCheckmarks = () => {
+    db.todoItems
+      .where({ listId: list.id })
+      .modify({ checked: false, updatedAt: new Date() })
+      .catch((error) => console.error(error));
+  };
+
+  const handleDeleteItems = () => {
+    db.todoItems
+      .where({ listId: list.id })
+      .delete()
+      .catch((error) => console.error(error));
+  };
+
   return (
     <div className={classes.list}>
       <ListContextMenu
         setDisplayColorPicker={setDisplayColorPicker}
         handleHideList={handleHideList}
+        handleClearCheckmarks={handleClearCheckmarks}
       >
         <div className={classes.title}>
           <div className={classes.icons}>
@@ -125,10 +140,10 @@ export function ListComponent({ list }: { list: List }) {
           </div>
           <div className={classes.icons}>
             <span>
-              <ClearCheckIcon />
+              <ClearCheckIcon onClick={handleClearCheckmarks} />
             </span>
             <span>
-              <ThreeLinesIcon />
+              <ThreeLinesIcon onClick={handleDeleteItems} />
             </span>
           </div>
         </div>
@@ -146,10 +161,12 @@ export function ListComponent({ list }: { list: List }) {
 function ListContextMenu({
   setDisplayColorPicker,
   handleHideList,
+  handleClearCheckmarks,
   children,
 }: {
   setDisplayColorPicker: (value: boolean) => void;
   handleHideList: () => void;
+  handleClearCheckmarks: () => void;
   children: React.ReactNode;
 }) {
   return (
@@ -164,7 +181,9 @@ function ListContextMenu({
           Color
         </ContextMenuItem>
         <ContextMenuItem onSelect={handleHideList}>Minimize</ContextMenuItem>
-        <ContextMenuItem>Clear Checkmark</ContextMenuItem>
+        <ContextMenuItem onSelect={handleClearCheckmarks}>
+          Clear Checkmarks
+        </ContextMenuItem>
         <ContextMenuItem>Half Size / Full Size</ContextMenuItem>
         {/* <ContextMenuItem onSelect={handleDeleteList}>Delete</ContextMenuItem> */}
       </ContextMenuContent>
