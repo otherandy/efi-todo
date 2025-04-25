@@ -3,11 +3,10 @@ import * as React from "react";
 
 import classes from "@/styles/ui/Accordion.module.css";
 
-import KeyboardArrowDownIcon from "@/assets/keyboard_arrow_down.svg?react";
+import UpArrowIcon from "@/assets/up_arrow.svg?react";
 
 export const Accordion = AccordionPrimitive.Root;
 export const AccordionItem = AccordionPrimitive.Item;
-export const AccordionContent = AccordionPrimitive.Content;
 
 export const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,
@@ -19,10 +18,29 @@ export const AccordionTrigger = React.forwardRef<
       className={classes.trigger}
       {...props}
     >
+      <span className={classes.chevron}>
+        <UpArrowIcon aria-hidden />
+      </span>
       {children}
-      <KeyboardArrowDownIcon aria-hidden />
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ));
 
 AccordionTrigger.displayName = "AccordionTrigger";
+
+export const AccordionContent = React.forwardRef<
+  React.ElementRef<typeof AccordionPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content> & {
+    className?: string;
+  }
+>(({ children, className, ...props }, ref) => (
+  <AccordionPrimitive.Content
+    ref={ref}
+    className={classes.content + " " + className}
+    {...props}
+  >
+    {children}
+  </AccordionPrimitive.Content>
+));
+
+AccordionContent.displayName = "AccordionContent";

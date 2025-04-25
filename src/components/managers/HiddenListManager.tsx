@@ -26,8 +26,8 @@ export function HiddenListManager() {
 
   return (
     <Accordion type="single" collapsible>
-      <AccordionItem value="hidden-lists">
-        <div className={classes.container}>
+      <AccordionItem value="hidden-lists" className={classes.container}>
+        <div className={classes.header}>
           <AccordionTrigger>Lists</AccordionTrigger>
           <AddListButton />
         </div>
