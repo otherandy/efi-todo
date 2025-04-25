@@ -134,10 +134,6 @@
   display: none;
 }
 
-.star > input:checked + svg {
-  fill: rgb(246, 211, 71);
-}
-
 .star > svg {
   cursor: pointer;
   width: 100%;

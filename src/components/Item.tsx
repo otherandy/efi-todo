@@ -21,10 +21,11 @@ import {
 
 import classes from "@/styles/Item.module.css";
 
-import KeyboardArrowDownIcon from "@/assets/keyboard_arrow_down.svg?react";
-import StarIcon from "@/assets/star.svg?react";
-import CircleIcon from "@/assets/circle.svg?react";
-import CheckCircleIcon from "@/assets/check_circle.svg?react";
+import TriangleIcon from "@/assets/triangle.svg?react";
+import EmptyStarIcon from "@/assets/empty_star.svg?react";
+import FullStarIcon from "@/assets/full_star.svg?react";
+import EmptyCheckIcon from "@/assets/empty_check.svg?react";
+import FullCheckIcon from "@/assets/full_check.svg?react";
 
 export function FullTodoItemComponent({ item }: { item: TodoItem }) {
   return (
@@ -39,7 +40,7 @@ export function FullTodoItemComponent({ item }: { item: TodoItem }) {
               .catch((error) => console.error(error));
           }}
         />
-        <StarIcon />
+        {item.starred ? <FullStarIcon /> : <EmptyStarIcon />}
       </label>
       <TodoItemComponent item={item} />
       <label className={classes.check}>
@@ -52,7 +53,7 @@ export function FullTodoItemComponent({ item }: { item: TodoItem }) {
               .catch((error) => console.error(error));
           }}
         />
-        {item.checked ? <CheckCircleIcon /> : <CircleIcon />}
+        {item.checked ? <FullCheckIcon /> : <EmptyCheckIcon />}
       </label>
     </div>
   );
@@ -285,11 +286,15 @@ function ItemStatusMenu({ item }: { item: TodoItem }) {
         className={classes.sideButton}
         onClick={() => handleSideClick("Left")}
       >
-        {"<"}
+        <TriangleIcon
+          style={{
+            transform: "rotate(90deg)",
+          }}
+        />
       </button>
       <DropdownMenu>
         <DropdownMenuTrigger className={classes.element}>
-          <KeyboardArrowDownIcon />
+          <TriangleIcon />
           <div>{item.status.elements[item.status.selected]}</div>
         </DropdownMenuTrigger>
         <DropdownMenuContent variant="item">
@@ -314,7 +319,11 @@ function ItemStatusMenu({ item }: { item: TodoItem }) {
         className={classes.sideButton}
         onClick={() => handleSideClick("Right")}
       >
-        {">"}
+        <TriangleIcon
+          style={{
+            transform: "rotate(-90deg)",
+          }}
+        />
       </button>
     </div>
   );

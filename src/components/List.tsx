@@ -7,7 +7,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-import { db } from "@/utils/db";
+import { db, deleteList } from "@/utils/db";
 import { getReadableTextColor } from "@/utils/color";
 import type { List, TodoItem } from "@/types";
 
@@ -23,6 +23,10 @@ import { ColorPicker } from "@/components/ui/ColorPicker";
 import classes from "@/styles/List.module.css";
 
 import AddCircleIcon from "@/assets/add_circle.svg?react";
+import TrashIcon from "@/assets/trash.svg?react";
+import MinLineIcon from "@/assets/min_line.svg?react";
+import ClearCheckIcon from "@/assets/clear_check.svg?react";
+import ThreeLinesIcon from "@/assets/three_lines.svg?react";
 
 export function ListComponent({ list }: { list: List }) {
   const items = useLiveQuery(() =>
@@ -62,13 +66,27 @@ export function ListComponent({ list }: { list: List }) {
     db.lists.update(list.id, { color }).catch((error) => console.error(error));
   };
 
+  const handleHideList = () => {
+    db.lists
+      .update(list.id, { hidden: 1 })
+      .catch((error) => console.error(error));
+  };
+
   return (
     <div className={classes.list}>
       <ListContextMenu
-        list={list}
         setDisplayColorPicker={setDisplayColorPicker}
+        handleHideList={handleHideList}
       >
         <div className={classes.title}>
+          <div className={classes.icons}>
+            <span>
+              <MinLineIcon onClick={handleHideList} />
+            </span>
+            <span>
+              <TrashIcon onClick={() => deleteList(list.id)} />
+            </span>
+          </div>
           <div
             className={classes.color}
             style={{
@@ -83,6 +101,14 @@ export function ListComponent({ list }: { list: List }) {
               value={list.title}
               onChange={handleChangeTitle}
             />
+          </div>
+          <div className={classes.icons}>
+            <span>
+              <ClearCheckIcon />
+            </span>
+            <span>
+              <ThreeLinesIcon />
+            </span>
           </div>
           {displayColorPicker && (
             <>
@@ -118,20 +144,14 @@ export function ListComponent({ list }: { list: List }) {
 }
 
 function ListContextMenu({
-  list,
   setDisplayColorPicker,
+  handleHideList,
   children,
 }: {
-  list: List;
   setDisplayColorPicker: (value: boolean) => void;
+  handleHideList: () => void;
   children: React.ReactNode;
 }) {
-  const handleHideList = () => {
-    db.lists
-      .update(list.id, { hidden: 1 })
-      .catch((error) => console.error(error));
-  };
-
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>

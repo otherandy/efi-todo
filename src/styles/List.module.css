@@ -11,11 +11,12 @@
 }
 
 .title {
+  display: flex;
   position: relative;
-  padding: 0 2rem;
 }
 
 .title .color {
+  flex-grow: 1;
   border-radius: 8px;
   background-color: #f1f1f1;
   padding: 0.5rem;
@@ -33,6 +34,30 @@
 
   &:focus {
     outline: none;
+  }
+}
+
+.title .icons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 2rem;
+}
+
+.icons > span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+
+  transition: opacity 0.2s;
+  cursor: pointer;
+  width: 2rem;
+  height: 1rem;
+
+  &:hover {
+    opacity: 0.8;
   }
 }
 

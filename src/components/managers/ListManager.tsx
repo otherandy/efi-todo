@@ -58,11 +58,7 @@ export function ListManager() {
 
 export function AddListButton() {
   return (
-    <button
-      className={classes.createButton}
-      title="Add Category"
-      onClick={addList}
-    >
+    <button className={classes.createButton} onClick={addList}>
       <AddCircleIcon />
     </button>
   );
