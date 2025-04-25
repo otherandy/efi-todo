@@ -101,6 +101,27 @@ export function ListComponent({ list }: { list: List }) {
               value={list.title}
               onChange={handleChangeTitle}
             />
+            {displayColorPicker && (
+              <>
+                <div
+                  style={{
+                    position: "fixed",
+                    top: "0px",
+                    right: "0px",
+                    bottom: "0px",
+                    left: "0px",
+                  }}
+                  onClick={() => setDisplayColorPicker(false)}
+                />
+                <ColorPicker
+                  color={list.color}
+                  onChange={(color) => {
+                    handleChangeColor(color);
+                    setDisplayColorPicker(false);
+                  }}
+                />
+              </>
+            )}
           </div>
           <div className={classes.icons}>
             <span>
@@ -110,27 +131,6 @@ export function ListComponent({ list }: { list: List }) {
               <ThreeLinesIcon />
             </span>
           </div>
-          {displayColorPicker && (
-            <>
-              <div
-                style={{
-                  position: "fixed",
-                  top: "0px",
-                  right: "0px",
-                  bottom: "0px",
-                  left: "0px",
-                }}
-                onClick={() => setDisplayColorPicker(false)}
-              />
-              <ColorPicker
-                color={list.color}
-                onChange={(color) => {
-                  handleChangeColor(color);
-                  setDisplayColorPicker(false);
-                }}
-              />
-            </>
-          )}
         </div>
       </ListContextMenu>
       <ListItems id={list.id} items={items} />
