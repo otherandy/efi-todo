@@ -1,7 +1,7 @@
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import * as React from "react";
 
-import classes from "@/styles/Accordion.module.css";
+import classes from "@/styles/ui/Accordion.module.css";
 
 import KeyboardArrowDownIcon from "@/assets/keyboard_arrow_down.svg?react";
 

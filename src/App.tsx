@@ -1,5 +1,5 @@
 import { ListsComponent } from "@/components/Lists";
-import { HiddenListManager } from "@/components/Managers";
+import { HiddenListManager } from "@/components/managers/HiddenListManager";
 import { Settings } from "@/components/Settings";
 import { DateView } from "@/components/DateView";
 import { Picture } from "@/components/Picture";

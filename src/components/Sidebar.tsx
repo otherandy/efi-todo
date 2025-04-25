@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 
-import { CategoryManager, ListManager } from "@/components/Managers";
+import { ListManager } from "@/components/managers/ListManager";
+import { CategoryManager } from "@/components/managers/CategoryManager";
 
 import classes from "@/styles/Sidebar.module.css";
 

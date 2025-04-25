@@ -1,7 +1,7 @@
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
 import * as React from "react";
 
-import classes from "@/styles/Separator.module.css";
+import classes from "@/styles/ui/Separator.module.css";
 
 import PropTypes from "prop-types";
 
