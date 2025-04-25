@@ -1,5 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/utils/db";
+import { getReadableTextColor } from "@/utils/color";
 
 import {
   Accordion,
@@ -33,7 +34,14 @@ export function HiddenListManager() {
         </div>
         <AccordionContent className={classes.lists}>
           {lists?.map((list) => (
-            <button key={list.id} onClick={() => handleSetUnhidden(list.id)}>
+            <button
+              key={list.id}
+              onClick={() => handleSetUnhidden(list.id)}
+              style={{
+                backgroundColor: list.color,
+                color: getReadableTextColor(list.color),
+              }}
+            >
               {list.title}
             </button>
           ))}

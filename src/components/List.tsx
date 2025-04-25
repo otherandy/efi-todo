@@ -8,6 +8,7 @@ import {
 } from "@dnd-kit/sortable";
 
 import { db } from "@/utils/db";
+import { getReadableTextColor } from "@/utils/color";
 import type { List, TodoItem } from "@/types";
 
 import { FullTodoItemComponent } from "@/components/Item";
@@ -61,15 +62,6 @@ export function ListComponent({ list }: { list: List }) {
     db.lists.update(list.id, { color }).catch((error) => console.error(error));
   };
 
-  const getOppositeColor = (hex: string) => {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    const avg = (r + g + b) / 3;
-    const oppositeColor = avg > 127 ? "#000000" : "#FFFFFF";
-    return oppositeColor;
-  };
-
   return (
     <div className={classes.list}>
       <ListContextMenu
@@ -86,7 +78,7 @@ export function ListComponent({ list }: { list: List }) {
             <input
               className={classes.input}
               style={{
-                color: getOppositeColor(list.color),
+                color: getReadableTextColor(list.color),
               }}
               value={list.title}
               onChange={handleChangeTitle}
