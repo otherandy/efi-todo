@@ -19,6 +19,7 @@ import {
   ContextMenuItem,
 } from "@/components/ui/ContextMenu";
 import { ColorPicker } from "@/components/ui/ColorPicker";
+import { DangerButton } from "@/components/ui/DangerButton";
 
 import classes from "@/styles/List.module.css";
 
@@ -95,9 +96,11 @@ export function ListComponent({ list }: { list: List }) {
       >
         <div className={classes.title}>
           <div className={classes.icons}>
-            <span>
-              <TrashIcon onClick={() => deleteList(list.id)} />
-            </span>
+            <DangerButton confirmAction={() => deleteList(list.id)} asChild>
+              <span>
+                <TrashIcon />
+              </span>
+            </DangerButton>
             <span>
               <MinLineIcon onClick={handleHideList} />
             </span>
