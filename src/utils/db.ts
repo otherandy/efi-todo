@@ -1,6 +1,10 @@
 import Dexie, { type EntityTable } from "dexie";
 import type { Category, CustomEmoji, List, TodoItem } from "@/types";
 
+import LvUpEmblem1Icon from "@/assets/lvup_emblem_color1.svg";
+import MantaDreamsIcon from "@/assets/manta_dreams.svg";
+import FracturedCoreIcon from "@/assets/fractured_core.svg";
+
 const db = new Dexie("efi-todo") as Dexie & {
   lists: EntityTable<List, "id">;
   categories: EntityTable<Category, "name">;
@@ -49,6 +53,24 @@ db.on("populate", async () => {
       },
       createdAt: new Date(),
       updatedAt: new Date(),
+    },
+  ]);
+
+  await db.customEmojis.bulkAdd([
+    {
+      id: "lvup1",
+      names: ["LvUp 1", "LvUp Emblem 1", "LvUp Emblem Color 1"],
+      imgUrl: LvUpEmblem1Icon,
+    },
+    {
+      id: "manta",
+      names: ["Manta", "Manta Dreams"],
+      imgUrl: MantaDreamsIcon,
+    },
+    {
+      id: "fractured",
+      names: ["Fractured", "Fractured Core"],
+      imgUrl: FracturedCoreIcon,
     },
   ]);
 });
