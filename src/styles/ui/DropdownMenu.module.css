@@ -67,8 +67,9 @@
 .dropdownContent > div {
   cursor: pointer;
   background-color: #f8f8f8;
-  padding: 0.2rem;
+  padding: 0.3rem;
   min-width: 7.5rem;
+  font-size: 0.875rem;
 
   &:first-child {
     border-top-right-radius: 8px;
