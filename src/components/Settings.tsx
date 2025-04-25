@@ -1,4 +1,4 @@
-import { db } from "@/utils/db";
+import { db, addList } from "@/utils/db";
 
 import {
   Dialog,
@@ -30,13 +30,13 @@ export function Settings() {
           <MoreVertIcon />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
+          <DropdownMenuItem onClick={addList}>
+            <span>New List</span>
+          </DropdownMenuItem>
           <DropdownMenuItem>
             <DialogTrigger asChild>
               <span>Custom Emoji</span>
             </DialogTrigger>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <span>Add List</span>
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {

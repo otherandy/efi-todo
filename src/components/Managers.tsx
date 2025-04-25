@@ -1,5 +1,5 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import { db, deleteList } from "@/utils/db";
+import { addList, db, deleteList } from "@/utils/db";
 
 import { CategoryComponent } from "@/components/Category";
 
@@ -98,13 +98,7 @@ export function ListManager() {
 
 export function AddListButton() {
   const handleAddList = () => {
-    db.lists
-      .add({
-        title: "New List",
-        color: "#d9d9d9",
-        hidden: 0,
-      })
-      .catch((error) => console.error(error));
+    addList();
   };
 
   return (

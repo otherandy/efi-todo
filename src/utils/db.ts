@@ -53,7 +53,7 @@ db.on("populate", async () => {
   ]);
 });
 
-export function deleteList(id: number) {
+function deleteList(id: number) {
   db.transaction("rw", db.lists, db.todoItems, async () => {
     await db.todoItems.where("listId").equals(id).delete();
     await db.lists.delete(id);
@@ -62,4 +62,14 @@ export function deleteList(id: number) {
   });
 }
 
-export { db };
+function addList() {
+  db.lists
+    .add({
+      title: "New List",
+      color: "#d9d9d9",
+      hidden: 0,
+    })
+    .catch((error) => console.error(error));
+}
+
+export { db, deleteList, addList };
