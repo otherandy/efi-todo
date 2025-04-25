@@ -97,15 +97,11 @@ export function ListManager() {
 }
 
 export function AddListButton() {
-  const handleAddList = () => {
-    addList();
-  };
-
   return (
     <button
       className={classes.createButton}
       title="Add Category"
-      onClick={handleAddList}
+      onClick={addList}
     >
       <AddCircleIcon />
     </button>

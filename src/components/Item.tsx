@@ -134,7 +134,7 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
   };
 
   return (
-    <ItemContextMenu item={item} handleDeleteItem={handleDeleteItem}>
+    <ItemContextMenu item={item}>
       <div
         ref={setNodeRef}
         className={classes.item}
@@ -323,23 +323,23 @@ function ItemStatusMenu({ item }: { item: TodoItem }) {
 function ItemContextMenu({
   item,
   children,
-  handleDeleteItem,
+  // handleDeleteItem,
 }: {
   item: TodoItem;
   children: React.ReactNode;
-  handleDeleteItem: () => void;
+  // handleDeleteItem: () => void;
 }) {
-  const handleToggleCheck = () => {
-    db.todoItems
-      .update(item.id, { checked: !item.checked })
-      .catch((error) => console.error(error));
-  };
+  // const handleToggleCheck = () => {
+  //   db.todoItems
+  //     .update(item.id, { checked: !item.checked })
+  //     .catch((error) => console.error(error));
+  // };
 
-  const handleToggleStar = () => {
-    db.todoItems
-      .update(item.id, { starred: !item.starred })
-      .catch((error) => console.error(error));
-  };
+  // const handleToggleStar = () => {
+  //   db.todoItems
+  //     .update(item.id, { starred: !item.starred })
+  //     .catch((error) => console.error(error));
+  // };
 
   const handleToggleStatus = () => {
     db.todoItems
@@ -352,20 +352,41 @@ function ItemContextMenu({
       .catch((error) => console.error(error));
   };
 
+  const handleDuplicateItem = () => {
+    db.todoItems
+      .add({
+        text: item.text,
+        listId: item.listId,
+        order: item.order + 1,
+        checked: item.checked,
+        starred: item.starred,
+        categoryName: item.categoryName,
+        emoji: item.emoji,
+        status: item.status,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .catch((error) => console.error(error));
+  };
+
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
       <ContextMenuContent>
-        <ContextMenuItem onSelect={handleToggleCheck}>
+        {/* <ContextMenuItem onSelect={handleToggleCheck}>
           {item.checked ? "Uncheck" : "Check"}
-        </ContextMenuItem>
-        <ContextMenuItem onSelect={handleToggleStar}>
+        </ContextMenuItem> */}
+        {/* <ContextMenuItem onSelect={handleToggleStar}>
           {item.starred ? "Unstar" : "Star"}
+        </ContextMenuItem> */}
+        <ContextMenuItem>Color</ContextMenuItem>
+        <ContextMenuItem onSelect={handleDuplicateItem}>
+          Dupicate
         </ContextMenuItem>
         <ContextMenuItem onSelect={handleToggleStatus}>
-          {item.status.hidden ? "Show" : "Hide"} Status
+          {item.status.hidden ? "Assign" : "Remove"} Status
         </ContextMenuItem>
-        <ContextMenuItem onSelect={handleDeleteItem}>Delete</ContextMenuItem>
+        {/* <ContextMenuItem onSelect={handleDeleteItem}>Delete</ContextMenuItem> */}
       </ContextMenuContent>
     </ContextMenu>
   );

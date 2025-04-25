@@ -7,7 +7,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-import { db, deleteList } from "@/utils/db";
+import { db } from "@/utils/db";
 import type { List, TodoItem } from "@/types";
 
 import { FullTodoItemComponent } from "@/components/Item";
@@ -140,15 +140,10 @@ function ListContextMenu({
       .catch((error) => console.error(error));
   };
 
-  const handleDeleteList = () => {
-    deleteList(list.id);
-  };
-
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
       <ContextMenuContent>
-        <ContextMenuItem onSelect={handleHideList}>Hide</ContextMenuItem>
         <ContextMenuItem
           onClick={() => {
             setDisplayColorPicker(true);
@@ -156,7 +151,10 @@ function ListContextMenu({
         >
           Color
         </ContextMenuItem>
-        <ContextMenuItem onSelect={handleDeleteList}>Delete</ContextMenuItem>
+        <ContextMenuItem onSelect={handleHideList}>Minimize</ContextMenuItem>
+        <ContextMenuItem>Clear Checkmark</ContextMenuItem>
+        <ContextMenuItem>Half Size / Full Size</ContextMenuItem>
+        {/* <ContextMenuItem onSelect={handleDeleteList}>Delete</ContextMenuItem> */}
       </ContextMenuContent>
     </ContextMenu>
   );
