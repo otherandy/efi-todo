@@ -1,11 +1,7 @@
+import { useState } from "react";
 import { db, addList } from "@/utils/db";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/Dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/Dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +10,6 @@ import {
 } from "@/components/ui/DropdownMenu";
 import {
   AlertDialog,
-  AlertDialogTrigger,
   AlertDialogContent,
   AlertDialogTitle,
   AlertDialogDescription,
@@ -29,6 +24,10 @@ import classes from "@/styles/Settings.module.css";
 import MoreVertIcon from "@/assets/more_vert.svg?react";
 
 export function Settings() {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+
   const handleReset = () => {
     db.delete({
       disableAutoOpen: true,
@@ -40,50 +39,61 @@ export function Settings() {
   };
 
   return (
-    <AlertDialog>
-      <Dialog>
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            className={classes.settingsButton}
-            title="Settings"
+    <>
+      <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+        <DropdownMenuTrigger
+          className={classes.settingsButton}
+          title="Settings"
+        >
+          <MoreVertIcon />
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent>
+          <DropdownMenuItem onClick={addList}>
+            <span>New List</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              setDropdownOpen(false);
+              setDialogOpen(true);
+            }}
           >
-            <MoreVertIcon />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onClick={addList}>
-              <span>New List</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <DialogTrigger asChild>
-                <span>Custom Emoji</span>
-              </DialogTrigger>
-            </DropdownMenuItem>
-            <AlertDialogTrigger asChild>
-              <DropdownMenuItem>
-                <span>Reset</span>
-              </DropdownMenuItem>
-            </AlertDialogTrigger>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            <span>Custom Emoji</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              setDropdownOpen(false);
+              setAlertOpen(true);
+            }}
+          >
+            <span>Reset</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogTitle>Custom Emoji</DialogTitle>
           <EmojiUploader />
         </DialogContent>
       </Dialog>
-      <AlertDialogContent>
-        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-        <AlertDialogDescription>
-          This action cannot be undone.
-        </AlertDialogDescription>
-        <div style={{ display: "flex", gap: 25, justifyContent: "flex-end" }}>
-          <AlertDialogCancel asChild>
-            <button>Cancel</button>
-          </AlertDialogCancel>
-          <AlertDialogAction asChild>
-            <button onClick={handleReset}>Confirm</button>
-          </AlertDialogAction>
-        </div>
-      </AlertDialogContent>
-    </AlertDialog>
+
+      <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone.
+          </AlertDialogDescription>
+          <div style={{ display: "flex", gap: 25, justifyContent: "flex-end" }}>
+            <AlertDialogCancel asChild>
+              <button>Cancel</button>
+            </AlertDialogCancel>
+            <AlertDialogAction asChild>
+              <button onClick={handleReset}>Confirm</button>
+            </AlertDialogAction>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
