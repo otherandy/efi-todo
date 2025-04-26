@@ -61,6 +61,7 @@ export function FullTodoItemComponent({ item }: { item: TodoItem }) {
 
 function TodoItemComponent({ item }: { item: TodoItem }) {
   const [category, setCategory] = useState<Category>();
+  const [text, setText] = useState(item.text);
 
   useEffect(() => {
     db.categories
@@ -82,22 +83,28 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
     transition,
   };
 
+  useEffect(() => {
+    setText(item.text);
+  }, [item.text]);
+
   const handleChangeItemText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    db.todoItems
-      .update(item.id, {
-        text: e.target.value,
-        updatedAt: new Date(),
-      })
-      .catch((error) => console.error(error));
+    setText(e.target.value);
   };
 
   const handleDeleteItem = () => {
     db.todoItems.delete(item.id).catch((error) => console.error(error));
   };
 
-  const handleLoseFocus = () => {
+  const handleBlur = () => {
     if (item.text.trim() === "") {
       handleDeleteItem();
+    } else if (text !== item.text) {
+      db.todoItems
+        .update(item.id, {
+          text: text,
+          updatedAt: new Date(),
+        })
+        .catch((error) => console.error(error));
     }
   };
 
@@ -163,10 +170,10 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
           <input
             aria-label="Item Text"
             autoFocus
-            value={item.text}
+            value={text}
             onChange={handleChangeItemText}
             onKeyDown={handleKeyDown}
-            onBlur={handleLoseFocus}
+            onBlur={handleBlur}
           />
           <button
             aria-label="Delete Item"
