@@ -36,7 +36,7 @@ export function ItemEmojiPicker(props: Props) {
   };
 
   return (
-    <div className={classes.picker}>
+    <div className={classes.picker} onPointerDown={(e) => e.stopPropagation()}>
       <Picker
         customEmojis={customEmojis}
         onEmojiClick={onEmojiClick}

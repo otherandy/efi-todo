@@ -72,15 +72,22 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
       .catch((error) => console.error(error));
   }, [item.categoryName]);
 
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({
-      id: `Item-${item.id}`,
-      data: { type: "item", listId: item.listId },
-    });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: `Item-${item.id}`,
+    data: { type: "item", listId: item.listId },
+  });
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
+    opacity: isDragging ? 0.5 : 1,
   };
 
   useEffect(() => {
@@ -148,9 +155,8 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
         className={classes.item}
         style={style}
         {...attributes}
-        {...listeners}
       >
-        <div className={classes.content}>
+        <div className={classes.content} {...listeners}>
           <span
             className={classes.cornerDecoration}
             style={
