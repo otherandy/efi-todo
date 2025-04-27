@@ -20,6 +20,7 @@ import EmptyStarIcon from "@/assets/empty_star.svg?react";
 import FullStarIcon from "@/assets/full_star.svg?react";
 import EmptyCheckIcon from "@/assets/empty_check.svg?react";
 import FullCheckIcon from "@/assets/full_check.svg?react";
+import PriorityIcon from "@/assets/priority.svg?react";
 
 export function FullTodoItemComponent({ item }: { item: TodoItem }) {
   return (
@@ -41,11 +42,11 @@ export function FullTodoItemComponent({ item }: { item: TodoItem }) {
           }}
         />
         {item.star === 2 ? (
-          <FullStarIcon style={{ color: "gold" }} /> // Priority (checked)
+          <PriorityIcon />
         ) : item.star === 1 ? (
-          <FullStarIcon /> // Star (intermediate)
+          <FullStarIcon />
         ) : (
-          <EmptyStarIcon /> // None
+          <EmptyStarIcon />
         )}
       </label>
       <TodoItemComponent item={item} />
