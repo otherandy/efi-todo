@@ -4,6 +4,7 @@ import { CSS } from "@dnd-kit/utilities";
 
 import { createItem, db } from "@/utils/db";
 import type { TodoItem } from "@/types";
+import { isStageStatus, isNumberStatus } from "@/utils/status";
 
 import { ItemEmoji } from "@/components/Emoji";
 import { ItemStatus } from "@/components/ItemStatus";
@@ -208,8 +209,21 @@ function ItemContextMenu({
   setDisplayColorPicker: (value: boolean) => void;
   children: React.ReactNode;
 }) {
-  const handleToggleStatus = () => {
-    if (item.status !== null) {
+  const handleDuplicateItem = () => {
+    createItem(
+      item.listId,
+      item.order + 1,
+      item.text,
+      item.emoji,
+      item.color,
+      item.star,
+      item.checked,
+      item.status,
+    );
+  };
+
+  const handleAssignStageStatus = () => {
+    if (isStageStatus(item.status)) {
       db.todoItems
         .update(item.id, {
           status: null,
@@ -228,17 +242,24 @@ function ItemContextMenu({
       .catch((error) => console.error(error));
   };
 
-  const handleDuplicateItem = () => {
-    createItem(
-      item.listId,
-      item.order + 1,
-      item.text,
-      item.emoji,
-      item.color,
-      item.star,
-      item.checked,
-      item.status,
-    );
+  const handleAssignNumberStatus = () => {
+    if (isNumberStatus(item.status)) {
+      db.todoItems
+        .update(item.id, {
+          status: null,
+        })
+        .catch((error) => console.error(error));
+      return;
+    }
+
+    db.todoItems
+      .update(item.id, {
+        status: {
+          current: 0,
+          max: 5,
+        },
+      })
+      .catch((error) => console.error(error));
   };
 
   return (
@@ -251,8 +272,11 @@ function ItemContextMenu({
         <ContextMenuItem onSelect={handleDuplicateItem}>
           Duplicate
         </ContextMenuItem>
-        <ContextMenuItem onSelect={handleToggleStatus}>
-          {item.status === null ? "Assign" : "Remove"} Status
+        <ContextMenuItem onSelect={handleAssignStageStatus}>
+          {isStageStatus(item.status) ? "Remove" : "Assign"} Stage Status
+        </ContextMenuItem>
+        <ContextMenuItem onSelect={handleAssignNumberStatus}>
+          {isNumberStatus(item.status) ? "Remove" : "Assign"} Number Status
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>

@@ -5,26 +5,27 @@
   width: 100%;
 }
 
-.status .sideButton {
+.sideButton {
   cursor: pointer;
   border: none;
   background-color: transparent;
 }
 
-.status .element {
+.element {
   display: flex;
   flex-grow: 1;
   align-items: center;
   border: none;
   border-radius: 9999px;
   background-color: #efefef;
+  height: 1rem;
 
   &:hover {
     background-color: #e0e0e0;
   }
 }
 
-.status .element > div {
+.element > div {
   flex-grow: 1;
   text-align: center;
 }
