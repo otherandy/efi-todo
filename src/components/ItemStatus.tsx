@@ -8,6 +8,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/DropdownMenu";
+import { Progress, ProgressIndicator } from "@/components/ui/Progress";
 
 import classes from "@/styles/ItemStatus.module.css";
 
@@ -180,14 +181,22 @@ function ItemNumberStatus({ item }: { item: TodoItem }) {
         />
       </button>
       <DropdownMenu>
-        <DropdownMenuTrigger className={classes.currentContainer}>
-          <TriangleIcon />
-          <div className={classes.current}>
-            {(item.status as NumberStatus).current}
-            {" / "}
-            {(item.status as NumberStatus).max}
-          </div>
-        </DropdownMenuTrigger>
+        <Progress asChild>
+          <DropdownMenuTrigger className={classes.currentContainer}>
+            <ProgressIndicator
+              style={{
+                backgroundColor: item.color,
+                transform: `translateX(-${100 - ((item.status as NumberStatus).current / (item.status as NumberStatus).max) * 100}%)`,
+              }}
+            />
+            <TriangleIcon />
+            <div className={classes.current}>
+              {(item.status as NumberStatus).current}
+              {" / "}
+              {(item.status as NumberStatus).max}
+            </div>
+          </DropdownMenuTrigger>
+        </Progress>
         <DropdownMenuContent variant="item">
           <div className={classes.numberInputContainer}>
             <label className={classes.numberInput}>
