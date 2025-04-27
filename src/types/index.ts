@@ -4,6 +4,7 @@ type Star = 0 | 1 | 2;
 
 interface List {
   id: number;
+  order: number;
   title: string;
   color: Color;
   halfSize: boolean;

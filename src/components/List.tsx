@@ -4,8 +4,10 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useDroppable } from "@dnd-kit/core";
 import {
   SortableContext,
+  useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 import { createItem, db, deleteList } from "@/utils/db";
 import { getReadableTextColor } from "@/utils/color";
@@ -35,6 +37,25 @@ export function ListComponent({ list }: { list: List }) {
   );
 
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: `List-${list.id}`,
+    data: { type: "list", listId: list.id },
+  });
+
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    backgroundColor: list.color,
+  };
 
   const handleChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     db.lists
@@ -97,9 +118,10 @@ export function ListComponent({ list }: { list: List }) {
           </div>
           <div
             className={classes.color}
-            style={{
-              backgroundColor: list.color,
-            }}
+            ref={setNodeRef}
+            style={style}
+            {...attributes}
+            {...listeners}
           >
             <input
               className={classes.input}
@@ -132,6 +154,23 @@ export function ListComponent({ list }: { list: List }) {
         <button title="Add Item" onClick={handleAddItem}>
           <AddCircleIcon />
         </button>
+      </div>
+    </div>
+  );
+}
+
+export function DummyListComponent({ list }: { list: List }) {
+  return (
+    <div className={classes.title}>
+      <div className={classes.color} style={{ backgroundColor: list.color }}>
+        <input
+          className={classes.input}
+          value={list.title}
+          disabled
+          style={{
+            color: getReadableTextColor(list.color),
+          }}
+        />
       </div>
     </div>
   );

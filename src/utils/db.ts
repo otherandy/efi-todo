@@ -21,7 +21,7 @@ const db = new Dexie("efi-todo") as Dexie & {
 };
 
 db.version(1).stores({
-  lists: "++id, hidden",
+  lists: "++id, order, hidden",
   categories: "&name",
   todoItems: "++id, listId",
   customEmojis: "&id",
@@ -30,6 +30,7 @@ db.version(1).stores({
 db.on("populate", async () => {
   await db.lists.bulkAdd([
     {
+      order: 0,
       title: "New List",
       color: "#90abbf",
       halfSize: false,
@@ -91,13 +92,21 @@ function deleteList(id: number) {
 
 function addList() {
   db.lists
-    .add({
-      title: "New List",
-      color: "#d9d9d9",
-      halfSize: false,
-      hidden: 0,
-    })
-    .catch((error) => console.error(error));
+    .orderBy("order")
+    .last()
+    .then(
+      async (lastList) =>
+        await db.lists.add({
+          order: lastList ? lastList.order + 1 : 0,
+          title: "New List",
+          color: "#d9d9d9",
+          halfSize: false,
+          hidden: 0,
+        }),
+    )
+    .catch((error) => {
+      console.error(error);
+    });
 }
 
 function createItem(
