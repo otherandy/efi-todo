@@ -1,0 +1,30 @@
+.status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.status .sideButton {
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+}
+
+.status .element {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  border: none;
+  border-radius: 9999px;
+  background-color: #efefef;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+}
+
+.status .element > div {
+  flex-grow: 1;
+  text-align: center;
+}

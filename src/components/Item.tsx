@@ -2,26 +2,20 @@ import { useState, useEffect } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-import { db } from "@/utils/db";
-import type { Category, TodoItem } from "@/types";
+import { createItem, db } from "@/utils/db";
+import type { TodoItem } from "@/types";
 
 import { ItemEmoji } from "@/components/Emoji";
+import { ItemStatus } from "@/components/ItemStatus";
 import {
   ContextMenu,
   ContextMenuTrigger,
   ContextMenuContent,
   ContextMenuItem,
 } from "@/components/ui/ContextMenu";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/DropdownMenu";
 
 import classes from "@/styles/Item.module.css";
 
-import TriangleIcon from "@/assets/triangle.svg?react";
 import EmptyStarIcon from "@/assets/empty_star.svg?react";
 import FullStarIcon from "@/assets/full_star.svg?react";
 import EmptyCheckIcon from "@/assets/empty_check.svg?react";
@@ -33,14 +27,26 @@ export function FullTodoItemComponent({ item }: { item: TodoItem }) {
       <label className={classes.star}>
         <input
           type="checkbox"
-          checked={item.starred}
+          checked={item.star === 2}
+          ref={(el) => {
+            if (el) el.indeterminate = item.star === 1;
+          }}
           onChange={() => {
+            // Cycle: 0 (none) → 1 (star) → 2 (priority) → 0 ...
+            const nextState =
+              typeof item.star === "number" ? (item.star + 1) % 3 : 1;
             db.todoItems
-              .update(item.id, { starred: !item.starred })
+              .update(item.id, { star: nextState as 0 | 1 | 2 })
               .catch((error) => console.error(error));
           }}
         />
-        {item.starred ? <FullStarIcon /> : <EmptyStarIcon />}
+        {item.star === 2 ? (
+          <FullStarIcon style={{ color: "gold" }} /> // Priority (checked)
+        ) : item.star === 1 ? (
+          <FullStarIcon /> // Star (intermediate)
+        ) : (
+          <EmptyStarIcon /> // None
+        )}
       </label>
       <TodoItemComponent item={item} />
       <label className={classes.check}>
@@ -60,17 +66,7 @@ export function FullTodoItemComponent({ item }: { item: TodoItem }) {
 }
 
 function TodoItemComponent({ item }: { item: TodoItem }) {
-  const [category, setCategory] = useState<Category>();
   const [text, setText] = useState(item.text);
-
-  useEffect(() => {
-    db.categories
-      .get(item.categoryName)
-      .then((category) => {
-        setCategory(category);
-      })
-      .catch((error) => console.error(error));
-  }, [item.categoryName]);
 
   const {
     attributes,
@@ -115,36 +111,10 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
     }
   };
 
-  // const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   db.todoItems
-  //     .update(item.id, {
-  //       categoryName: e.target.value,
-  //       updatedAt: new Date(),
-  //     })
-  //     .catch((error) => console.error(error));
-  // };
-
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      db.todoItems
-        .add({
-          text: "",
-          listId: item.listId,
-          order: item.order + 1,
-          checked: false,
-          starred: false,
-          categoryName: item.categoryName,
-          emoji: "",
-          status: {
-            selected: 0,
-            elements: [],
-            hidden: true,
-          },
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        })
-        .catch((error) => console.error(error));
+      createItem(item.listId, item.order + 1);
     }
   };
 
@@ -161,16 +131,10 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
             className={classes.cornerDecoration}
             style={
               {
-                "--cat-color": category?.color,
+                "--cat-color": item.color,
               } as React.CSSProperties
             }
           />
-          {/* <input
-            aria-label="Category"
-            className={classes.category}
-            value={item.categoryName ?? ""}
-            onChange={handleCategoryChange}
-          /> */}
           <ItemEmoji itemId={item.id} emoji={item.emoji} />
           {/* <span className={classes.separator} /> */}
           <input
@@ -189,24 +153,13 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
             x
           </button>
         </div>
-        <ItemStatusMenu item={item} />
+        <ItemStatus item={item} />
       </div>
     </ItemContextMenu>
   );
 }
 
 export function DummyTodoItemComponent({ item }: { item: TodoItem }) {
-  const [category, setCategory] = useState<Category>();
-
-  useEffect(() => {
-    db.categories
-      .get(item.categoryName)
-      .then((category) => {
-        setCategory(category);
-      })
-      .catch((error) => console.error(error));
-  }, [item.categoryName]);
-
   return (
     <div className={classes.item}>
       <div className={classes.content}>
@@ -214,7 +167,7 @@ export function DummyTodoItemComponent({ item }: { item: TodoItem }) {
           className={classes.cornerDecoration}
           style={
             {
-              "--cat-color": category?.color,
+              "--cat-color": item.color,
             } as React.CSSProperties
           }
         />
@@ -225,119 +178,7 @@ export function DummyTodoItemComponent({ item }: { item: TodoItem }) {
           x
         </button>
       </div>
-      <ItemStatusMenu item={item} />
-    </div>
-  );
-}
-
-function ItemStatusMenu({ item }: { item: TodoItem }) {
-  const handleUpdateStatus = (newIndex: number) => {
-    db.todoItems
-      .update(item.id, {
-        status: {
-          ...item.status,
-          selected: newIndex,
-        },
-      })
-      .catch((error) => console.error(error));
-  };
-
-  const handleDeleteStatusElement = (index: number) => {
-    db.todoItems
-      .update(item.id, {
-        status: {
-          ...item.status,
-          elements: item.status.elements.filter((_, i) => i !== index),
-        },
-      })
-      .catch((error) => console.error(error));
-
-    if (index === item.status.selected) {
-      handleUpdateStatus(0);
-    }
-  };
-
-  const handleKeyDownNewStatus = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    e.stopPropagation();
-
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const newElement = e.currentTarget.value.trim();
-
-      if (newElement !== "") {
-        db.todoItems
-          .update(item.id, {
-            status: {
-              ...item.status,
-              elements: [...item.status.elements, newElement],
-            },
-          })
-          .catch((error) => console.error(error));
-      }
-    }
-  };
-
-  const handleSideClick = (direction: "Left" | "Right") => {
-    const dir = direction === "Left" ? -1 : 1;
-    let newIndex = item.status.selected + dir;
-
-    if (newIndex < 0) {
-      newIndex = item.status.elements.length - 1;
-    } else if (newIndex >= item.status.elements.length) {
-      newIndex = 0;
-    }
-
-    handleUpdateStatus(newIndex);
-  };
-
-  return (
-    <div
-      className={classes.status}
-      style={{ display: item.status.hidden ? "none" : "flex" }}
-    >
-      <button
-        className={classes.sideButton}
-        onClick={() => handleSideClick("Left")}
-      >
-        <TriangleIcon
-          style={{
-            transform: "rotate(90deg)",
-          }}
-        />
-      </button>
-      <DropdownMenu>
-        <DropdownMenuTrigger className={classes.element}>
-          <TriangleIcon />
-          <div>{item.status.elements[item.status.selected]}</div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent variant="item">
-          {item.status.elements.map((element, index) => (
-            <div key={index}>
-              <button onClick={() => handleDeleteStatusElement(index)}>
-                x
-              </button>
-              <DropdownMenuItem
-                onSelect={() => {
-                  handleUpdateStatus(index);
-                }}
-              >
-                {element}
-              </DropdownMenuItem>
-            </div>
-          ))}
-          <input placeholder="" onKeyDown={handleKeyDownNewStatus} />
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <button
-        className={classes.sideButton}
-        onClick={() => handleSideClick("Right")}
-      >
-        <TriangleIcon
-          style={{
-            transform: "rotate(-90deg)",
-          }}
-        />
-      </button>
+      {}
     </div>
   );
 }
@@ -345,70 +186,54 @@ function ItemStatusMenu({ item }: { item: TodoItem }) {
 function ItemContextMenu({
   item,
   children,
-  // handleDeleteItem,
 }: {
   item: TodoItem;
   children: React.ReactNode;
-  // handleDeleteItem: () => void;
 }) {
-  // const handleToggleCheck = () => {
-  //   db.todoItems
-  //     .update(item.id, { checked: !item.checked })
-  //     .catch((error) => console.error(error));
-  // };
-
-  // const handleToggleStar = () => {
-  //   db.todoItems
-  //     .update(item.id, { starred: !item.starred })
-  //     .catch((error) => console.error(error));
-  // };
-
   const handleToggleStatus = () => {
+    if (item.status !== null) {
+      db.todoItems
+        .update(item.id, {
+          status: null,
+        })
+        .catch((error) => console.error(error));
+      return;
+    }
+
     db.todoItems
       .update(item.id, {
         status: {
-          ...item.status,
-          hidden: !item.status.hidden,
+          selected: 0,
+          elements: [],
         },
       })
       .catch((error) => console.error(error));
   };
 
   const handleDuplicateItem = () => {
-    db.todoItems
-      .add({
-        text: item.text,
-        listId: item.listId,
-        order: item.order + 1,
-        checked: item.checked,
-        starred: item.starred,
-        categoryName: item.categoryName,
-        emoji: item.emoji,
-        status: item.status,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      })
-      .catch((error) => console.error(error));
+    createItem(
+      item.listId,
+      item.order + 1,
+      item.text,
+      item.emoji,
+      item.color,
+      item.star,
+      item.checked,
+      item.status,
+    );
   };
 
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
       <ContextMenuContent>
-        {/* <ContextMenuItem onSelect={handleToggleCheck}>
-          {item.checked ? "Uncheck" : "Check"}
-        </ContextMenuItem> */}
-        {/* <ContextMenuItem onSelect={handleToggleStar}>
-          {item.starred ? "Unstar" : "Star"}
-        </ContextMenuItem> */}
         <ContextMenuItem>Color</ContextMenuItem>
         <ContextMenuItem onSelect={handleDuplicateItem}>
           Duplicate
         </ContextMenuItem>
         <ContextMenuItem onSelect={handleToggleStatus}>
-          {item.status.hidden ? "Assign" : "Remove"} Status
+          {item.status === null ? "Assign" : "Remove"} Status
         </ContextMenuItem>
-        {/* <ContextMenuItem onSelect={handleDeleteItem}>Delete</ContextMenuItem> */}
       </ContextMenuContent>
     </ContextMenu>
   );

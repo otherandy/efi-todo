@@ -7,7 +7,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-import { db, deleteList } from "@/utils/db";
+import { createItem, db, deleteList } from "@/utils/db";
 import { getReadableTextColor } from "@/utils/color";
 import type { List, TodoItem } from "@/types";
 
@@ -43,24 +43,7 @@ export function ListComponent({ list }: { list: List }) {
   };
 
   const handleAddItem = () => {
-    db.todoItems
-      .add({
-        listId: list.id,
-        order: items?.length ?? 0,
-        text: "",
-        checked: false,
-        starred: false,
-        categoryName: "",
-        emoji: "",
-        status: {
-          selected: 0,
-          elements: [],
-          hidden: true,
-        },
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      })
-      .catch((error) => console.error(error));
+    createItem(list.id, items?.length ?? 0);
   };
 
   const handleChangeColor = (color: string) => {

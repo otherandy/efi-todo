@@ -1,11 +1,14 @@
 type Color = string;
+type Size = "full" | "half";
 type Hidden = 0 | 1;
+type Star = 0 | 1 | 2;
 
 interface List {
   id: number;
   title: string;
-  hidden: Hidden;
   color: Color;
+  size: Size;
+  hidden: Hidden;
 }
 
 interface TodoItem {
@@ -13,11 +16,11 @@ interface TodoItem {
   listId: number;
   order: number;
   text: string;
-  checked: boolean;
-  starred: boolean;
-  categoryName: string;
   emoji: string;
-  status: Status;
+  color: Color;
+  star: Star;
+  checked: boolean;
+  status: StageStatus | NumberStatus | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -29,10 +32,14 @@ interface Category {
   hidden: boolean;
 }
 
-interface Status {
+interface StageStatus {
   selected: number;
   elements: string[];
-  hidden: boolean;
+}
+
+interface NumberStatus {
+  current: number;
+  max: number;
 }
 
 interface CustomEmoji {
@@ -41,4 +48,15 @@ interface CustomEmoji {
   imgUrl: string;
 }
 
-export type { List, TodoItem, Category, Status, CustomEmoji };
+export type {
+  List,
+  TodoItem,
+  Category,
+  StageStatus,
+  NumberStatus,
+  CustomEmoji,
+  Color,
+  Size,
+  Hidden,
+  Star,
+};

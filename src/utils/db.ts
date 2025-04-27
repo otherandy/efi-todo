@@ -1,5 +1,13 @@
 import Dexie, { type EntityTable } from "dexie";
-import type { Category, CustomEmoji, List, TodoItem } from "@/types";
+import type {
+  Category,
+  CustomEmoji,
+  List,
+  NumberStatus,
+  StageStatus,
+  Star,
+  TodoItem,
+} from "@/types";
 
 import LvUpEmblem1Icon from "@/assets/lvup_emblem_color1.svg";
 import MantaDreamsIcon from "@/assets/manta_dreams.svg";
@@ -24,6 +32,7 @@ db.on("populate", async () => {
     {
       title: "New List",
       color: "#90abbf",
+      size: "full",
       hidden: 0,
     },
   ]);
@@ -42,15 +51,11 @@ db.on("populate", async () => {
       listId: 1,
       order: 0,
       text: "Item 1",
-      checked: false,
-      starred: false,
-      categoryName: "",
       emoji: "",
-      status: {
-        selected: 0,
-        elements: [],
-        hidden: true,
-      },
+      color: "#d9d9d9",
+      star: 0,
+      checked: false,
+      status: null,
       createdAt: new Date(),
       updatedAt: new Date(),
     },
@@ -89,9 +94,36 @@ function addList() {
     .add({
       title: "New List",
       color: "#d9d9d9",
+      size: "full",
       hidden: 0,
     })
     .catch((error) => console.error(error));
 }
 
-export { db, deleteList, addList };
+function createItem(
+  listId: number,
+  order: number,
+  text = "",
+  emoji = "",
+  color = "#d9d9d9",
+  star: Star = 0,
+  checked = false,
+  status: StageStatus | NumberStatus | null = null,
+) {
+  db.todoItems
+    .add({
+      listId,
+      order,
+      text,
+      emoji,
+      color,
+      star,
+      checked,
+      status,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .catch((error) => console.error(error));
+}
+
+export { db, deleteList, addList, createItem };
