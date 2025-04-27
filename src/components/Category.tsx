@@ -61,10 +61,8 @@ export function CategoryComponent({ category }: { category: Category }) {
           {displayColorPicker && (
             <ColorPicker
               color={category.color}
-              onChange={(color) => {
-                handleChangeColor(color);
-                setDisplayColorPicker(false);
-              }}
+              setDisplayColorPicker={setDisplayColorPicker}
+              handleChangeColor={handleChangeColor}
             />
           )}
         </ContextMenuTrigger>
