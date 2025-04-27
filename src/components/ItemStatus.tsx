@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { db } from "@/utils/db";
-import type { TodoItem, StageStatus, NumberStatus } from "@/types";
 import { isStageStatus, isNumberStatus } from "@/utils/status";
+import type { TodoItem, StageStatus, NumberStatus } from "@/types";
 
 import {
   DropdownMenu,
@@ -106,7 +107,7 @@ function ItemStageStatus({ item }: { item: TodoItem }) {
       </button>
       <DropdownMenu>
         <DropdownMenuTrigger className={classes.currentContainer}>
-          <TriangleIcon />
+          <TriangleIcon className={classes.currentTriangle} />
           <div className={classes.current}>
             {
               (item.status as StageStatus).elements[
@@ -148,12 +149,19 @@ function ItemStageStatus({ item }: { item: TodoItem }) {
 }
 
 function ItemNumberStatus({ item }: { item: TodoItem }) {
+  const [progress, setProgress] = useState(
+    ((item.status as NumberStatus).current /
+      (item.status as NumberStatus).max) *
+      100,
+  );
+
   const handleSideClick = (direction: "Left" | "Right") => {
     const dir = direction === "Left" ? -1 : 1;
     const newCurrent = (item.status as NumberStatus).current + dir;
     if (newCurrent < 0 || newCurrent > (item.status as NumberStatus).max) {
       return;
     }
+
     handleUpdateStatus({
       current: newCurrent,
       max: (item.status as NumberStatus).max,
@@ -161,6 +169,8 @@ function ItemNumberStatus({ item }: { item: TodoItem }) {
   };
 
   const handleUpdateStatus = (newStatus: NumberStatus) => {
+    setProgress((newStatus.current / newStatus.max) * 100);
+
     db.todoItems
       .update(item.id, {
         status: newStatus,
@@ -181,15 +191,15 @@ function ItemNumberStatus({ item }: { item: TodoItem }) {
         />
       </button>
       <DropdownMenu>
-        <Progress asChild>
+        <Progress asChild value={progress}>
           <DropdownMenuTrigger className={classes.currentContainer}>
             <ProgressIndicator
               style={{
                 backgroundColor: item.color,
-                transform: `translateX(-${100 - ((item.status as NumberStatus).current / (item.status as NumberStatus).max) * 100}%)`,
+                transform: `translateX(-${Math.max(0, 100 - progress)}%)`,
               }}
             />
-            <TriangleIcon />
+            <TriangleIcon className={classes.currentTriangle} />
             <div className={classes.current}>
               {(item.status as NumberStatus).current}
               {" / "}

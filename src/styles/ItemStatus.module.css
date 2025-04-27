@@ -18,11 +18,16 @@
   border: none;
   border-radius: 9999px;
   background-color: #efefef;
+  padding: 0;
   height: 1rem;
 
   &:hover {
     background-color: #e0e0e0;
   }
+}
+
+.currentTriangle {
+  padding: 0 0.5rem;
 }
 
 .current {
