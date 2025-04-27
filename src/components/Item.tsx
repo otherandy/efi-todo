@@ -195,7 +195,6 @@ export function DummyTodoItemComponent({ item }: { item: TodoItem }) {
           x
         </button>
       </div>
-      {}
     </div>
   );
 }

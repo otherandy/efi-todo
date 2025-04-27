@@ -104,9 +104,9 @@ function ItemStageStatus({ item }: { item: TodoItem }) {
         />
       </button>
       <DropdownMenu>
-        <DropdownMenuTrigger className={classes.element}>
+        <DropdownMenuTrigger className={classes.currentContainer}>
           <TriangleIcon />
-          <div>
+          <div className={classes.current}>
             {
               (item.status as StageStatus).elements[
                 (item.status as StageStatus).selected
@@ -116,7 +116,7 @@ function ItemStageStatus({ item }: { item: TodoItem }) {
         </DropdownMenuTrigger>
         <DropdownMenuContent variant="item">
           {(item.status as StageStatus).elements.map((element, index) => (
-            <div key={index}>
+            <div key={index} className={classes.stageItem}>
               <button onClick={() => handleDeleteStatusElement(index)}>
                 x
               </button>
@@ -147,11 +147,100 @@ function ItemStageStatus({ item }: { item: TodoItem }) {
 }
 
 function ItemNumberStatus({ item }: { item: TodoItem }) {
+  const handleSideClick = (direction: "Left" | "Right") => {
+    const dir = direction === "Left" ? -1 : 1;
+    const newCurrent = (item.status as NumberStatus).current + dir;
+    if (newCurrent < 0 || newCurrent > (item.status as NumberStatus).max) {
+      return;
+    }
+    handleUpdateStatus({
+      current: newCurrent,
+      max: (item.status as NumberStatus).max,
+    });
+  };
+
+  const handleUpdateStatus = (newStatus: NumberStatus) => {
+    db.todoItems
+      .update(item.id, {
+        status: newStatus,
+      })
+      .catch((error) => console.error(error));
+  };
+
   return (
     <div className={classes.status}>
-      <div>{(item.status as NumberStatus).current}</div>
-      <div>/</div>
-      <div>{(item.status as NumberStatus).max}</div>
+      <button
+        className={classes.sideButton}
+        onClick={() => handleSideClick("Left")}
+      >
+        <TriangleIcon
+          style={{
+            transform: "rotate(90deg)",
+          }}
+        />
+      </button>
+      <DropdownMenu>
+        <DropdownMenuTrigger className={classes.currentContainer}>
+          <TriangleIcon />
+          <div className={classes.current}>
+            {(item.status as NumberStatus).current}
+            {" / "}
+            {(item.status as NumberStatus).max}
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent variant="item">
+          <div className={classes.numberInputContainer}>
+            <label className={classes.numberInput}>
+              <span>CURRENT</span>
+              <input
+                type="number"
+                value={(item.status as NumberStatus).current}
+                onChange={(e) => {
+                  const newCurrent = parseInt(e.target.value, 10);
+                  if (!isNaN(newCurrent)) {
+                    handleUpdateStatus({
+                      current: newCurrent,
+                      max: (item.status as NumberStatus).max,
+                    });
+                  }
+                }}
+                min={0}
+                max={(item.status as NumberStatus).max}
+                step={1}
+              />
+            </label>
+            <label className={classes.numberInput}>
+              <span>MAX</span>
+              <input
+                type="number"
+                value={(item.status as NumberStatus).max}
+                onChange={(e) => {
+                  const newMax = parseInt(e.target.value, 10);
+                  if (!isNaN(newMax)) {
+                    handleUpdateStatus({
+                      max: newMax,
+                      current: (item.status as NumberStatus).current,
+                    });
+                  }
+                }}
+                min={0}
+                max={100}
+                step={1}
+              />
+            </label>
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <button
+        className={classes.sideButton}
+        onClick={() => handleSideClick("Right")}
+      >
+        <TriangleIcon
+          style={{
+            transform: "rotate(-90deg)",
+          }}
+        />
+      </button>
     </div>
   );
 }
