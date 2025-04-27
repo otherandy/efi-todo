@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -90,12 +90,15 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
     opacity: isDragging ? 0.5 : 1,
   };
 
-  useEffect(() => {
-    setText(item.text);
-  }, [item.text]);
-
   const handleChangeItemText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      createItem(item.listId, item.order + 1);
+    }
   };
 
   const handleDeleteItem = () => {
@@ -103,7 +106,7 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
   };
 
   const handleBlur = () => {
-    if (item.text.trim() === "") {
+    if (text.trim() === "") {
       handleDeleteItem();
     } else if (text !== item.text) {
       db.todoItems
@@ -112,13 +115,6 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
           updatedAt: new Date(),
         })
         .catch((error) => console.error(error));
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      createItem(item.listId, item.order + 1);
     }
   };
 
