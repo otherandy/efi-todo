@@ -1,5 +1,4 @@
 type Color = string;
-type Size = "full" | "half";
 type Hidden = 0 | 1;
 type Star = 0 | 1 | 2;
 
@@ -7,7 +6,7 @@ interface List {
   id: number;
   title: string;
   color: Color;
-  size: Size;
+  halfSize: boolean;
   hidden: Hidden;
 }
 
@@ -56,7 +55,6 @@ export type {
   NumberStatus,
   CustomEmoji,
   Color,
-  Size,
   Hidden,
   Star,
 };

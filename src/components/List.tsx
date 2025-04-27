@@ -70,12 +70,19 @@ export function ListComponent({ list }: { list: List }) {
       .catch((error) => console.error(error));
   };
 
+  const handleResize = () => {
+    db.lists
+      .update(list.id, { halfSize: !list.halfSize })
+      .catch((error) => console.error(error));
+  };
+
   return (
     <div className={classes.list}>
       <ListContextMenu
         setDisplayColorPicker={setDisplayColorPicker}
         handleHideList={handleHideList}
         handleClearCheckmarks={handleClearCheckmarks}
+        handleResize={handleResize}
       >
         <div className={classes.title}>
           <div className={classes.icons}>
@@ -134,11 +141,13 @@ function ListContextMenu({
   setDisplayColorPicker,
   handleHideList,
   handleClearCheckmarks,
+  handleResize,
   children,
 }: {
   setDisplayColorPicker: (value: boolean) => void;
   handleHideList: () => void;
   handleClearCheckmarks: () => void;
+  handleResize: () => void;
   children: React.ReactNode;
 }) {
   return (
@@ -156,8 +165,9 @@ function ListContextMenu({
         <ContextMenuItem onSelect={handleClearCheckmarks}>
           Clear Checkmarks
         </ContextMenuItem>
-        <ContextMenuItem>Half Size / Full Size</ContextMenuItem>
-        {/* <ContextMenuItem onSelect={handleDeleteList}>Delete</ContextMenuItem> */}
+        <ContextMenuItem onSelect={handleResize}>
+          Half Size / Full Size
+        </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>
   );

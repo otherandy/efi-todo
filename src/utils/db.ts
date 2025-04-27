@@ -32,7 +32,7 @@ db.on("populate", async () => {
     {
       title: "New List",
       color: "#90abbf",
-      size: "full",
+      halfSize: false,
       hidden: 0,
     },
   ]);
@@ -94,7 +94,7 @@ function addList() {
     .add({
       title: "New List",
       color: "#d9d9d9",
-      size: "full",
+      halfSize: false,
       hidden: 0,
     })
     .catch((error) => console.error(error));
