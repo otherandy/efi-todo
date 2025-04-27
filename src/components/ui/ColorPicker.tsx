@@ -2,17 +2,34 @@ import { TwitterPicker } from "react-color";
 
 export function ColorPicker({
   color,
-  onChange,
+  setDisplayColorPicker,
+  handleChangeColor,
 }: {
   color: string;
-  onChange: (color: string) => void;
+  setDisplayColorPicker: (display: boolean) => void;
+  handleChangeColor: (color: string) => void;
 }) {
   return (
-    <div style={{ position: "absolute", zIndex: 10 }}>
-      <TwitterPicker
-        color={color}
-        onChangeComplete={(color: { hex: string }) => onChange(color.hex)}
+    <>
+      <div
+        style={{
+          position: "fixed",
+          top: "0px",
+          right: "0px",
+          bottom: "0px",
+          left: "0px",
+        }}
+        onClick={() => setDisplayColorPicker(false)}
       />
-    </div>
+      <div style={{ position: "absolute", zIndex: 10 }}>
+        <TwitterPicker
+          color={color}
+          onChangeComplete={(color: { hex: string }) => {
+            handleChangeColor(color.hex);
+            setDisplayColorPicker(false);
+          }}
+        />
+      </div>
+    </>
   );
 }

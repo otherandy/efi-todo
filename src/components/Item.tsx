@@ -13,6 +13,7 @@ import {
   ContextMenuContent,
   ContextMenuItem,
 } from "@/components/ui/ContextMenu";
+import { ColorPicker } from "@/components/ui/ColorPicker";
 
 import classes from "@/styles/Item.module.css";
 
@@ -68,6 +69,7 @@ export function FullTodoItemComponent({ item }: { item: TodoItem }) {
 
 function TodoItemComponent({ item }: { item: TodoItem }) {
   const [text, setText] = useState(item.text);
+  const [displayColorPicker, setDisplayColorPicker] = useState(false);
 
   const {
     attributes,
@@ -119,8 +121,14 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
     }
   };
 
+  const handleChangeColor = (color: string) => {
+    db.todoItems
+      .update(item.id, { color })
+      .catch((error) => console.error(error));
+  };
+
   return (
-    <ItemContextMenu item={item}>
+    <ItemContextMenu item={item} setDisplayColorPicker={setDisplayColorPicker}>
       <div
         ref={setNodeRef}
         className={classes.item}
@@ -155,6 +163,13 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
           </button>
         </div>
         <ItemStatus item={item} />
+        {displayColorPicker && (
+          <ColorPicker
+            color={item.color}
+            setDisplayColorPicker={setDisplayColorPicker}
+            handleChangeColor={handleChangeColor}
+          />
+        )}
       </div>
     </ItemContextMenu>
   );
@@ -186,9 +201,11 @@ export function DummyTodoItemComponent({ item }: { item: TodoItem }) {
 
 function ItemContextMenu({
   item,
+  setDisplayColorPicker,
   children,
 }: {
   item: TodoItem;
+  setDisplayColorPicker: (value: boolean) => void;
   children: React.ReactNode;
 }) {
   const handleToggleStatus = () => {
@@ -228,7 +245,9 @@ function ItemContextMenu({
     <ContextMenu>
       <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
       <ContextMenuContent>
-        <ContextMenuItem>Color</ContextMenuItem>
+        <ContextMenuItem onSelect={() => setDisplayColorPicker(true)}>
+          Color
+        </ContextMenuItem>
         <ContextMenuItem onSelect={handleDuplicateItem}>
           Duplicate
         </ContextMenuItem>

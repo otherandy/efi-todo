@@ -103,25 +103,11 @@ export function ListComponent({ list }: { list: List }) {
               onChange={handleChangeTitle}
             />
             {displayColorPicker && (
-              <>
-                <div
-                  style={{
-                    position: "fixed",
-                    top: "0px",
-                    right: "0px",
-                    bottom: "0px",
-                    left: "0px",
-                  }}
-                  onClick={() => setDisplayColorPicker(false)}
-                />
-                <ColorPicker
-                  color={list.color}
-                  onChange={(color) => {
-                    handleChangeColor(color);
-                    setDisplayColorPicker(false);
-                  }}
-                />
-              </>
+              <ColorPicker
+                color={list.color}
+                setDisplayColorPicker={setDisplayColorPicker}
+                handleChangeColor={handleChangeColor}
+              />
             )}
           </div>
           <div className={classes.icons}>
