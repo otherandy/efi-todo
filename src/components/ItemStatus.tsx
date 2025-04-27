@@ -89,6 +89,8 @@ function ItemStageStatus({ item }: { item: TodoItem }) {
             } as StageStatus,
           })
           .catch((error) => console.error(error));
+
+        e.currentTarget.value = "";
       }
     }
   };
