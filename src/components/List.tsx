@@ -98,12 +98,18 @@ export function ListComponent({ list }: { list: List }) {
   };
 
   return (
-    <div className={classes.list}>
+    <div
+      className={classes.list}
+      style={{
+        height: list.halfSize ? "50%" : "100%",
+      }}
+    >
       <ListContextMenu
         setDisplayColorPicker={setDisplayColorPicker}
         handleHideList={handleHideList}
         handleClearCheckmarks={handleClearCheckmarks}
         handleResize={handleResize}
+        halfSize={list.halfSize}
       >
         <div className={classes.title}>
           <div className={classes.icons}>
@@ -181,12 +187,14 @@ function ListContextMenu({
   handleHideList,
   handleClearCheckmarks,
   handleResize,
+  halfSize,
   children,
 }: {
   setDisplayColorPicker: (value: boolean) => void;
   handleHideList: () => void;
   handleClearCheckmarks: () => void;
   handleResize: () => void;
+  halfSize: boolean;
   children: React.ReactNode;
 }) {
   return (
@@ -205,7 +213,7 @@ function ListContextMenu({
           Clear Checkmarks
         </ContextMenuItem>
         <ContextMenuItem onSelect={handleResize}>
-          Half Size / Full Size
+          {halfSize ? "Full Size" : "Half Size"}
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>

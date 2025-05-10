@@ -1,14 +1,15 @@
 .lists {
   display: flex;
-  flex-direction: column;
   flex-wrap: wrap;
   justify-content: center;
   gap: 1rem;
   padding: 1rem;
 }
 
-@media (min-width: 1024px) {
-  .lists {
-    flex-direction: row;
-  }
+.listGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: fit-content;
+  height: 80vh;
 }

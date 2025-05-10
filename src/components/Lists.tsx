@@ -164,6 +164,29 @@ export function ListsComponent() {
     }
   };
 
+  const groupedLists: List[][] = [];
+  let tempGroup: List[] = [];
+
+  lists?.forEach((list) => {
+    if (list.halfSize) {
+      tempGroup.push(list);
+      if (tempGroup.length === 2) {
+        groupedLists.push(tempGroup);
+        tempGroup = [];
+      }
+    } else {
+      if (tempGroup.length > 0) {
+        groupedLists.push(tempGroup);
+        tempGroup = [];
+      }
+      groupedLists.push([list]);
+    }
+  });
+
+  if (tempGroup.length > 0) {
+    groupedLists.push(tempGroup);
+  }
+
   return (
     <DndContext
       sensors={sensors}
@@ -177,10 +200,14 @@ export function ListsComponent() {
         strategy={rectSwappingStrategy}
       >
         <div className={classes.lists}>
-          {lists?.map((list) => {
-            if (list.hidden) return null;
-            return <ListComponent key={list.id} list={list} />;
-          })}
+          {groupedLists.map((group, index) => (
+            <div key={index} className={classes.listGroup}>
+              {group.map((list) => {
+                if (list.hidden) return null;
+                return <ListComponent key={list.id} list={list} />;
+              })}
+            </div>
+          ))}
         </div>
       </SortableContext>
       <DragOverlay>
