@@ -1,0 +1,21 @@
+{
+  "name": "efi ToDo",
+  "short_name": "Todo",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1976d2",
+  "description": "A simple and effective todo app.",
+  "icons": [
+    {
+      "src": "/full_check.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/full_check.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
