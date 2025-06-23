@@ -32,15 +32,6 @@
   font-size: 1.25rem;
 }
 
-@media (width >= 96rem) {
-  .header {
-    font-size: 1.25rem;
-  }
-  .body {
-    font-size: 1.75rem;
-  }
-}
-
 .emoji {
   align-self: flex-start;
 }
