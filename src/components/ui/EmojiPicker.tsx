@@ -40,7 +40,7 @@ export function ItemEmojiPicker(props: Props) {
       <Picker
         customEmojis={customEmojis}
         onEmojiClick={onEmojiClick}
-        emojiStyle={EmojiStyle.NATIVE}
+        emojiStyle={EmojiStyle.TWITTER}
         previewConfig={{
           showPreview: false,
         }}

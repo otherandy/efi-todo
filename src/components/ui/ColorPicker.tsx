@@ -1,4 +1,4 @@
-import { TwitterPicker } from "react-color";
+import { SketchPicker } from "react-color";
 
 export function ColorPicker({
   color,
@@ -22,7 +22,7 @@ export function ColorPicker({
         onClick={() => setDisplayColorPicker(false)}
       />
       <div style={{ position: "absolute", zIndex: 10 }}>
-        <TwitterPicker
+        <SketchPicker
           color={color}
           onChangeComplete={(color: { hex: string }) => {
             handleChangeColor(color.hex);

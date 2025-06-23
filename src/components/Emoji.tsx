@@ -41,7 +41,7 @@ export function Emoji({ unified }: { unified?: string }) {
     <EmojiPrimitive
       unified={unified ?? "1f539"}
       size={size}
-      emojiStyle={EmojiStyle.NATIVE}
+      emojiStyle={EmojiStyle.TWITTER}
     />
   );
 }
