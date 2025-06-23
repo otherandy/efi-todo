@@ -16,9 +16,9 @@ export const DialogContent = React.forwardRef<
     <DialogPrimitive.Overlay className={classes.overlay} />
     <DialogPrimitive.Content ref={ref} className={classes.content} {...props}>
       <div>{children}</div>
-      <DialogPrimitive.Close className={classes.closeButton} aria-label="Close">
+      {/* <DialogPrimitive.Close className={classes.closeButton} aria-label="Close">
         X
-      </DialogPrimitive.Close>
+      </DialogPrimitive.Close> */}
     </DialogPrimitive.Content>
   </DialogPrimitive.Portal>
 ));
