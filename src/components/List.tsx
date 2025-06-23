@@ -151,8 +151,8 @@ export function ListComponent({ list }: { list: List }) {
                 <TrashIcon />
               </span>
             </DangerButton>
-            <span>
-              <MinLineIcon onClick={handleHideList} />
+            <span onClick={handleHideList}>
+              <MinLineIcon />
             </span>
           </div>
           <div
@@ -181,11 +181,11 @@ export function ListComponent({ list }: { list: List }) {
             )}
           </div>
           <div className={classes.icons}>
-            <span>
-              <ClearCheckIcon onClick={handleClearCheckmarks} />
+            <span onClick={handleClearCheckmarks}>
+              <ClearCheckIcon />
             </span>
-            <span>
-              <ThreeLinesIcon onClick={handleDeleteItems} />
+            <span onClick={handleDeleteItems}>
+              <ThreeLinesIcon />
             </span>
           </div>
         </div>
