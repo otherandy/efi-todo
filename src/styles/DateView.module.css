@@ -6,15 +6,18 @@
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   background-color: white;
-  width: fit-content;
+  aspect-ratio: 227.89 / 79.03;
+  width: 100%;
+  min-width: fit-content;
   pointer-events: none;
   user-select: none;
 }
 
 .header {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   gap: 1.5rem;
+  padding: 0 2rem;
   color: #555;
   font-size: 0.825rem;
   text-align: center;
@@ -22,10 +25,20 @@
 
 .body {
   display: flex;
+  justify-content: space-evenly;
   align-items: center;
   gap: 1rem;
   padding: 0.2rem 2rem;
   font-size: 1.25rem;
+}
+
+@media (width >= 96rem) {
+  .header {
+    font-size: 1.25rem;
+  }
+  .body {
+    font-size: 1.75rem;
+  }
 }
 
 .emoji {
