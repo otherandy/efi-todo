@@ -67,7 +67,14 @@ export function ItemEmoji({
       {isOpen && pickerPos && (
         <Portal>
           <div
-            className={classes.overlay}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              zIndex: 9998,
+            }}
             onClick={() => setIsOpen(false)}
           ></div>
           <div

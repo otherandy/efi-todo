@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -15,6 +15,7 @@ import {
   ContextMenuItem,
 } from "@/components/ui/ContextMenu";
 import { ColorPicker } from "@/components/ui/ColorPicker";
+import { Portal } from "@/components/ui/Portal";
 
 import classes from "@/styles/Item.module.css";
 
@@ -71,6 +72,12 @@ export function FullTodoItemComponent({ item }: { item: TodoItem }) {
 function TodoItemComponent({ item }: { item: TodoItem }) {
   const [text, setText] = useState(item.text);
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
+  const itemRef = useRef<HTMLDivElement>(null);
+
+  const [pickerPos, setPickerPos] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
 
   const {
     attributes,
@@ -124,6 +131,29 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
       .catch((error) => console.error(error));
   };
 
+  const updatePickerPos = useCallback(() => {
+    if (itemRef.current) {
+      const rect = itemRef.current.getBoundingClientRect();
+      setPickerPos({
+        top: rect.bottom + window.scrollY,
+        left: rect.left + window.scrollX,
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!displayColorPicker) return;
+
+    updatePickerPos();
+    window.addEventListener("scroll", updatePickerPos, true);
+    window.addEventListener("resize", updatePickerPos);
+
+    return () => {
+      window.removeEventListener("scroll", updatePickerPos, true);
+      window.removeEventListener("resize", updatePickerPos);
+    };
+  }, [displayColorPicker, updatePickerPos]);
+
   return (
     <ItemContextMenu item={item} setDisplayColorPicker={setDisplayColorPicker}>
       <div
@@ -132,7 +162,7 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
         style={style}
         {...attributes}
       >
-        <div className={classes.content} {...listeners}>
+        <div ref={itemRef} className={classes.content} {...listeners}>
           <span
             className={classes.cornerDecoration}
             style={
@@ -160,12 +190,33 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
           </button>
         </div>
         <ItemStatus item={item} />
-        {displayColorPicker && (
-          <ColorPicker
-            color={item.color}
-            setDisplayColorPicker={setDisplayColorPicker}
-            handleChangeColor={handleChangeColor}
-          />
+        {displayColorPicker && pickerPos && (
+          <Portal>
+            <div
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                zIndex: 9998,
+              }}
+              onClick={() => setDisplayColorPicker(false)}
+            ></div>
+            <div
+              style={{
+                position: "absolute",
+                top: pickerPos.top,
+                left: pickerPos.left,
+                zIndex: 9999,
+              }}
+            >
+              <ColorPicker
+                color={item.color}
+                handleChangeColor={handleChangeColor}
+              />
+            </div>
+          </Portal>
         )}
       </div>
     </ItemContextMenu>
