@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 
 import { useDroppable } from "@dnd-kit/core";
@@ -36,7 +36,12 @@ export function ListComponent({ list }: { list: List }) {
     db.todoItems.where({ listId: list.id }).sortBy("order"),
   );
 
+  const listRef = useRef<HTMLInputElement>(null);
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
+  const [pickerPos, setPickerPos] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
 
   const {
     attributes,
@@ -97,6 +102,29 @@ export function ListComponent({ list }: { list: List }) {
       .catch((error) => console.error(error));
   };
 
+  const updatePickerPos = useCallback(() => {
+    if (listRef.current) {
+      const rect = listRef.current.getBoundingClientRect();
+      setPickerPos({
+        top: rect.bottom + window.scrollY,
+        left: rect.left + window.scrollX,
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!displayColorPicker) return;
+
+    updatePickerPos();
+    window.addEventListener("scroll", updatePickerPos, true);
+    window.addEventListener("resize", updatePickerPos);
+
+    return () => {
+      window.removeEventListener("scroll", updatePickerPos, true);
+      window.removeEventListener("resize", updatePickerPos);
+    };
+  }, [displayColorPicker, updatePickerPos]);
+
   return (
     <div
       className={classes.list}
@@ -130,6 +158,7 @@ export function ListComponent({ list }: { list: List }) {
             {...listeners}
           >
             <input
+              ref={listRef}
               className={classes.input}
               style={{
                 color: getReadableTextColor(list.color),
@@ -137,9 +166,10 @@ export function ListComponent({ list }: { list: List }) {
               value={list.title}
               onChange={handleChangeTitle}
             />
-            {displayColorPicker && (
+            {displayColorPicker && pickerPos && (
               <ColorPicker
                 color={list.color}
+                pickerPos={pickerPos}
                 setDisplayColorPicker={setDisplayColorPicker}
                 handleChangeColor={handleChangeColor}
               />

@@ -15,7 +15,6 @@ import {
   ContextMenuItem,
 } from "@/components/ui/ContextMenu";
 import { ColorPicker } from "@/components/ui/ColorPicker";
-import { Portal } from "@/components/ui/Portal";
 
 import classes from "@/styles/Item.module.css";
 
@@ -71,9 +70,9 @@ export function FullTodoItemComponent({ item }: { item: TodoItem }) {
 
 function TodoItemComponent({ item }: { item: TodoItem }) {
   const [text, setText] = useState(item.text);
-  const [displayColorPicker, setDisplayColorPicker] = useState(false);
-  const itemRef = useRef<HTMLDivElement>(null);
 
+  const itemRef = useRef<HTMLDivElement>(null);
+  const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [pickerPos, setPickerPos] = useState<{
     top: number;
     left: number;
@@ -191,32 +190,12 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
         </div>
         <ItemStatus item={item} />
         {displayColorPicker && pickerPos && (
-          <Portal>
-            <div
-              style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                zIndex: 9998,
-              }}
-              onClick={() => setDisplayColorPicker(false)}
-            ></div>
-            <div
-              style={{
-                position: "absolute",
-                top: pickerPos.top,
-                left: pickerPos.left,
-                zIndex: 9999,
-              }}
-            >
-              <ColorPicker
-                color={item.color}
-                handleChangeColor={handleChangeColor}
-              />
-            </div>
-          </Portal>
+          <ColorPicker
+            color={item.color}
+            pickerPos={pickerPos}
+            setDisplayColorPicker={setDisplayColorPicker}
+            handleChangeColor={handleChangeColor}
+          />
         )}
       </div>
     </ItemContextMenu>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { db } from "@/utils/db";
 import type { Category } from "@/types";
@@ -16,7 +16,13 @@ import classes from "@/styles/Category.module.css";
 
 export function CategoryComponent({ category }: { category: Category }) {
   const [name, setName] = useState(category.name);
+
+  const categoryRef = useRef<HTMLDivElement>(null);
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
+  const [pickerPos, setPickerPos] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
 
   const handleChangeName = () => {
     db.categories
@@ -34,11 +40,35 @@ export function CategoryComponent({ category }: { category: Category }) {
     db.categories.delete(category.name).catch((error) => console.error(error));
   };
 
+  const updatePickerPos = useCallback(() => {
+    if (categoryRef.current) {
+      const rect = categoryRef.current.getBoundingClientRect();
+      setPickerPos({
+        top: rect.bottom + window.scrollY,
+        left: rect.left + window.scrollX,
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!displayColorPicker) return;
+
+    updatePickerPos();
+    window.addEventListener("scroll", updatePickerPos, true);
+    window.addEventListener("resize", updatePickerPos);
+
+    return () => {
+      window.removeEventListener("scroll", updatePickerPos, true);
+      window.removeEventListener("resize", updatePickerPos);
+    };
+  }, [displayColorPicker, updatePickerPos]);
+
   return (
     <Dialog>
       <ContextMenu>
         <ContextMenuTrigger>
           <div
+            ref={categoryRef}
             className={classes.category}
             style={{
               borderColor: category.color,
@@ -58,9 +88,10 @@ export function CategoryComponent({ category }: { category: Category }) {
               x
             </button>
           </div>
-          {displayColorPicker && (
+          {displayColorPicker && pickerPos && (
             <ColorPicker
               color={category.color}
+              pickerPos={pickerPos}
               setDisplayColorPicker={setDisplayColorPicker}
               handleChangeColor={handleChangeColor}
             />
