@@ -39,17 +39,9 @@ export function ItemEmoji({
     window.addEventListener("scroll", updatePickerPos, true);
     window.addEventListener("resize", updatePickerPos);
 
-    function handleClick(e: MouseEvent) {
-      if (emojiRef.current && !emojiRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClick);
-
     return () => {
       window.removeEventListener("scroll", updatePickerPos, true);
       window.removeEventListener("resize", updatePickerPos);
-      document.removeEventListener("mousedown", handleClick);
     };
   }, [isOpen, updatePickerPos]);
 
@@ -74,6 +66,10 @@ export function ItemEmoji({
       </span>
       {isOpen && pickerPos && (
         <Portal>
+          <div
+            className={classes.overlay}
+            onClick={() => setIsOpen(false)}
+          ></div>
           <div
             style={{
               position: "absolute",
