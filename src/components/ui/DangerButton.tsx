@@ -9,9 +9,13 @@ import {
 } from "@/components/ui/AlertDialog";
 
 export function DangerButton({
+  action,
+  description,
   confirmAction,
   children,
 }: {
+  action: string;
+  description?: string;
   confirmAction: () => void;
   asChild?: boolean;
   children: React.ReactNode;
@@ -20,11 +24,13 @@ export function DangerButton({
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
-        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+        <AlertDialogTitle>{action}</AlertDialogTitle>
         <AlertDialogDescription>
-          This action cannot be undone.
+          {description ?? "This action cannot be undone."}
         </AlertDialogDescription>
-        <div style={{ display: "flex", gap: 25, justifyContent: "flex-end" }}>
+        <div
+          style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}
+        >
           <AlertDialogCancel asChild>
             <button>Cancel</button>
           </AlertDialogCancel>

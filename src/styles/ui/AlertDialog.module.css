@@ -1,7 +1,9 @@
 .overlay {
   position: fixed;
+  z-index: 1000;
   animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
   inset: 0;
+  background-color: rgba(0, 0, 0, 0.9);
 }
 
 .content {
@@ -9,14 +11,52 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 2000;
   animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
-  border-radius: 6px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #f9f9f9;
   padding: 25px;
   width: 90vw;
   max-width: 500px;
   max-height: 85vh;
+
+  &:focus {
+    outline: none;
+  }
 }
 
-.content:focus {
-  outline: none;
+.content .description {
+  padding: 1rem 0;
+}
+
+.cancelButton {
+  transition: background 0.15s;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  color: #333;
+  font-size: 1rem;
+
+  &:hover,
+  &:focus {
+    background: #cccccc;
+  }
+}
+
+.actionButton {
+  transition: background 0.15s;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  background: #d32f2f;
+  padding: 8px 20px;
+  color: #fff;
+  font-size: 1rem;
+
+  &:hover,
+  &:focus {
+    background: #b71c1c;
+  }
 }

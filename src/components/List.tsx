@@ -141,7 +141,12 @@ export function ListComponent({ list }: { list: List }) {
       >
         <div className={classes.title}>
           <div className={classes.icons}>
-            <DangerButton confirmAction={() => deleteList(list.id)} asChild>
+            <DangerButton
+              action="Delete?"
+              description={`You're about to delete the list "${list.title}".`}
+              confirmAction={() => deleteList(list.id)}
+              asChild
+            >
               <span>
                 <TrashIcon />
               </span>

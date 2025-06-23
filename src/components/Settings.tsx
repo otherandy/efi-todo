@@ -80,11 +80,13 @@ export function Settings() {
 
       <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
         <AlertDialogContent>
-          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogTitle>Reset?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone.
+            This erases all your lists and emoji.
           </AlertDialogDescription>
-          <div style={{ display: "flex", gap: 25, justifyContent: "flex-end" }}>
+          <div
+            style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}
+          >
             <AlertDialogCancel asChild>
               <button>Cancel</button>
             </AlertDialogCancel>
