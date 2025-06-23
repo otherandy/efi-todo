@@ -10,6 +10,7 @@ import classes from "@/styles/Emoji.module.css";
 
 type Props = {
   itemId: number;
+  onClose?: () => void;
 } & Omit<
   PickerProps,
   "customEmojis" | "onEmojiClick" | "emojiStyle" | "previewConfig"
@@ -21,18 +22,22 @@ export function EmojiPickerLoader() {
 }
 
 export function ItemEmojiPicker(props: Props) {
+  const { itemId, onClose, ...rest } = props;
   const customEmojis = useLiveQuery(() => db.customEmojis.toArray(), []);
 
   const onEmojiClick = (emojiData: EmojiClickData) => {
     const { unified } = emojiData;
 
     db.todoItems
-      .update(props.itemId, {
+      .update(itemId, {
         emoji: unified,
       })
       .catch((error) => {
         console.error("Error updating emoji:", error);
       });
+    if (onClose) {
+      onClose();
+    }
   };
 
   return (
@@ -44,7 +49,7 @@ export function ItemEmojiPicker(props: Props) {
         previewConfig={{
           showPreview: false,
         }}
-        {...props}
+        {...rest}
       />
     </div>
   );
