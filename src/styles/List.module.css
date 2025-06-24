@@ -88,6 +88,19 @@
   gap: 0.5rem;
   padding: 0.5rem 0;
   overflow-y: auto;
+  scrollbar-color: #bbb #e6eaec;
+  scrollbar-width: thin;
+  scrollbar-width: thin;
+}
+
+.items::-webkit-scrollbar {
+  background: #e6eaec;
+  width: 8px;
+}
+
+.items::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: #bbb;
 }
 
 .emptyDropZone {
