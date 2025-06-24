@@ -1,11 +1,11 @@
 {
-  "name": "efi ToDo",
-  "short_name": "Todo",
+  "name": "At-List",
+  "short_name": "efi",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#1976d2",
-  "description": "A simple and effective todo app.",
+  "description": "A simple todo app for efi.",
   "icons": [
     {
       "src": "/full_check.svg",
