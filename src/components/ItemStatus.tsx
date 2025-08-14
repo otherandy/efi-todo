@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { db } from "@/utils/db";
+import { db } from "@/services/dexie.service";
 import { isStageStatus, isNumberStatus } from "@/utils/status";
-import type { TodoItem, StageStatus, NumberStatus } from "@/types";
+import type { TodoItem, StageStatus, NumberStatus } from "@/types/index.types";
 
 import {
   DropdownMenu,

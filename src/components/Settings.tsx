@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { db, addList } from "@/utils/db";
+import { useDatabaseService } from "@/hooks/useDatabaseService";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/Dialog";
 import {
@@ -27,13 +27,32 @@ export function Settings() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
+  const db = useDatabaseService();
 
   const handleReset = () => {
-    db.delete({
-      disableAutoOpen: true,
-    })
+    db.reset()
       .then(() => {
+        setAlertOpen(false);
         window.location.reload();
+      })
+      .catch(console.error);
+  };
+
+  const handleAddList = () => {
+    db.getLists()
+      .then((lists) => {
+        lists.sort((a, b) => a.order - b.order);
+        return lists.slice(-1);
+      })
+      .then((last) => {
+        const newOrder = last.length > 0 ? last[0].order + 1 : 0;
+        return db.addList({
+          order: newOrder,
+          title: "New List",
+          color: "#90abbf",
+          halfSize: false,
+          hidden: 0,
+        });
       })
       .catch(console.error);
   };
@@ -49,7 +68,7 @@ export function Settings() {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent>
-          <DropdownMenuItem onClick={addList}>
+          <DropdownMenuItem onClick={handleAddList}>
             <span>New List</span>
           </DropdownMenuItem>
           <DropdownMenuItem

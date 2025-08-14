@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLiveQuery } from "dexie-react-hooks";
+import { useHistory } from "@/hooks/useHistory";
 import {
   DndContext,
   rectIntersection,
@@ -17,8 +17,8 @@ import {
   rectSwappingStrategy,
 } from "@dnd-kit/sortable";
 
-import { db } from "@/utils/db";
-import type { List, TodoItem } from "@/types";
+import { useDatabaseService } from "@/hooks/useDatabaseService";
+import type { List, TodoItem } from "@/types/index.types";
 
 import { DummyListComponent, ListComponent } from "@/components/List";
 import { DummyTodoItemComponent } from "@/components/Item";
@@ -26,7 +26,9 @@ import { DummyTodoItemComponent } from "@/components/Item";
 import classes from "@/styles/Lists.module.css";
 
 export function ListsComponent() {
-  const lists = useLiveQuery(() => db.lists.orderBy("order").toArray());
+  const db = useDatabaseService();
+  const { state } = useHistory();
+
   const [overlayItem, setOverlayItem] = useState<TodoItem | null>(null);
   const [overlayList, setOverlayList] = useState<List | null>(null);
   const [overlayType, setOverlayType] = useState<"item" | "list" | null>(null);
@@ -47,8 +49,7 @@ export function ListsComponent() {
     if (active.data.current.type === "item") {
       const itemId = parseInt(active.id.toString().split("-")[1]);
 
-      db.todoItems
-        .get(itemId)
+      db.getItemById(itemId)
         .then((item) => {
           if (item) setOverlayItem(item);
         })
@@ -60,8 +61,7 @@ export function ListsComponent() {
     if (active.data.current.type === "list") {
       const listId = parseInt(active.id.toString().split("-")[1]);
 
-      db.lists
-        .get(listId)
+      db.getListById(listId)
         .then((list) => {
           if (list) setOverlayList(list);
         })
@@ -82,18 +82,14 @@ export function ListsComponent() {
       const itemId = parseInt(active.id.toString().split("-")[1]);
       const listId = over.data.current.listId as number;
 
-      db.todoItems
-        .get(itemId)
+      db.getItemById(itemId)
         .then((item) => {
           if (!item) return;
-
           if (item.listId !== listId) {
-            db.todoItems
-              .update(item.id, {
-                listId: listId,
-                updatedAt: new Date(),
-              })
-              .catch((error) => console.error(error));
+            db.updateItem(item.id, {
+              listId: listId,
+              updatedAt: new Date(),
+            }).catch((error) => console.error(error));
           }
         })
         .catch((error) => console.error(error));
@@ -117,22 +113,22 @@ export function ListsComponent() {
       const overItemId = parseInt(over.id.toString().split("-")[1]);
       const overListId = over.data.current.listId as number;
 
-      db.todoItems
-        .where({ listId: overListId })
-        .sortBy("order")
-        .then(async (items) => {
+      db.getItemsByListId(overListId)
+        .then((items) => {
           const sortedItems = arrayMove(
             items,
             items.findIndex((item) => item.id === activeItemId),
             items.findIndex((item) => item.id === overItemId),
           );
 
-          for (const item of sortedItems) {
-            await db.todoItems.update(item.id, {
-              order: sortedItems.indexOf(item),
-              updatedAt: new Date(),
-            });
-          }
+          return Promise.all(
+            sortedItems.map((item, index) =>
+              db.updateItem(item.id, {
+                order: index,
+                updatedAt: new Date(),
+              }),
+            ),
+          );
         })
         .catch((error) => console.error(error));
     }
@@ -144,21 +140,18 @@ export function ListsComponent() {
       const activeListId = parseInt(active.id.toString().split("-")[1]);
       const overListId = parseInt(over.id.toString().split("-")[1]);
 
-      db.lists
-        .orderBy("order")
-        .toArray()
-        .then(async (lists) => {
+      db.getLists()
+        .then((lists) => {
           const sortedLists = arrayMove(
             lists,
             lists.findIndex((list) => list.id === activeListId),
             lists.findIndex((list) => list.id === overListId),
           );
-
-          for (const list of sortedLists) {
-            await db.lists.update(list.id, {
-              order: sortedLists.indexOf(list),
-            });
-          }
+          return Promise.all(
+            sortedLists.map((list, index) =>
+              db.updateList(list.id, { order: index }),
+            ),
+          );
         })
         .catch((error) => console.error(error));
     }
@@ -167,7 +160,7 @@ export function ListsComponent() {
   const groupedLists: List[][] = [];
   let tempGroup: List[] = [];
 
-  lists?.forEach((list) => {
+  state.lists.forEach((list) => {
     if (list.halfSize) {
       tempGroup.push(list);
       if (tempGroup.length === 2) {
@@ -196,7 +189,7 @@ export function ListsComponent() {
       onDragEnd={handleDragEnd}
     >
       <SortableContext
-        items={lists?.map((list) => list.id) ?? []}
+        items={state.lists.map((list) => list.id)}
         strategy={rectSwappingStrategy}
       >
         <div className={classes.lists}>

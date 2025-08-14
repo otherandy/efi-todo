@@ -1,4 +1,4 @@
-import type { StageStatus, NumberStatus } from "@/types";
+import type { StageStatus, NumberStatus } from "@/types/index.types";
 
 export function isStageStatus(status: unknown): status is StageStatus {
   return (

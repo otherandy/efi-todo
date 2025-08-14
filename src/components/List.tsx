@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useLiveQuery } from "dexie-react-hooks";
 
 import { useDroppable } from "@dnd-kit/core";
 import {
@@ -9,9 +8,9 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-import { createItem, db, deleteList } from "@/utils/db";
+import { useDatabaseService } from "@/hooks/useDatabaseService";
 import { getReadableTextColor } from "@/utils/color";
-import type { List, TodoItem } from "@/types";
+import type { List, TodoItem } from "@/types/index.types";
 
 import { FullTodoItemComponent } from "@/components/Item";
 import {
@@ -32,9 +31,20 @@ import ClearCheckIcon from "@/assets/clear_check.svg?react";
 import ThreeLinesIcon from "@/assets/three_lines.svg?react";
 
 export function ListComponent({ list }: { list: List }) {
-  const items = useLiveQuery(() =>
-    db.todoItems.where({ listId: list.id }).sortBy("order"),
-  );
+  const db = useDatabaseService();
+  const [items, setItems] = useState<TodoItem[] | undefined>(undefined);
+
+  useEffect(() => {
+    let mounted = true;
+    db.getItemsByListId(list.id)
+      .then((data) => {
+        if (mounted) setItems(data);
+      })
+      .catch((error) => console.error(error));
+    return () => {
+      mounted = false;
+    };
+  }, [db, list.id]);
 
   const listRef = useRef<HTMLInputElement>(null);
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
@@ -63,43 +73,68 @@ export function ListComponent({ list }: { list: List }) {
   };
 
   const handleChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    db.lists
-      .update(list.id, { title: e.target.value })
-      .catch((error) => console.error(error));
+    db.updateList(list.id, {
+      title: e.target.value,
+    }).catch((error) => console.error(error));
   };
 
   const handleAddItem = () => {
-    createItem(list.id, items?.length ?? 0);
+    db.addItem({
+      text: "New Item",
+      listId: list.id,
+      checked: false,
+      star: 0,
+      order: items?.length ? items[items.length - 1].order + 1 : 0,
+      color: "#d9d9d9",
+      emoji: "",
+      status: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }).catch((error) => console.error(error));
   };
 
   const handleChangeColor = (color: string) => {
-    db.lists.update(list.id, { color }).catch((error) => console.error(error));
+    db.updateList(list.id, { color }).catch((error) => console.error(error));
   };
 
   const handleHideList = () => {
-    db.lists
-      .update(list.id, { hidden: 1 })
-      .catch((error) => console.error(error));
+    db.updateList(list.id, { hidden: list.hidden ? 0 : 1 }).catch((error) =>
+      console.error(error),
+    );
   };
 
   const handleClearCheckmarks = () => {
-    db.todoItems
-      .where({ listId: list.id })
-      .modify({ checked: false, updatedAt: new Date() })
+    db.getItemsByListId(list.id)
+      .then((items) => {
+        const uncheckedItems = items.filter((item) => item.checked);
+        return Promise.all(
+          uncheckedItems.map((item) =>
+            db.updateItem(item.id, { checked: false, updatedAt: new Date() }),
+          ),
+        );
+      })
       .catch((error) => console.error(error));
   };
 
   const handleDeleteItems = () => {
-    db.todoItems
-      .where({ listId: list.id })
-      .delete()
+    db.getItemsByListId(list.id)
+      .then((items) => {
+        const itemIds = items.map((item) => item.id);
+        for (const itemId of itemIds) {
+          db.deleteItem(itemId).catch((error) => console.error(error));
+        }
+      })
       .catch((error) => console.error(error));
   };
 
   const handleResize = () => {
-    db.lists
-      .update(list.id, { halfSize: !list.halfSize })
-      .catch((error) => console.error(error));
+    db.updateList(list.id, { halfSize: !list.halfSize }).catch((error) =>
+      console.error(error),
+    );
+  };
+
+  const handleDeleteList = () => {
+    db.deleteList(list.id).catch((error) => console.error(error));
   };
 
   const updatePickerPos = useCallback(() => {
@@ -144,7 +179,7 @@ export function ListComponent({ list }: { list: List }) {
             <DangerButton
               action="Delete?"
               description={`You're about to delete the list "${list.title}".`}
-              confirmAction={() => deleteList(list.id)}
+              confirmAction={handleDeleteList}
               asChild
             >
               <span>

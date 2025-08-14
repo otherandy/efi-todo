@@ -1,6 +1,7 @@
-import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/utils/db";
+import { useEffect, useState } from "react";
+import { useDatabaseService } from "@/hooks/useDatabaseService";
 import { getReadableTextColor } from "@/utils/color";
+import type { List } from "@/types/index.types";
 
 import {
   Accordion,
@@ -8,19 +9,29 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/Accordion";
-// import { AddListButton } from "@/components/managers/ListManager";
 
 import classes from "@/styles/managers/HiddenListManager.module.css";
 
 export function HiddenListManager() {
-  const lists = useLiveQuery(() =>
-    db.lists.where("hidden").equals(1).toArray(),
-  );
+  const db = useDatabaseService();
+  const [lists, setLists] = useState<List[] | undefined>(undefined);
+
+  useEffect(() => {
+    let mounted = true;
+    db.getLists()
+      .then((data) => {
+        if (mounted) setLists(data.filter((list) => list.hidden));
+      })
+      .catch((error) => console.error(error));
+    return () => {
+      mounted = false;
+    };
+  }, [db]);
 
   const handleSetUnhidden = (listId: number) => {
-    db.lists
-      .update(listId, {
-        hidden: 0,
+    db.updateList(listId, { hidden: 0 })
+      .then(() => {
+        setLists((prev) => prev?.filter((list) => list.id !== listId));
       })
       .catch((error) => console.error(error));
   };

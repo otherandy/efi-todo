@@ -2,8 +2,10 @@ import { useRef, useState, useCallback, useEffect } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-import { createItem, db } from "@/utils/db";
-import type { TodoItem } from "@/types";
+import { useDatabaseService } from "@/hooks/useDatabaseService";
+
+import { db } from "@/services/dexie.service";
+import type { TodoItem } from "@/types/index.types";
 import { isStageStatus, isNumberStatus } from "@/utils/status";
 
 import { ItemEmoji } from "@/components/Emoji";
@@ -70,6 +72,7 @@ export function FullTodoItemComponent({ item }: { item: TodoItem }) {
 
 function TodoItemComponent({ item }: { item: TodoItem }) {
   const [text, setText] = useState(item.text);
+  const db = useDatabaseService();
 
   const itemRef = useRef<HTMLDivElement>(null);
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
@@ -103,31 +106,35 @@ function TodoItemComponent({ item }: { item: TodoItem }) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      createItem(item.listId, item.order + 1);
+      db.addItem({
+        listId: item.listId,
+        order: item.order + 1,
+        text: "",
+        emoji: "",
+        color: "#d9d9d9",
+        star: 0,
+        checked: false,
+        status: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }).catch((error) => console.error(error));
     }
   };
 
   const handleDeleteItem = () => {
-    db.todoItems.delete(item.id).catch((error) => console.error(error));
+    db.deleteItem(item.id).catch((error) => console.error(error));
   };
 
   const handleBlur = () => {
     if (text.trim() === "") {
       handleDeleteItem();
     } else if (text !== item.text) {
-      db.todoItems
-        .update(item.id, {
-          text: text,
-          updatedAt: new Date(),
-        })
-        .catch((error) => console.error(error));
+      db.updateItem(item.id, { text }).catch((error) => console.error(error));
     }
   };
 
   const handleChangeColor = (color: string) => {
-    db.todoItems
-      .update(item.id, { color })
-      .catch((error) => console.error(error));
+    db.updateItem(item.id, { color }).catch((error) => console.error(error));
   };
 
   const updatePickerPos = useCallback(() => {
@@ -234,57 +241,53 @@ function ItemContextMenu({
   setDisplayColorPicker: (value: boolean) => void;
   children: React.ReactNode;
 }) {
+  const db = useDatabaseService();
+
   const handleDuplicateItem = () => {
-    createItem(
-      item.listId,
-      item.order + 1,
-      item.text,
-      item.emoji,
-      item.color,
-      item.star,
-      item.checked,
-      item.status,
-    );
+    db.addItem({
+      listId: item.listId,
+      order: item.order + 1,
+      text: item.text,
+      emoji: item.emoji,
+      color: item.color,
+      star: item.star,
+      checked: item.checked,
+      status: item.status,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }).catch((error) => console.error(error));
   };
 
   const handleAssignStageStatus = () => {
     if (isStageStatus(item.status)) {
-      db.todoItems
-        .update(item.id, {
-          status: null,
-        })
-        .catch((error) => console.error(error));
+      db.updateItem(item.id, {
+        status: null,
+      }).catch((error) => console.error(error));
       return;
     }
 
-    db.todoItems
-      .update(item.id, {
-        status: {
-          selected: 0,
-          elements: [],
-        },
-      })
-      .catch((error) => console.error(error));
+    db.updateItem(item.id, {
+      status: {
+        current: 0,
+        max: 3,
+      },
+    }).catch((error) => console.error(error));
   };
 
   const handleAssignNumberStatus = () => {
     if (isNumberStatus(item.status)) {
-      db.todoItems
-        .update(item.id, {
-          status: null,
-        })
-        .catch((error) => console.error(error));
+      db.updateItem(item.id, {
+        status: null,
+      }).catch((error) => console.error(error));
       return;
     }
 
-    db.todoItems
-      .update(item.id, {
-        status: {
-          current: 0,
-          max: 5,
-        },
-      })
-      .catch((error) => console.error(error));
+    db.updateItem(item.id, {
+      status: {
+        current: 0,
+        max: 10,
+      },
+    }).catch((error) => console.error(error));
   };
 
   return (

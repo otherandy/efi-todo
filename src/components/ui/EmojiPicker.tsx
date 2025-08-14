@@ -4,7 +4,7 @@ import Picker, {
   EmojiStyle,
 } from "emoji-picker-react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/utils/db";
+import { db } from "@/services/dexie.service";
 
 import classes from "@/styles/Emoji.module.css";
 
