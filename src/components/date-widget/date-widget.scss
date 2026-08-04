@@ -1,0 +1,60 @@
+@use '@assets/mixins.scss' as *;
+@use '@assets/variables.scss' as *;
+
+.date-widget {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    z-index: $z-overlay;
+
+    padding: pxToRem(8) 0;
+    box-shadow: 0 pxToRem(2) rgba(0, 0, 0, 0.1);
+    border: pxToRem(1) solid $alto;
+    border-radius: pxToRem(8);
+    background-color: white;
+    width: fit-content;
+    pointer-events: none;
+    user-select: none;
+
+    .date-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        gap: pxToRem(24);
+        padding: 0 pxToRem(32);
+        color: #555;
+        font-size: pxToRem(14);
+        text-align: center;
+    }
+
+    .date-body {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+        gap: pxToRem(16);
+        padding: 0 pxToRem(32);
+        font-size: pxToRem(20);
+
+        .day-emoji {
+            align-self: flex-start;
+        }
+    }
+
+    .separator {
+        display: inline-block;
+        background-color: $alto;
+        flex-shrink: 0;
+        
+
+        &.vertical-separator {
+            height: 100%;
+            width: pxToRem(1);
+        }
+
+        &.horizontal-separator {
+            height: pxToRem(1);
+            width: 100%;
+        }
+    }
+}

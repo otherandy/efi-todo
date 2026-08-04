@@ -1,0 +1,19 @@
+@use '@assets/mixins.scss' as *;
+
+.bottom-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  padding: pxToRem(16) pxToRem(32);
+
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  .right {
+    display: flex;
+    flex-direction: row;
+    gap: pxToRem(8);
+  }
+}

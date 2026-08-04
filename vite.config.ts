@@ -1,14 +1,19 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import svgr from "vite-plugin-svgr";
-import path from "path";
+import { fileURLToPath, URL } from 'node:url';
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import vueDevTools from 'vite-plugin-vue-devtools';
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [react(), svgr()],
+export default defineConfig(({ mode }) => ({
+  plugins: [
+    vue(),
+    ...(mode !== 'production' ? [vueDevTools()] : [])
+  ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src"),
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@assets': fileURLToPath(new URL('./src/assets', import.meta.url)),
+      '@models': fileURLToPath(new URL('./src/models', import.meta.url)),
     },
   },
-});
+}));

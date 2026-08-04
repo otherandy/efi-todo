@@ -1,0 +1,41 @@
+@use '@assets/mixins.scss' as *;
+@use '@assets/variables.scss' as *;
+
+.picture-widget {
+    display: flex;
+    width: pxToRem(80);
+    height: pxToRem(80);
+    padding: pxToRem(4);
+    border: pxToRem(1) solid $alto;
+    box-shadow: 0 pxToRem(2) rgba($color: #000000, $alpha: 0.1);
+    background-color: white;
+    border-radius: pxToRem(8);
+    cursor: pointer;
+
+    .image-upload-input {
+        display: none;
+    }
+
+    .icon-upload-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        margin: 0;
+        padding: 0;
+        border: none;
+        width: 100%;
+        height: 100%;
+        color: #9cb3c3;
+        cursor: pointer;
+
+        svg {
+            width: pxToRem(24);
+            height: pxToRem(24);
+        }
+    }
+
+    .image-upload-preview {
+        object-fit: cover;
+    }
+}
