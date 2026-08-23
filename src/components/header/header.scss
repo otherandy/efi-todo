@@ -1,0 +1,14 @@
+@use '@assets/mixins.scss' as *;
+@use '@assets/variables.scss' as *;
+
+.header {
+    background: white;
+    height: pxToRem(30);
+
+    .menu-btn {
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        padding: pxToRem(8);
+    }
+}

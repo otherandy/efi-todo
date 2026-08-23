@@ -23,7 +23,7 @@
         gap: pxToRem(24);
         padding: 0 pxToRem(32);
         color: #555;
-        font-size: pxToRem(14);
+        font-size: pxToRem(18);
         text-align: center;
     }
 
@@ -34,10 +34,12 @@
         align-items: center;
         gap: pxToRem(16);
         padding: 0 pxToRem(32);
-        font-size: pxToRem(20);
+        font-size: pxToRem(18);
 
         .day-emoji {
             align-self: flex-start;
+            width: pxToRem(20);
+            height: pxToRem(20);
         }
     }
 

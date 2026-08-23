@@ -2,5 +2,41 @@
 @use '@assets/variables.scss' as *;
 
 .list-item-container {
-    
+    display: flex;
+    flex-direction: row;
+    gap: pxToRem(8);
+    border-radius: pxToRem(8);
+    background-color: white;
+    padding: pxToRem(12);
+    position: relative;
+    align-items: center;
+
+    .tag {
+        position: absolute;
+        top: 0;
+        left: 0;
+        clip-path: polygon(0 0, 100% 0, 0 100%);
+        border-radius: pxToRem(16) 0 0 0;
+        width: pxToRem(20);
+        height: pxToRem(18);
+        background-color: blue;
+    }
+
+    .icon {
+        cursor: pointer;
+        font-size: pxToRem(24);
+        width: pxToRem(24);
+        height: pxToRem(24);
+    }
+
+    .checkbox-btn {
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        width: pxToRem(20);
+        height: pxToRem(20);
+    }
 }

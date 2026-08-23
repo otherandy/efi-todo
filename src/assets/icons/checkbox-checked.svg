@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="4 11 24 24">
+<rect x="5" y="12" width="22" height="22" rx="5" stroke="var(--checkbox-color, #A0A0A0)" stroke-width="2"/>
+<rect x="8" y="15" width="16" height="16" rx="2" fill="var(--checkbox-color, #A0A0A0)"/>
+<path d="M11 23L14.5 26.5L21.5 19.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

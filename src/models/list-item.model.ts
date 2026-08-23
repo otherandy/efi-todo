@@ -8,11 +8,11 @@ export interface ListItem {
 
     text: string;
     checked: boolean;
-    priorityStatus: PriorityStatus;
-    activityStatus: ActivityStatus;
+    priorityStatus?: PriorityStatus;
+    activityStatus?: ActivityStatus;
 
-    emoji: string;
-    color: Color;
+    emoji?: string;
+    color?: Color;
     
     createdAt: Date;
     updatedAt: Date;
