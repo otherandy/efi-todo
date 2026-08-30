@@ -30,4 +30,6 @@ import { useAtListStore } from './store/index.ts';
 
 const atList$ = useAtListStore(); 
 const { lists } = storeToRefs(atList$);
+
+atList$.initialize();
 </script>

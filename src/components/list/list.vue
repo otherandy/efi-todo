@@ -2,6 +2,9 @@
 
 <template>
     <div class="list-container">
+        <div class="list-header">
+            
+        </div>
         <div class="list-items">
             <ListItem
                 v-for="item in list.items"

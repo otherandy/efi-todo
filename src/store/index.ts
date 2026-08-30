@@ -6,6 +6,8 @@ export const useAtListStore = defineStore('at-list', {
     lists: [],
   }),
   getters: {
+  },
+  actions: {
     initialize() {
         this.lists.push({
             id: 1,
@@ -27,7 +29,5 @@ export const useAtListStore = defineStore('at-list', {
             ]
         });
     }
-  },
-  actions: {
   }
 });
