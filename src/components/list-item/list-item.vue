@@ -2,7 +2,8 @@
 
 <template>
     <div class="list-item-container">
-        <div class="tag"></div>
+        <div class="tag"
+        :style="{ '--tag-color': item.color }"></div>
         <div class="icon"></div>
         <div class="text">
             {{ item.text }}

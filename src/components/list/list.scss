@@ -2,5 +2,56 @@
 @use '@assets/variables.scss' as *;
 
 .list-container {
-    
+    display: flex;
+    flex-direction: column;
+    width: pxToRem(300);
+    gap: pxToRem(12);
+
+    .list-header {
+        display: flex;
+        flex-direction: row;
+        border-radius: pxToRem(8);
+        background-color: white;
+        position: relative;
+        align-items: center;
+        justify-content: space-between;
+        overflow: hidden;
+        height: pxToRem(60);
+        padding: pxToRem(12);
+        box-shadow: 0 pxToRem(3) pxToRem(1) pxToRem(1) rgba(0, 0, 0, 0.15);
+
+        &.tag-folded {
+            border-left: pxToRem(8) solid var(--tag-color, #f1f1f1);
+        }
+        
+        &.tag::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 20px 20px 0 0;
+            border-color: var(--tag-color, #f1f1f1) transparent transparent transparent;        
+        }
+
+        .icon {
+            cursor: pointer;
+            font-size: pxToRem(24);
+            width: pxToRem(24);
+            height: pxToRem(24);
+        }
+
+        .checkbox-btn {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            width: pxToRem(20);
+            height: pxToRem(20);
+        }
+    }
 }

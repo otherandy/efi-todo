@@ -10,16 +10,19 @@
     padding: pxToRem(12);
     position: relative;
     align-items: center;
+    box-shadow: 0 pxToRem(3) pxToRem(1) pxToRem(1) rgba(0, 0, 0, 0.15);
+    overflow: hidden;
 
-    .tag {
+    .tag::before {
+        content: '';
         position: absolute;
         top: 0;
         left: 0;
-        clip-path: polygon(0 0, 100% 0, 0 100%);
-        border-radius: pxToRem(16) 0 0 0;
-        width: pxToRem(20);
-        height: pxToRem(18);
-        background-color: blue;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 20px 20px 0 0;
+        border-color: var(--tag-color, #f1f1f1) transparent transparent transparent;        
     }
 
     .icon {
@@ -27,6 +30,10 @@
         font-size: pxToRem(24);
         width: pxToRem(24);
         height: pxToRem(24);
+    }
+
+    .text {
+        flex: 1;
     }
 
     .checkbox-btn {

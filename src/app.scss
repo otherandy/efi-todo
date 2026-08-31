@@ -1,5 +1,9 @@
 @use '@assets/mixins.scss' as *;
 
+.lists-container {
+  padding: pxToRem(16);
+}
+
 .bottom-bar {
   display: flex;
   flex-direction: row;
