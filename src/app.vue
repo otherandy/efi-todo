@@ -18,6 +18,7 @@
       <PictureWidget></PictureWidget>
     </div>
   </div>
+  <EmojiPickerPopup></EmojiPickerPopup>
 </template>
 
 <script setup lang="ts">
@@ -25,6 +26,7 @@ import DateWidget from './components/date-widget/date-widget.vue';
 import PictureWidget from './components/picture-widget/picture-widget.vue';
 import List from './components/list/list.vue';
 import Header from './components/header/header.vue';
+import EmojiPickerPopup from './components/emoji-picker-popup/emoji-picker-popup.vue';
 import { storeToRefs } from 'pinia';
 import { useAtListStore } from './store/index.ts';
 

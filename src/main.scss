@@ -65,3 +65,12 @@ body {
     flex: 1;
   }
 }
+
+// emoji-mart-vue-fast-next sets background-size: 100% inline on custom
+// emoji, which crops non-square images against their box. Override with
+// !important since it's the only way to beat an inline style.
+.emoji-type-custom {
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat;
+}

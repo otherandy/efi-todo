@@ -13,6 +13,12 @@ export default defineConfig(({ mode }) => ({
     }),
     ...(mode !== 'production' ? [vueDevTools()] : [])
   ],
+  build: {
+    // Keep asset URLs as real file paths — some consumers (e.g. the emoji
+    // picker's background-image: url(...) construction) break on data URIs
+    // that contain unescaped parentheses, which small inlined SVGs can have.
+    assetsInlineLimit: 0,
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

@@ -2,9 +2,15 @@
 
 <template>
     <div class="list-item-container">
-        <div class="tag"
-        :style="{ '--tag-color': item.color }"></div>
-        <div class="icon"></div>
+        <div class="tag" :style="{ '--tag-color': item.color }"></div>
+        <div class="icon" @click="openPicker">
+            <Emoji
+                v-if="item.emoji"
+                :emoji="item.emoji"
+                :data="emojiIndex"
+                :set="EMOJI_SET"
+                :size="24" />
+        </div>
         <div class="text">
             {{ item.text }}
         </div>
@@ -21,12 +27,21 @@
 import type { ListItem } from '@/models/list-item.model';
 import CheckboxUnchecked from '@assets/icons/checkbox-unchecked.svg';
 import CheckboxChecked from '@assets/icons/checkbox-checked.svg';
+import { Emoji } from 'emoji-mart-vue-fast-next/src';
+import { useEmojiPicker } from '@/composables/useEmojiPicker';
+import { emojiIndex, EMOJI_SET } from '@/composables/emoji-data';
 
 const { item } = defineProps<{
-    item: ListItem; 
+    item: ListItem;
 }>();
+
+const { open } = useEmojiPicker();
 
 function onChecked() {
     item.checked = !item.checked;
+}
+
+function openPicker(event: MouseEvent) {
+    open(event, item);
 }
 </script>
