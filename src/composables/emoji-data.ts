@@ -36,7 +36,9 @@ export const EMOJI_SET = 'twitter';
 const categories = emojiIndex.categories();
 const customCategoryIndex = categories.findIndex((category) => category.id === 'custom');
 if (customCategoryIndex > -1) {
-    const [customCategory] = categories.splice(customCategoryIndex, 1);
-    const recentCategoryIndex = categories.findIndex((category) => category.id === 'recent');
-    categories.splice(recentCategoryIndex > -1 ? recentCategoryIndex + 1 : 0, 0, customCategory);
+    const customCategory = categories.splice(customCategoryIndex, 1)[0];
+    if (customCategory) {
+        const recentCategoryIndex = categories.findIndex((category) => category.id === 'recent');
+        categories.splice(recentCategoryIndex > -1 ? recentCategoryIndex + 1 : 0, 0, customCategory);
+    }
 }
