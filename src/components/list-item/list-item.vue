@@ -1,8 +1,9 @@
 <style lang="scss" scoped src="./list-item.scss"></style>
 
 <template>
-    <div class="list-item-container">
-        <div class="tag" :style="{ '--tag-color': item.color }"></div>
+    <div
+        class="list-item-container tag-folded"
+        :style="{ '--tag-color': item.color }">
         <div class="icon" @click="openPicker">
             <Emoji
                 v-if="item.emoji"

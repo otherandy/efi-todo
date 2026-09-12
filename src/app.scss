@@ -1,6 +1,9 @@
 @use '@assets/mixins.scss' as *;
 
 .lists-container {
+  display: flex;
+  flex-direction: row;
+  gap: pxToRem(16);
   padding: pxToRem(16);
 }
 

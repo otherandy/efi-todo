@@ -13,16 +13,8 @@
     box-shadow: 0 pxToRem(3) pxToRem(1) pxToRem(1) rgba(0, 0, 0, 0.15);
     overflow: hidden;
 
-    .tag::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-width: 20px 20px 0 0;
-        border-color: var(--tag-color, #f1f1f1) transparent transparent transparent;        
+    &.tag-folded {
+        border-left: pxToRem(8) solid var(--tag-color, #f1f1f1);
     }
 
     .icon {

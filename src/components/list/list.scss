@@ -19,6 +19,7 @@
         height: pxToRem(60);
         padding: pxToRem(12);
         box-shadow: 0 pxToRem(3) pxToRem(1) pxToRem(1) rgba(0, 0, 0, 0.15);
+        background-color: color-mix(in srgb, var(--tag-color, #f1f1f1) 10%, white);
 
         &.tag-folded {
             border-left: pxToRem(8) solid var(--tag-color, #f1f1f1);
@@ -53,5 +54,11 @@
             width: pxToRem(20);
             height: pxToRem(20);
         }
+    }
+
+    .list-items {
+        display: flex;
+        flex-direction: column;
+        gap: pxToRem(16);
     }
 }
