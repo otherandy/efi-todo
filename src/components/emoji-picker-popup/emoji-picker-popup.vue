@@ -21,6 +21,7 @@
 import { Picker } from 'emoji-mart-vue-fast-next/src';
 import { useEmojiPicker } from '@/composables/useEmojiPicker';
 import { emojiIndex, EMOJI_SET } from '@/composables/emoji-data';
+import { vOnClickOutside } from '@vueuse/components';
 
 const { state, close, select } = useEmojiPicker();
 </script>
