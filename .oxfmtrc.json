@@ -3,5 +3,6 @@
   "tabWidth": 4,
   "singleQuote": true,
   "vueIndentScriptAndStyle": false,
-  "ignorePatterns": []
+  "ignorePatterns": [],
+  "bracketSameLine": true
 }

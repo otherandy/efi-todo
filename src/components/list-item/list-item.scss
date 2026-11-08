@@ -31,7 +31,7 @@
     .text {
         flex: 1;
 
-        &.completed { 
+        &.completed {
             text-decoration: line-through;
             color: $alto;
         }

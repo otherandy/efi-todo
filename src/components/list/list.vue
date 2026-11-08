@@ -6,8 +6,7 @@
             <div
                 class="tag"
                 :class="{ 'tag-folded': list.hidden }"
-                @click="atList$.toggleHidden(list.id)"
-            ></div>
+                @click="atList$.toggleHidden(list.id)"></div>
             <div class="icon"></div>
             <div class="list-header-title">
                 {{ list.title }}
@@ -49,13 +48,10 @@ const atList$ = useAtListStore();
 const showMenu = ref(false);
 const menuState = ref<MenuState>({
     x: 0,
-    y: 0
+    y: 0,
 });
 
-
-const menuActions = ref<MenuAction[]>([
-
-]);
+const menuActions = ref<MenuAction[]>([]);
 
 function onMenuClicked(event: MouseEvent) {
     event.preventDefault();
@@ -68,7 +64,5 @@ function closeMenu() {
     showMenu.value = false;
 }
 
-function onActionClicked(action: string) {
-
-}
+function onActionClicked(action: string) {}
 </script>
