@@ -6,13 +6,15 @@
             v-if="state.visible"
             class="global-emoji-popup"
             :style="{ top: state.y + 'px', left: state.x + 'px' }"
-            v-on-click-outside="close">
+            v-on-click-outside="close"
+        >
             <Picker
                 :data="emojiIndex"
                 :set="EMOJI_SET"
                 :showPreview="false"
                 color="#87b2d3"
-                @select="select" />
+                @select="select"
+            />
         </div>
     </Teleport>
 </template>

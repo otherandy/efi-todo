@@ -1,24 +1,18 @@
 <style lang="scss" scoped src="./app.scss"></style>
 
 <template>
-  <Header></Header>
-  <div class="lists-container">
-    <List
-      v-for="list in lists"
-      :key="list.id"
-      :list="list">
-    </List>
-  </div>
-  <div class="bottom-bar">
-    <div class="left">
-
+    <Header></Header>
+    <div class="lists-container">
+        <List v-for="list in lists" :key="list.id" :list="list"> </List>
     </div>
-    <div class="right">
-      <DateWidget></DateWidget>
-      <PictureWidget></PictureWidget>
+    <div class="bottom-bar">
+        <div class="left"></div>
+        <div class="right">
+            <DateWidget></DateWidget>
+            <PictureWidget></PictureWidget>
+        </div>
     </div>
-  </div>
-  <EmojiPickerPopup></EmojiPickerPopup>
+    <EmojiPickerPopup></EmojiPickerPopup>
 </template>
 
 <script setup lang="ts">
@@ -30,7 +24,7 @@ import EmojiPickerPopup from './components/emoji-picker-popup/emoji-picker-popup
 import { storeToRefs } from 'pinia';
 import { useAtListStore } from './store/index.ts';
 
-const atList$ = useAtListStore(); 
+const atList$ = useAtListStore();
 const { lists } = storeToRefs(atList$);
 
 atList$.initialize();

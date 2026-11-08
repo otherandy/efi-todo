@@ -21,20 +21,23 @@
         box-shadow: 0 pxToRem(3) pxToRem(1) pxToRem(1) rgba(0, 0, 0, 0.15);
         background-color: color-mix(in srgb, var(--tag-color, #f1f1f1) 10%, white);
 
-        &.tag-folded {
-            border-left: pxToRem(8) solid var(--tag-color, #f1f1f1);
-        }
-        
-        &.tag::before {
-            content: '';
+        .tag {
             position: absolute;
             top: 0;
             left: 0;
             width: 0;
             height: 0;
+            cursor: pointer;
             border-style: solid;
             border-width: 20px 20px 0 0;
-            border-color: var(--tag-color, #f1f1f1) transparent transparent transparent;        
+            border-color: var(--tag-color, #f1f1f1) transparent transparent transparent;
+
+            &.tag-folded {
+                width: pxToRem(8);
+                height: 100%;
+                border: none;
+                background-color: var(--tag-color, #f1f1f1);
+            }
         }
 
         .icon {

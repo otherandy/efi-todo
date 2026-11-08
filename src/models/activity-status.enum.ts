@@ -1,5 +1,5 @@
 export enum ActivityStatus {
     None,
     Progressing,
-    Paused
+    Paused,
 }

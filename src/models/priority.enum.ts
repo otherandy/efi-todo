@@ -1,5 +1,5 @@
 export enum PriorityStatus {
     Normal,
     Starred,
-    Urgent
+    Urgent,
 }

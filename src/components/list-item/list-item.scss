@@ -30,6 +30,11 @@
 
     .text {
         flex: 1;
+
+        &.completed { 
+            text-decoration: line-through;
+            color: $alto;
+        }
     }
 
     .checkbox-btn {

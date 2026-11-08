@@ -6,27 +6,27 @@ import FracturedCoreIcon from '@assets/icons/fractured_core.svg?url';
 
 const custom = [
     {
-      id: 'lvup1',
-      short_names: ['lvup'],
-      keywords: ['LvUp 1', 'LvUp Emblem 1', 'LvUp Emblem Color 1'],
-      imageUrl: LvUpEmblem1Icon,
+        id: 'lvup1',
+        short_names: ['lvup'],
+        keywords: ['LvUp 1', 'LvUp Emblem 1', 'LvUp Emblem Color 1'],
+        imageUrl: LvUpEmblem1Icon,
     },
     {
-      id: 'manta',
-      short_names: ['manta'],
-      keywords: ['Manta', 'Manta Dreams'],
-      imageUrl: MantaDreamsIcon,
+        id: 'manta',
+        short_names: ['manta'],
+        keywords: ['Manta', 'Manta Dreams'],
+        imageUrl: MantaDreamsIcon,
     },
     {
-      id: 'fractured',
-      short_names: ['fractured'],
-      keywords: ['Fractured', 'Fractured Core'],
-      imageUrl: FracturedCoreIcon,
-    }
+        id: 'fractured',
+        short_names: ['fractured'],
+        keywords: ['Fractured', 'Fractured Core'],
+        imageUrl: FracturedCoreIcon,
+    },
 ];
 
 export const emojiIndex = new EmojiIndex(emojiData, {
-    custom
+    custom,
 });
 export const EMOJI_SET = 'twitter';
 
@@ -39,6 +39,10 @@ if (customCategoryIndex > -1) {
     const customCategory = categories.splice(customCategoryIndex, 1)[0];
     if (customCategory) {
         const recentCategoryIndex = categories.findIndex((category) => category.id === 'recent');
-        categories.splice(recentCategoryIndex > -1 ? recentCategoryIndex + 1 : 0, 0, customCategory);
+        categories.splice(
+            recentCategoryIndex > -1 ? recentCategoryIndex + 1 : 0,
+            0,
+            customCategory,
+        );
     }
 }

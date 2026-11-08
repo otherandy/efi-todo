@@ -13,7 +13,7 @@ export interface ListItem {
 
     emoji?: string;
     color?: Color;
-    
+
     createdAt: Date;
     updatedAt: Date;
 }

@@ -1,76 +1,76 @@
 @font-face {
-  font-style: normal;
-  font-weight: 300 700;
-  src: url(@fontsource-variable/comfortaa/files/comfortaa-latin-wght-normal.woff2)
-    format("woff2-variations");
-  font-family: "Comfortaa Variable";
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
-    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    font-style: normal;
+    font-weight: 300 700;
+    src: url(@fontsource-variable/comfortaa/files/comfortaa-latin-wght-normal.woff2)
+        format('woff2-variations');
+    font-family: 'Comfortaa Variable';
+    font-display: swap;
+    unicode-range:
+        U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+        U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-  font-weight: 400;
-  src:
-    url(@kfonts/nanum-square-round/NanumSquareRoundR.woff2) format("woff2"),
-    url(@kfonts/nanum-square-round/NanumSquareRoundR.woff) format("woff");
-  font-family: "나눔스퀘어라운드";
-  font-display: swap;
+    font-weight: 400;
+    src:
+        url(@kfonts/nanum-square-round/NanumSquareRoundR.woff2) format('woff2'),
+        url(@kfonts/nanum-square-round/NanumSquareRoundR.woff) format('woff');
+    font-family: '나눔스퀘어라운드';
+    font-display: swap;
 }
 
 @font-face {
-  font-weight: 300;
-  src:
-    url(@kfonts/nanum-square-round/NanumSquareRoundR.woff2) format("woff2"),
-    url(@kfonts/nanum-square-round/NanumSquareRoundR.woff) format("woff");
-  font-family: "나눔스퀘어라운드";
-  font-display: swap;
+    font-weight: 300;
+    src:
+        url(@kfonts/nanum-square-round/NanumSquareRoundR.woff2) format('woff2'),
+        url(@kfonts/nanum-square-round/NanumSquareRoundR.woff) format('woff');
+    font-family: '나눔스퀘어라운드';
+    font-display: swap;
 }
 
 @font-face {
-  font-weight: 700;
-  src:
-    url(@kfonts/nanum-square-round/NanumSquareRoundR.woff2) format("woff2"),
-    url(@kfonts/nanum-square-round/NanumSquareRoundR.woff) format("woff");
-  font-family: "나눔스퀘어라운드";
-  font-display: swap;
+    font-weight: 700;
+    src:
+        url(@kfonts/nanum-square-round/NanumSquareRoundR.woff2) format('woff2'),
+        url(@kfonts/nanum-square-round/NanumSquareRoundR.woff) format('woff');
+    font-family: '나눔스퀘어라운드';
+    font-display: swap;
 }
 
 @font-face {
-  font-weight: 800;
-  src:
-    url(@kfonts/nanum-square-round/NanumSquareRoundR.woff2) format("woff2"),
-    url(@kfonts/nanum-square-round/NanumSquareRoundR.woff) format("woff");
-  font-family: "나눔스퀘어라운드";
-  font-display: swap;
+    font-weight: 800;
+    src:
+        url(@kfonts/nanum-square-round/NanumSquareRoundR.woff2) format('woff2'),
+        url(@kfonts/nanum-square-round/NanumSquareRoundR.woff) format('woff');
+    font-family: '나눔스퀘어라운드';
+    font-display: swap;
 }
 
 * {
-  margin: 0;
-  font-family: "Comfortaa Variable", "나눔스퀘어라운드", "NanumSquareRound", system-ui;
-  box-sizing: border-box;
+    margin: 0;
+    font-family: 'Comfortaa Variable', '나눔스퀘어라운드', 'NanumSquareRound', system-ui;
+    box-sizing: border-box;
 }
 
 body {
-  background-color: #f3f3f3;
+    background-color: #f3f3f3;
 }
 
 #app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 
-  main {
-    flex: 1;
-  }
+    main {
+        flex: 1;
+    }
 }
 
 // emoji-mart-vue-fast-next sets background-size: 100% inline on custom
 // emoji, which crops non-square images against their box. Override with
 // !important since it's the only way to beat an inline style.
 .emoji-type-custom {
-  background-size: contain !important;
-  background-position: center !important;
-  background-repeat: no-repeat;
+    background-size: contain !important;
+    background-position: center !important;
+    background-repeat: no-repeat;
 }

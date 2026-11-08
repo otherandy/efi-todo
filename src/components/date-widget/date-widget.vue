@@ -5,7 +5,7 @@
         <div class="date-header">
             <span> {{ date.getFullYear() }} </span>
             <div class="separator vertical-separator"></div>
-            <span> {{ `W${String(getWeek()).padStart(2, "0")}` }} </span>
+            <span> {{ `W${String(getWeek()).padStart(2, '0')}` }} </span>
         </div>
         <div class="separator horizontal-separator"></div>
         <div class="date-body">
@@ -21,23 +21,9 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 
-const MONTHS = [
-  "JAN",
-  "FEB",
-  "MAR",
-  "APR",
-  "MAY",
-  "JUN",
-  "JUL",
-  "AUG",
-  "SEP",
-  "OCT",
-  "NOV",
-  "DEC",
-];
+const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
-const DAYS = ["☀️", "🌙", "🔥", "💧", "🌳", "⭐", "🏔"];
-
+const DAYS = ['☀️', '🌙', '🔥', '💧', '🌳', '⭐', '🏔'];
 
 const date = ref(new Date());
 let interval: ReturnType<typeof setInterval> | undefined;
@@ -55,12 +41,12 @@ const getWeek = function () {
 };
 
 onMounted(() => {
-  interval = setInterval(() => {
-    date.value = new Date()
-  }, 1000);
-})
+    interval = setInterval(() => {
+        date.value = new Date();
+    }, 1000);
+});
 
 onUnmounted(() => {
-  clearInterval(interval);
+    clearInterval(interval);
 });
 </script>

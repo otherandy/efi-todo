@@ -1,24 +1,22 @@
 <style lang="scss" scoped src="./list-item.scss"></style>
 
 <template>
-    <div
-        class="list-item-container tag-folded"
-        :style="{ '--tag-color': item.color }">
+    <div class="list-item-container tag-folded" :style="{ '--tag-color': item.color }">
         <div class="icon" @click="openPicker">
             <Emoji
                 v-if="item.emoji"
                 :emoji="item.emoji"
                 :data="emojiIndex"
                 :set="EMOJI_SET"
-                :size="24" />
+                :size="24"
+            />
         </div>
-        <div class="text">
+        <div
+            class="text"
+            :class="{ 'completed': item.checked }">
             {{ item.text }}
         </div>
-        <button
-            class="checkbox-btn"
-            @click="onChecked"
-            :style="{ '--checkbox-color': item.color }">
+        <button class="checkbox-btn" @click="onChecked" :style="{ '--checkbox-color': item.color }">
             <component :is="item.checked ? CheckboxChecked : CheckboxUnchecked" />
         </button>
     </div>
